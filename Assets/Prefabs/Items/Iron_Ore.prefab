@@ -127,10 +127,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a28858bd824b7df4e936b1c9b92280e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  prefix: default
   objectName: Iron_Ore
   impactSound: {fileID: 8300000, guid: 5fb50044d3560bb4b966ae1a8d68adff, type: 3}
   isAvailable: 1
-  price: 25
+  price: 1000
   canStoreInInventory: 1
   itemId: 0
   itemIcon: {fileID: 0}
@@ -180,14 +181,8 @@ MonoBehaviour:
   weaknessAmount: 100
   impactSound: {fileID: 8300000, guid: 5fb50044d3560bb4b966ae1a8d68adff, type: 3}
   destroyOnDeath: 0
-  deathReceiver: {fileID: 0}
   originalPrefab: {fileID: 114988886934263314, guid: 9c8420015c65f394183af93c3bdda027,
     type: 2}
-  chunkMeshes:
-  - {fileID: 4300008, guid: f0b523a83d444df44a8c08dcf3c09f31, type: 3}
-  - {fileID: 4300006, guid: f0b523a83d444df44a8c08dcf3c09f31, type: 3}
-  - {fileID: 4300004, guid: f0b523a83d444df44a8c08dcf3c09f31, type: 3}
-  - {fileID: 4300002, guid: f0b523a83d444df44a8c08dcf3c09f31, type: 3}
 --- !u!114 &114684903910946546
 MonoBehaviour:
   m_ObjectHideFlags: 1
