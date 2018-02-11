@@ -952,8 +952,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefix: default
+  hurtSound: {fileID: 8300000, guid: 7db4a6d7e11ab374bb4715d62ab2601c, type: 3}
   objectName: Mineral_Deposit
-  impactSound: {fileID: 8300000, guid: 5fb50044d3560bb4b966ae1a8d68adff, type: 3}
   isAvailable: 1
   price: 10
   canStoreInInventory: 0
@@ -979,7 +979,7 @@ MonoBehaviour:
   miningBonus: 0
   harvestingBonus: 0
   impactFX: {fileID: 0}
-  shootSound: {fileID: 0}
+  attackSound: {fileID: 0}
   meleeRange: 2
   hitDelay: 0.15
   audioDelay: 0.15

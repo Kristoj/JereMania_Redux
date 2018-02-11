@@ -78,7 +78,7 @@ public class MeleeWeapon : Weapon {
 				}
 
 				// Play impact audio
-				if (entity != null) {
+				if (entity != null && entity.hurtSound != null) {
 					AudioManager.instance.CmdPlayCustomSound2D (entity.hurtSound.name, hit.point, "");
 				} 
 				else if (impactAudio != null) {

@@ -3765,7 +3765,7 @@ MonoBehaviour:
   forwardLean: 0.3
   downwardLean: 0.2
   recoilRot: {x: 0, y: 0}
-  jumpSound: {fileID: 8300000, guid: 0a0cc7e922ffc4440be9824ddd3e3a5f, type: 3}
+  jumpSound: {fileID: 8300000, guid: 4fbdd7b8fc9f7d2479bcfdd6d2db0ea0, type: 3}
   canRun: 1
   velocityText: {fileID: 0}
 --- !u!114 &114293580632898918
@@ -3799,7 +3799,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefix: Player
-  impactSound: {fileID: 0}
+  hurtSound: {fileID: 0}
   startingHealth: 100
   slashResistance: 25
   bluntResistance: 25
@@ -4066,7 +4066,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefix: default
-  impactSound: {fileID: 0}
+  hurtSound: {fileID: 0}
   objectName: PlayerInventory
   isAvailable: 1
   slotCountX: 4

@@ -128,7 +128,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefix: default
-  impactSound: {fileID: 8300000, guid: 7db4a6d7e11ab374bb4715d62ab2601c, type: 3}
+  hurtSound: {fileID: 8300000, guid: 7db4a6d7e11ab374bb4715d62ab2601c, type: 3}
   objectName: Ore
   isAvailable: 1
   price: 10
@@ -155,7 +155,7 @@ MonoBehaviour:
   miningBonus: 0
   harvestingBonus: 0
   impactFX: {fileID: 114339121599838044, guid: 5df671e9e9489574bb08ad6bb0775d0d, type: 2}
-  shootSound: {fileID: 8300000, guid: 7209df69f9c268a4d92332c97bb435c0, type: 3}
+  attackSound: {fileID: 0}
   meleeRange: 2
   hitDelay: 0.15
   audioDelay: 0.15
@@ -173,7 +173,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefix: default
-  impactSound: {fileID: 8300000, guid: 5fb50044d3560bb4b966ae1a8d68adff, type: 3}
+  hurtSound: {fileID: 0}
   startingHealth: 180
   slashResistance: 90
   bluntResistance: 0

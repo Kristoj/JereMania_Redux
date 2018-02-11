@@ -146,13 +146,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefix: default
+  hurtSound: {fileID: 8300000, guid: 4bc77c37a6d80e24997f4932e6288345, type: 3}
   startingHealth: 1000
   slashResistance: 25
   bluntResistance: 25
   piercingResistance: 25
   professionWeakness: 0
   weaknessAmount: 25
-  impactSound: {fileID: 8300000, guid: 4bc77c37a6d80e24997f4932e6288345, type: 3}
   destroyOnDeath: 1
   dropCount: 3
   dropOffset: {x: 0, y: 4, z: 0}

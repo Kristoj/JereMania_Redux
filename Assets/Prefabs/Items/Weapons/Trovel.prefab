@@ -231,9 +231,9 @@ MonoBehaviour:
   miningBonus: 0
   harvestingBonus: 200
   impactFX: {fileID: 114339121599838044, guid: 5df671e9e9489574bb08ad6bb0775d0d, type: 2}
-  attackSound: {fileID: 0}
+  attackSound: {fileID: 8300000, guid: 7209df69f9c268a4d92332c97bb435c0, type: 3}
   meleeRange: 3
   hitDelay: 0.35
   audioDelay: 0.15
   impactForce: 0.3
-  impactAudio: {fileID: 8300000, guid: 5e4ac5840998fc34fa65103eda63e1bb, type: 3}
+  impactAudio: {fileID: 8300000, guid: aa742e5263d382e429424962856be88e, type: 3}

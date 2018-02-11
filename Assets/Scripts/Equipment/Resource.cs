@@ -19,7 +19,6 @@ public class Resource : MeleeWeapon {
 			}
 
 			yield return new WaitForSeconds (hitDelay);
-
 			// Rot
 			Vector3 tracerRot = new Vector3 (player.cam.transform.eulerAngles.x, player.cam.transform.eulerAngles.y, player.cam.transform.eulerAngles.z);
 
