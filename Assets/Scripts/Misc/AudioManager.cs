@@ -68,11 +68,11 @@ public class AudioManager : NetworkBehaviour {
 	}
 
 	[ClientRpc]
-	public void RpcPlayCustomSound (string clip,Vector3 soundPos, string masterId, float volume) {
+	public void RpcPlayCustomSound (string clip,Vector3 soundPos, string entityToFollow, float volume) {
 
 		Transform sourcePlayer = null;
-		if (GameManager.GetCharacter (masterId) != null) {
-			sourcePlayer = GameManager.GetCharacter (masterId).transform;
+		if (GameManager.GetCharacter (entityToFollow) != null) {
+			sourcePlayer = GameManager.GetCharacter (entityToFollow).transform;
 		}
 		if (sourcePlayer != null) {
 			// Setup sound game object
