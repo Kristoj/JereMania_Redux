@@ -11,7 +11,7 @@ public class ViliOnHomo : MonoBehaviour {
 	}
 
 	void PrintMessage() {
-		viliMessage = "Homo";
+		viliMessage = "krifiomo";
 		Debug.Log (viliMessage);
 	}
 }
