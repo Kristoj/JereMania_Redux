@@ -430,7 +430,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefix: default
-  hurtSound: {fileID: 8300000, guid: 7db4a6d7e11ab374bb4715d62ab2601c, type: 3}
+  hurtSound: {fileID: 8300000, guid: 5fb50044d3560bb4b966ae1a8d68adff, type: 3}
   objectName: Wood_Block
   isAvailable: 1
   price: 10
@@ -463,7 +463,7 @@ MonoBehaviour:
   audioDelay: 0.15
   impactForce: 8
   impactAudio: {fileID: 8300000, guid: 5fb50044d3560bb4b966ae1a8d68adff, type: 3}
-  chunkPrefab: {fileID: 4304350315674750, guid: 0afacd0d46851e9409c2e3e48bf3e300,
+  chunkPrefab: {fileID: 4325535355188340, guid: 2ace41c5a51ea2d4a8632251fa1f77ed,
     type: 2}
   chunkMeshes:
   - {fileID: 4300008, guid: f0b523a83d444df44a8c08dcf3c09f31, type: 3}
