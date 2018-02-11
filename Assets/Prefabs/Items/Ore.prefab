@@ -128,8 +128,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefix: default
+  impactSound: {fileID: 8300000, guid: 7db4a6d7e11ab374bb4715d62ab2601c, type: 3}
   objectName: Ore
-  impactSound: {fileID: 8300000, guid: 2fc8c34d80db79d488b94acd87d7e98b, type: 3}
   isAvailable: 1
   price: 10
   canStoreInInventory: 1
@@ -173,13 +173,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefix: default
+  impactSound: {fileID: 8300000, guid: 5fb50044d3560bb4b966ae1a8d68adff, type: 3}
   startingHealth: 180
   slashResistance: 90
   bluntResistance: 0
   piercingResistance: 0
   professionWeakness: 1
   weaknessAmount: 100
-  impactSound: {fileID: 8300000, guid: 5fb50044d3560bb4b966ae1a8d68adff, type: 3}
   destroyOnDeath: 0
   originalPrefab: {fileID: 114988886934263314, guid: 9c8420015c65f394183af93c3bdda027,
     type: 2}

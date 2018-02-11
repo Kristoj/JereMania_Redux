@@ -3765,7 +3765,7 @@ MonoBehaviour:
   forwardLean: 0.3
   downwardLean: 0.2
   recoilRot: {x: 0, y: 0}
-  jumpSound: {fileID: 8300000, guid: 9fdedd54716ce0d43a25f7dd97e6d09a, type: 3}
+  jumpSound: {fileID: 8300000, guid: 0a0cc7e922ffc4440be9824ddd3e3a5f, type: 3}
   canRun: 1
   velocityText: {fileID: 0}
 --- !u!114 &114293580632898918
@@ -3799,13 +3799,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefix: Player
+  impactSound: {fileID: 0}
   startingHealth: 100
   slashResistance: 25
   bluntResistance: 25
   piercingResistance: 25
   professionWeakness: 0
   weaknessAmount: 25
-  impactSound: {fileID: 0}
   destroyOnDeath: 0
   cam: {fileID: 20605921141499132}
   myMsgId: 1000
@@ -4066,8 +4066,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefix: default
-  objectName: PlayerInventory
   impactSound: {fileID: 0}
+  objectName: PlayerInventory
   isAvailable: 1
   slotCountX: 4
   slotCountY: 3
@@ -4136,12 +4136,12 @@ MonoBehaviour:
   horizontalRange: 0.2
   verticalRange: 0.2
   footStepSounds:
-  - {fileID: 8300000, guid: c0e597d585be80e419ae31aab1ff7467, type: 3}
-  - {fileID: 8300000, guid: 408c0562c73f258459052874774401cd, type: 3}
-  - {fileID: 8300000, guid: 326b60d68fa39c845b541b6ebab2a142, type: 3}
-  - {fileID: 8300000, guid: 1148ab777c87a3046886437d9f79541f, type: 3}
-  - {fileID: 8300000, guid: 4f0ef8efe7ab0514b8c129be3b1e2fff, type: 3}
-  - {fileID: 8300000, guid: db9eb45f244c7174aaf044f62665d663, type: 3}
+  - {fileID: 8300000, guid: c8bcf95c06b84a0418330ab6ef2ac003, type: 3}
+  - {fileID: 8300000, guid: 1b40aefc130459240b12a7d18580f887, type: 3}
+  - {fileID: 8300000, guid: cceeefdc0eec8f7408cf32171db874dd, type: 3}
+  - {fileID: 8300000, guid: b1ce6a29f119fab48b512e9cb39f1570, type: 3}
+  - {fileID: 8300000, guid: ad9b07ae5da1feb4d872e230b44e6011, type: 3}
+  - {fileID: 8300000, guid: ea9f0363d20388a4d93b46eb0922a4fd, type: 3}
   isChargingSecondaryAction: 0
   canChangeEquipment: 1
   isAttacking: 0

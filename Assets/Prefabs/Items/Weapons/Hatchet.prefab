@@ -304,8 +304,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81ff7e7b6d4744343aef285b70789d77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  prefix: default
+  impactSound: {fileID: 8300000, guid: 3e450bdc991ad4b4882bd51775346a34, type: 3}
   objectName: Hatchet
-  impactSound: {fileID: 0}
   isAvailable: 1
   price: 10
   canStoreInInventory: 1

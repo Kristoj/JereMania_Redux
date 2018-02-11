@@ -68,7 +68,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1171205930070092}
-  m_LocalRotation: {x: -0.7056911, y: -0.70569104, z: 0.044723514, w: -0.044723354}
+  m_LocalRotation: {x: -0.70569104, y: -0.705691, z: 0.04472351, w: -0.04472335}
   m_LocalPosition: {x: -0, y: 0.0282, z: -0.0036}
   m_LocalScale: {x: 0.6866445, y: 0.6866445, z: 0.6866445}
   m_Children: []
@@ -203,8 +203,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81ff7e7b6d4744343aef285b70789d77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  prefix: default
+  impactSound: {fileID: 8300000, guid: aa742e5263d382e429424962856be88e, type: 3}
   objectName: Trovel
-  impactSound: {fileID: 0}
   isAvailable: 1
   price: 10
   canStoreInInventory: 1

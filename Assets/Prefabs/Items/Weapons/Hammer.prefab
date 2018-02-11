@@ -377,8 +377,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefix: default
+  impactSound: {fileID: 8300000, guid: 3a6146214b063c54f8d9279c1b4469a2, type: 3}
   objectName: Hammer
-  impactSound: {fileID: 0}
   isAvailable: 1
   price: 10
   canStoreInInventory: 1

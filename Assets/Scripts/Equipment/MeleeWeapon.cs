@@ -80,8 +80,12 @@ public class MeleeWeapon : Weapon {
 				// Play impact audio
 				if (entity != null) {
 					AudioManager.instance.CmdPlayCustomSound2D (entity.impactSound.name, hit.point, "");
-				} else {
-					AudioManager.instance.CmdPlayCustomSound2D ("Impact_Generic", hit.point, "");
+				} 
+				else if (impactAudio != null) {
+					AudioManager.instance.CmdPlayCustomSound2D (impactAudio.name, hit.point, "");
+				}
+				else {
+					AudioManager.instance.CmdPlayCustomSound2D ("Impact_General", hit.point, "");
 				}
 
 				// Tell server to spawn tracer for all clients
