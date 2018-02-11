@@ -67,8 +67,8 @@ public class Shotgun : Gun {
 			}
 				
 			// Audio
-			if (shootSound != null) {
-				AudioManager.instance.PlaySound2D (shootSound, 1);
+			if (attackSound != null) {
+				AudioManager.instance.PlaySound2D (attackSound, 1);
 			}
 
 			// Animation
