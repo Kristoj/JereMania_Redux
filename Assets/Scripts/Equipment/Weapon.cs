@@ -25,7 +25,7 @@ public class Weapon : Equipment {
 	public ImpactFX impactFX;
 
 	[Header("Audio")]
-	public AudioClip shootSound;
+	public AudioClip attackSound;
 
 	public override void Start() {
 		base.Start ();

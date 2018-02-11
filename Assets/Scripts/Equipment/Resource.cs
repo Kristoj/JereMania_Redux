@@ -14,8 +14,8 @@ public class Resource : MeleeWeapon {
 			playerAnimationController.Attack();
 			lastShotTime = Time.time;
 			// Audio
-			if (shootSound != null) {
-				AudioManager.instance.PlaySound2D (shootSound, 1);
+			if (attackSound != null) {
+				AudioManager.instance.PlaySound2D (attackSound, 1);
 			}
 
 			yield return new WaitForSeconds (hitDelay);
@@ -37,7 +37,7 @@ public class Resource : MeleeWeapon {
 				}
 
 				// Audio
-				if (shootSound != null) {
+				if (attackSound != null) {
 					AudioManager.instance.PlaySound2D (impactAudio, 1);
 				}
 

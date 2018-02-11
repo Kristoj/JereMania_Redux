@@ -30,8 +30,8 @@ public class LivingEntity : Entity{
 		health -= (int)damage;
 
 		// Sound
-		if (impactSound != null) {
-			AudioManager.instance.CmdPlayCustomSound (impactSound.name, transform.position, "");
+		if (hurtSound != null) {
+			AudioManager.instance.CmdPlayCustomSound (hurtSound.name, transform.position, "");
 		}
 		if (health <= 0 && !dead) {
 			Die ();

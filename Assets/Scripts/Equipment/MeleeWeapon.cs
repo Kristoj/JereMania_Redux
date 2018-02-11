@@ -28,7 +28,7 @@ public class MeleeWeapon : Weapon {
 			lastShotTime = Time.time;
 			weaponController.isAttacking = true;
 			// Audio
-			if (shootSound != null) {
+			if (attackSound != null) {
 				StartCoroutine (HitAudioDelay ());
 			}
 
@@ -79,7 +79,7 @@ public class MeleeWeapon : Weapon {
 
 				// Play impact audio
 				if (entity != null) {
-					AudioManager.instance.CmdPlayCustomSound2D (entity.impactSound.name, hit.point, "");
+					AudioManager.instance.CmdPlayCustomSound2D (entity.hurtSound.name, hit.point, "");
 				} 
 				else if (impactAudio != null) {
 					AudioManager.instance.CmdPlayCustomSound2D (impactAudio.name, hit.point, "");
@@ -142,7 +142,7 @@ public class MeleeWeapon : Weapon {
 
 	IEnumerator HitAudioDelay() {
 		yield return new WaitForSeconds (audioDelay);
-		AudioManager.instance.CmdPlayCustomSound2D (shootSound.name, transform.position, owner.name);
+		AudioManager.instance.CmdPlayCustomSound2D (attackSound.name, transform.position, owner.name);
 	}
 
 	public float CalculateDamage(float slashResistance, float bluntResistance, float piercingResistance, LivingEntity.ProfessionWeakness professionWeakness, float weaknessAmount) {
