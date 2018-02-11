@@ -38,8 +38,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1048201564521188}
-  m_LocalRotation: {x: 0.000000059604645, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -10.52, y: 3.8, z: 36.34}
+  m_LocalRotation: {x: 0.000000047287553, y: -0.60876125, z: -0.000000036284998, w: 0.7933535}
+  m_LocalPosition: {x: 31.04, y: -0.57, z: 11.58}
   m_LocalScale: {x: 1.4, y: 1.4, z: 1.4}
   m_Children: []
   m_Father: {fileID: 0}
@@ -156,7 +156,7 @@ MonoBehaviour:
   destroyOnDeath: 1
   dropCount: 3
   dropOffset: {x: 0, y: 4, z: 0}
-  dropResource: {fileID: 54071749237319310, guid: ac33476bef2ba764195430dfb22f7dfd,
+  dropResource: {fileID: 54655138986736230, guid: ac33476bef2ba764195430dfb22f7dfd,
     type: 2}
 --- !u!136 &136199024367509146
 CapsuleCollider:

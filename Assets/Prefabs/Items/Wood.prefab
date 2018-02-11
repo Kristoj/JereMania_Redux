@@ -141,7 +141,7 @@ MonoBehaviour:
   positionOffset: {x: 0, y: 0, z: 0}
   speedMultiplier: 1
   canRunWith: 1
-  pickupSound: {fileID: 0}
+  pickupSound: {fileID: 8300000, guid: 1ff4f6c5149b42a438a89892d6e077bc, type: 3}
   myHitMask:
     serializedVersion: 2
     m_Bits: 0
@@ -155,12 +155,12 @@ MonoBehaviour:
   miningBonus: 0
   harvestingBonus: 0
   impactFX: {fileID: 114339121599838044, guid: 5df671e9e9489574bb08ad6bb0775d0d, type: 2}
-  attackSound: {fileID: 0}
+  attackSound: {fileID: 8300000, guid: 7209df69f9c268a4d92332c97bb435c0, type: 3}
   meleeRange: 2
   hitDelay: 0.15
   audioDelay: 0.15
   impactForce: 3
-  impactAudio: {fileID: 8300000, guid: 3d29d570a1c07d3408b8563ba8d95940, type: 3}
+  impactAudio: {fileID: 8300000, guid: 7c01e3ee5a8b24b46a8bb2e84ef990d9, type: 3}
 --- !u!114 &114609506244547668
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -173,7 +173,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefix: default
-  hurtSound: {fileID: 0}
+  hurtSound: {fileID: 8300000, guid: 5fb50044d3560bb4b966ae1a8d68adff, type: 3}
   startingHealth: 25
   slashResistance: 50
   bluntResistance: 95
@@ -181,7 +181,7 @@ MonoBehaviour:
   professionWeakness: 0
   weaknessAmount: 200
   destroyOnDeath: 0
-  originalPrefab: {fileID: 114133234255962176, guid: ac33476bef2ba764195430dfb22f7dfd,
+  originalPrefab: {fileID: 114063220970265644, guid: ac33476bef2ba764195430dfb22f7dfd,
     type: 2}
 --- !u!114 &114700781435291450
 MonoBehaviour:

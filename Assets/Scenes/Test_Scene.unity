@@ -925,7 +925,7 @@ Transform:
   - {fileID: 1288289729}
   - {fileID: 375666883}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &241230203
 MonoBehaviour:
@@ -994,7 +994,7 @@ MonoBehaviour:
   - {fileID: 1866623620492360, guid: a138047e3022f7341a56d32c320fc1c2, type: 2}
   - {fileID: 1969176770183374, guid: 4389de3781236ad45ab7b548111e9226, type: 2}
   - {fileID: 1186337892987664, guid: 88b428e0154116441bbc71fadd961f96, type: 2}
-  - {fileID: 1731803256148128, guid: ac33476bef2ba764195430dfb22f7dfd, type: 2}
+  - {fileID: 1848887808258974, guid: ac33476bef2ba764195430dfb22f7dfd, type: 2}
   - {fileID: 1348065061956054, guid: bb0d078ecc83fee48804771d54346e08, type: 2}
   - {fileID: 1898672491041380, guid: d798c10f5aab2ee4598f07b5cf4aba2e, type: 2}
   - {fileID: 1459134518774008, guid: 2ace41c5a51ea2d4a8632251fa1f77ed, type: 2}
@@ -4683,7 +4683,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4569514612361114, guid: e8d310f905eaf7441b3d539f0b529d89, type: 2}
       propertyPath: m_RootOrder
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e8d310f905eaf7441b3d539f0b529d89, type: 2}
@@ -5986,48 +5986,6 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
---- !u!1001 &1708405986
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4954621276039812, guid: ac33476bef2ba764195430dfb22f7dfd, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 43.45
-      objectReference: {fileID: 0}
-    - target: {fileID: 4954621276039812, guid: ac33476bef2ba764195430dfb22f7dfd, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 0.41
-      objectReference: {fileID: 0}
-    - target: {fileID: 4954621276039812, guid: ac33476bef2ba764195430dfb22f7dfd, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 20.77
-      objectReference: {fileID: 0}
-    - target: {fileID: 4954621276039812, guid: ac33476bef2ba764195430dfb22f7dfd, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: -0.0000014305114
-      objectReference: {fileID: 0}
-    - target: {fileID: 4954621276039812, guid: ac33476bef2ba764195430dfb22f7dfd, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4954621276039812, guid: ac33476bef2ba764195430dfb22f7dfd, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4954621276039812, guid: ac33476bef2ba764195430dfb22f7dfd, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4954621276039812, guid: ac33476bef2ba764195430dfb22f7dfd, type: 2}
-      propertyPath: m_RootOrder
-      value: 4
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: ac33476bef2ba764195430dfb22f7dfd, type: 2}
-  m_IsPrefabParent: 0
 --- !u!1 &1741173200
 GameObject:
   m_ObjectHideFlags: 0
@@ -6945,7 +6903,7 @@ MonoBehaviour:
   - {fileID: 114844248172485674, guid: 597591872cb625245adc1bfaf84f89ad, type: 2}
   - {fileID: 114471897330974050, guid: a138047e3022f7341a56d32c320fc1c2, type: 2}
   - {fileID: 114464691599615374, guid: 2c202b57b07725143bbab709f55df19e, type: 2}
-  - {fileID: 114133234255962176, guid: ac33476bef2ba764195430dfb22f7dfd, type: 2}
+  - {fileID: 114063220970265644, guid: ac33476bef2ba764195430dfb22f7dfd, type: 2}
   - {fileID: 114815888928559240, guid: 4389de3781236ad45ab7b548111e9226, type: 2}
   - {fileID: 114463679717495102, guid: 88b428e0154116441bbc71fadd961f96, type: 2}
   - {fileID: 114464691599615374, guid: a263de3b903d049478a9104af34ce7fb, type: 2}
@@ -6974,7 +6932,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2052376543
 MonoBehaviour:
@@ -7343,7 +7301,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   forestryList:
-  - {fileID: 54071749237319310, guid: ac33476bef2ba764195430dfb22f7dfd, type: 2}
   - {fileID: 54171871815236046, guid: 9c8420015c65f394183af93c3bdda027, type: 2}
   maxForestryCount: 5
   curForestryCount: 0

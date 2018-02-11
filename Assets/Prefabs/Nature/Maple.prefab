@@ -124,7 +124,7 @@ MonoBehaviour:
   destroyOnDeath: 1
   dropCount: 3
   dropOffset: {x: 0, y: 0, z: 0}
-  dropResource: {fileID: 54071749237319310, guid: ac33476bef2ba764195430dfb22f7dfd,
+  dropResource: {fileID: 54655138986736230, guid: ac33476bef2ba764195430dfb22f7dfd,
     type: 2}
 --- !u!114 &114963196299802840
 MonoBehaviour:
