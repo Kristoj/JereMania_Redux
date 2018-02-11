@@ -128,7 +128,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefix: default
-  hurtSound: {fileID: 8300000, guid: 7c01e3ee5a8b24b46a8bb2e84ef990d9, type: 3}
+  hurtSound: {fileID: 8300000, guid: dc4b45db27bc57b4abd321b32e735ff7, type: 3}
   objectName: Wood
   isAvailable: 1
   price: 10

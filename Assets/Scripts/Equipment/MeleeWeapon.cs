@@ -79,13 +79,13 @@ public class MeleeWeapon : Weapon {
 
 				// Play impact audio
 				if (entity != null && entity.hurtSound != null) {
-					AudioManager.instance.CmdPlayCustomSound2D (entity.hurtSound.name, hit.point, "");
+					AudioManager.instance.CmdPlayCustomSound2D (entity.hurtSound.name, hit.point, "", 1);
 				} 
 				else if (impactAudio != null) {
-					AudioManager.instance.CmdPlayCustomSound2D (impactAudio.name, hit.point, "");
+					AudioManager.instance.CmdPlayCustomSound2D (impactAudio.name, hit.point, "", 1);
 				}
 				else {
-					AudioManager.instance.CmdPlayCustomSound2D ("Impact_General", hit.point, "");
+					AudioManager.instance.CmdPlayCustomSound2D ("Impact_General", hit.point, "", 1);
 				}
 
 				// Tell server to spawn tracer for all clients
@@ -142,7 +142,7 @@ public class MeleeWeapon : Weapon {
 
 	IEnumerator HitAudioDelay() {
 		yield return new WaitForSeconds (audioDelay);
-		AudioManager.instance.CmdPlayCustomSound2D (attackSound.name, transform.position, owner.name);
+		AudioManager.instance.CmdPlayCustomSound2D (attackSound.name, transform.position, owner.name, 1);
 	}
 
 	public float CalculateDamage(float slashResistance, float bluntResistance, float piercingResistance, LivingEntity.ProfessionWeakness professionWeakness, float weaknessAmount) {

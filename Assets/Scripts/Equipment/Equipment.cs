@@ -149,7 +149,7 @@ public class Equipment : Item {
 
 	IEnumerator ConsumeItem() {
 		EquipmentLibrary.instance.ConsumeItem (this.objectName, owner.name);
-		AudioManager.instance.CmdPlayCustomSound2D ("UI_Eat1",transform.position, owner.name);
+		AudioManager.instance.CmdPlayCustomSound2D ("UI_Eat1",transform.position, owner.name, 1);
 		weaponController.DestroyCurrentEquipment ();
 		yield return new WaitForSeconds (1);
 	}
@@ -160,7 +160,7 @@ public class Equipment : Item {
 		if (isAvailable) {
 			// Play sound
 			if (pickupSound != null) {
-				AudioManager.instance.CmdPlayCustomSound (pickupSound.name, transform.position, "");
+				AudioManager.instance.CmdPlayCustomSound (pickupSound.name, transform.position, "", 1);
 			}
 			PlayerInteraction playerIntera = GameManager.instance.localPlayer.GetComponent<PlayerInteraction> ();
 			playerIntera.StartCoroutine ("PickupItemFollow", objectName);
@@ -174,7 +174,7 @@ public class Equipment : Item {
 
 			// Play sound
 			if (pickupSound != null) {
-				AudioManager.instance.CmdPlayCustomSound (pickupSound.name, transform.position, "");
+				AudioManager.instance.CmdPlayCustomSound (pickupSound.name, transform.position, "", 1);
 			}
 			weaponController.EquipEquipment (this, 1);
 		}

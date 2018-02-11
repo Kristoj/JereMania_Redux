@@ -44,9 +44,6 @@ public class PlayerController : NetworkBehaviour {
 	//[HideInInspector]
 	public Vector2 recoilRot;
 
-	/* Sound stuff */
-	public AudioClip jumpSound;
-
 	private Player player;
 	private CharacterController controller;
 	private PlayerStats playerStats;
@@ -168,9 +165,15 @@ public class PlayerController : NetworkBehaviour {
 
 		yield return new WaitForSeconds (.02f);
 
+		float fallPosY = transform.position.y;
 		while (!IsGrounded()) {
 			yield return null;
 		}
+
+		if (Mathf.Abs ((transform.position.y - fallPosY)) > .09f && transform.position.y < fallPosY) {
+			AudioManager.instance.CmdPlayCustomSound2D ("Jump_Land1", transform.position, transform.name, .35f);
+		}
+
 		jumpIssued = false;
 		StartCoroutine (SetPlayerAbsoluteGroundMode());
 		StartCoroutine (EnableGroundStrafe());
@@ -179,7 +182,6 @@ public class PlayerController : NetworkBehaviour {
 
 	// Called when player lands on the ground
 	IEnumerator OnPlayerLand() {
-		
 		while (IsGrounded()) {
 			yield return null;
 		}
@@ -344,8 +346,9 @@ public class PlayerController : NetworkBehaviour {
 		if (wishJump) {
 			playerVelocity.y = jumpSpeed;
 			wishJump = false;
+			AudioManager.instance.CmdPlayCustomSound2D ("Jump_Vocal", transform.position, transform.name, .5f);
+			AudioManager.instance.CmdPlayCustomSound2D ("Jump_Start1", transform.position, transform.name, .5f);
 			playerStats.RemoveFatique (.7f);
-			PlayJumpSound();
 		}
 	}
 
@@ -456,15 +459,6 @@ public class PlayerController : NetworkBehaviour {
 		scale = curSpeed * max / (moveScale * total);
 
 		return scale;
-	}
-
-
-
-	void PlayJumpSound() {
-
-		if (jumpSound != null) {
-			AudioManager.instance.CmdPlayCustomSound2D (jumpSound.name, transform.position, transform.name);
-		}
 	}
 
 	void CheckPlayerInput() {
