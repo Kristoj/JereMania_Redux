@@ -5,11 +5,14 @@ using UnityEngine;
 public class SoundLibrary : MonoBehaviour {
 
 	public SoundGroup[] soundGroups;
+	public EntitySoundManager[] entitySoundManagers;
+	public static SoundLibrary instance;
 
 	//private Dictionary<string, AudioClip[]> groupDictionary = new Dictionary<string, AudioClip[]>();
 	public AudioClip[] sounds;
 
 	void Awake() {
+		instance = this;
 		foreach (SoundGroup soundGroup in soundGroups) {
 			//groupDictionary.Add (soundGroup.groupId, soundGroup.group);
 		}
@@ -30,6 +33,16 @@ public class SoundLibrary : MonoBehaviour {
 		foreach (AudioClip a in sounds) {
 			if (a.name == clipName) {
 				return a;
+			}
+		}
+		return null;
+	}
+
+	public AudioClip GetEntityImpactSound(string entityType, string equipmentType) {
+		
+		foreach (EntitySoundManager esm in entitySoundManagers) {
+			if (entityType == esm.entityType) {
+				return esm.GetBranchClip (equipmentType);
 			}
 		}
 		return null;

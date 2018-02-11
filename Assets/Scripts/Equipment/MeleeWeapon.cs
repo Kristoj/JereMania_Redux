@@ -78,14 +78,16 @@ public class MeleeWeapon : Weapon {
 				}
 
 				// Play impact audio
-				if (entity != null && entity.hurtSound != null) {
-					AudioManager.instance.CmdPlayCustomSound2D (entity.hurtSound.name, hit.point, "", 1);
-				} 
-				else if (impactAudio != null) {
-					AudioManager.instance.CmdPlayCustomSound2D (impactAudio.name, hit.point, "", 1);
-				}
-				else {
-					AudioManager.instance.CmdPlayCustomSound2D ("Impact_General", hit.point, "", 1);
+				if (entity != null) {
+					AudioClip impactClip = SoundLibrary.instance.GetEntityImpactSound (entity.entitySoundSet.ToString (), impactSoundSet.ToString ());
+					if (impactClip != null) {
+						AudioManager.instance.CmdPlayCustomSound (impactClip.name, hit.point, "", 1);
+					}
+				} else {
+					AudioClip genericClip = SoundLibrary.instance.GetEntityImpactSound ("Generic", impactSoundSet.ToString());
+					if (genericClip != null) {
+						AudioManager.instance.CmdPlayCustomSound (genericClip.name, hit.point, "", 1);
+					}
 				}
 
 				// Tell server to spawn tracer for all clients

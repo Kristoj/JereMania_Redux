@@ -8,6 +8,8 @@ public class Entity : NetworkBehaviour {
 	public string prefix = "default";
 	public delegate void DeathDelegate ();
 	public DeathDelegate deathEvent;
+	public EntitySoundSet entitySoundSet;
+	public enum EntitySoundSet {Wood, Metal, Rock}
 
 	protected Rigidbody rig;
 	public AudioClip hurtSound;

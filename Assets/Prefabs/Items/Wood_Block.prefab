@@ -430,6 +430,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefix: default
+  entitySoundSet: 0
   hurtSound: {fileID: 8300000, guid: 5fb50044d3560bb4b966ae1a8d68adff, type: 3}
   objectName: Wood_Block
   isAvailable: 1
@@ -440,8 +441,9 @@ MonoBehaviour:
   holdStyle: 0
   primaryAction: 0
   secondaryAction: 1
+  impactSoundSet: 0
   positionOffset: {x: 0, y: 0, z: 0}
-  speedMultiplier: 1
+  speedMultiplier: 0.85
   canRunWith: 0
   pickupSound: {fileID: 0}
   myHitMask:

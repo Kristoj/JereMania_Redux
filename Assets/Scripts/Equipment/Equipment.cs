@@ -13,6 +13,8 @@ public class Equipment : Item {
 	public ActionType primaryAction = ActionType.Attack;
 	public ActionType secondaryAction = ActionType.Throw;
 	public enum ActionType{Attack, Throw, Block, Consume, Custom};
+	public ImpactSoundSet impactSoundSet;
+	public enum ImpactSoundSet {Metal_Slash, Metal_Blunt}
 
 	[Header ("Equipment Properties")]
 	public Vector3 positionOffset;

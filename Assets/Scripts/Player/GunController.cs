@@ -23,6 +23,8 @@ public class GunController : NetworkBehaviour {
 	public PlayerAnimationController animController;
 	private PlayerController playerController;
 	private CharacterController controller;
+	[HideInInspector]
+	public SoundLibrary soundLibrary;
 	//private PlayerUI playerUI;
 
 	[Header ("Sway")]
@@ -85,6 +87,7 @@ public class GunController : NetworkBehaviour {
 		animController = GetComponent<PlayerAnimationController> ();
 		playerController = GetComponent<PlayerController> ();
 		controller = GetComponent<CharacterController> ();
+		soundLibrary = GameObject.Find ("#GAMEMANAGER").GetComponent<SoundLibrary> ();
 		//playerUI = GetComponent<PlayerUI> ();
 		kickPosVector = Vector3.zero;
 

@@ -47,7 +47,6 @@ public class PlayerController : NetworkBehaviour {
 	private Player player;
 	private CharacterController controller;
 	private PlayerStats playerStats;
-
 	private Vector3 playerVelocity = Vector3.zero;
 
 	// Q3: players can queue the next jump just before he hits the ground

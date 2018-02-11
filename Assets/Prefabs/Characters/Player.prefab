@@ -3743,8 +3743,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gravity: 25
   friction: 5
-  moveSpeed: 5
-  runSpeed: 7.3
+  moveSpeed: 4.5
+  runSpeed: 7
   speedMultiplier: 1
   curSpeed: 0
   runAcceleration: 15
@@ -3765,7 +3765,6 @@ MonoBehaviour:
   forwardLean: 0.3
   downwardLean: 0.2
   recoilRot: {x: 0, y: 0}
-  jumpSound: {fileID: 8300000, guid: 4fbdd7b8fc9f7d2479bcfdd6d2db0ea0, type: 3}
   canRun: 1
   velocityText: {fileID: 0}
 --- !u!114 &114293580632898918
@@ -3799,6 +3798,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefix: Player
+  entitySoundSet: 0
   hurtSound: {fileID: 0}
   startingHealth: 100
   slashResistance: 25
@@ -4066,6 +4066,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefix: default
+  entitySoundSet: 0
   hurtSound: {fileID: 0}
   objectName: PlayerInventory
   isAvailable: 1
@@ -4120,6 +4121,7 @@ MonoBehaviour:
     m_Bits: 4294960639
   currentEquipment: {fileID: 0}
   animController: {fileID: 0}
+  soundLibrary: {fileID: 0}
   weaponOffset: {x: 0, y: 0, z: 0}
   aimOffset: {x: 0, y: 0, z: 0}
   swayScaleX: 0.5

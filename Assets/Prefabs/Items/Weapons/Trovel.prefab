@@ -204,6 +204,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefix: default
+  entitySoundSet: 0
   hurtSound: {fileID: 0}
   objectName: Trovel
   isAvailable: 1
@@ -214,6 +215,7 @@ MonoBehaviour:
   holdStyle: 0
   primaryAction: 0
   secondaryAction: 2
+  impactSoundSet: 1
   positionOffset: {x: 0, y: 0, z: -0.075}
   speedMultiplier: 1
   canRunWith: 1
