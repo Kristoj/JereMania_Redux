@@ -430,8 +430,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefix: default
+  impactSound: {fileID: 8300000, guid: dc4b45db27bc57b4abd321b32e735ff7, type: 3}
   objectName: Wood_Block
-  impactSound: {fileID: 8300000, guid: 5fb50044d3560bb4b966ae1a8d68adff, type: 3}
   isAvailable: 1
   price: 10
   canStoreInInventory: 0

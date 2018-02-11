@@ -149,6 +149,7 @@ public class Equipment : Item {
 
 	IEnumerator ConsumeItem() {
 		EquipmentLibrary.instance.ConsumeItem (this.objectName, owner.name);
+		AudioManager.instance.CmdPlayCustomSound2D ("UI_Eat1",transform.position, owner.name);
 		weaponController.DestroyCurrentEquipment ();
 		yield return new WaitForSeconds (1);
 	}
