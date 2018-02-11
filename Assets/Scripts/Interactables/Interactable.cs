@@ -5,7 +5,6 @@ using System.Collections;
 public class Interactable : Entity {
 
 	public string objectName;
-	public AudioClip impactSound;
 	[HideInInspector]
 	[SyncVar]
 	public bool isAvailable = true;
@@ -48,6 +47,4 @@ public class Interactable : Entity {
 		//	PlayerUI.instance.focusText.text = objectName;
 		//}
 	}
-
-
 }

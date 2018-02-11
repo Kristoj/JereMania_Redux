@@ -77,24 +77,9 @@ public class MeleeWeapon : Weapon {
 					impactRot = Quaternion.LookRotation (hit.normal);
 				}
 
-				// Audio
-				Interactable intera = hit.collider.GetComponent<Interactable>();
-				if (livingEntity != null) {
-					if (livingEntity.impactSound != null) {
-						AudioManager.instance.CmdPlayCustomSound2D (livingEntity.impactSound.name, hit.point, "");
-					} else {
-						AudioManager.instance.CmdPlayCustomSound2D ("Impact_Generic", hit.point, "");
-					}
-				} else if (intera != null) {
-					if (intera.impactSound != null) {
-						AudioManager.instance.CmdPlayCustomSound2D (intera.impactSound.name, hit.point, "");
-
-					} else {
-						AudioManager.instance.CmdPlayCustomSound2D ("Impact_Generic", hit.point, "");
-					}
-				}
-				else if (impactAudio != null) {
-					AudioManager.instance.CmdPlayCustomSound2D (impactAudio.name, hit.point, "");
+				// Play impact audio
+				if (entity != null) {
+					AudioManager.instance.CmdPlayCustomSound2D (entity.impactSound.name, hit.point, "");
 				} else {
 					AudioManager.instance.CmdPlayCustomSound2D ("Impact_Generic", hit.point, "");
 				}

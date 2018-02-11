@@ -10,6 +10,7 @@ public class Entity : NetworkBehaviour {
 	public DeathDelegate deathEvent;
 
 	protected Rigidbody rig;
+	public AudioClip impactSound;
 
 	public virtual void Start() {
 		rig = GetComponent<Rigidbody> ();

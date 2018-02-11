@@ -12,7 +12,6 @@ public class ForestrySpawner : NetworkBehaviour {
 	public float xRange = 200f;
 	public float zRange = 200f;
 	public bool canGrown = true;
-	private bool isGrowing = false;
 	public LayerMask whatToHit;
 
 	// Use this for initialization
@@ -26,7 +25,6 @@ public class ForestrySpawner : NetworkBehaviour {
 
 	}
 	IEnumerator GrowForestry() {
-		isGrowing = true;
 		yield return new WaitForSeconds (30);
 		while (canGrown) {
 			yield return new WaitForSeconds (spawnInterval);

@@ -16,7 +16,6 @@ public class LivingEntity : Entity{
 	public float weaknessAmount = 25;
 
 	[Header ("FX")]
-	public AudioClip impactSound;
 	public bool destroyOnDeath = false;
 	[SyncVar]
 	protected int health;
