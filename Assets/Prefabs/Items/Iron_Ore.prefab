@@ -1,0 +1,222 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1056361635174502}
+  m_IsPrefabParent: 1
+--- !u!1 &1056361635174502
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4304350315674750}
+  - component: {fileID: 23966664186269606}
+  - component: {fileID: 33424530133053470}
+  - component: {fileID: 114149672150764366}
+  - component: {fileID: 114343130268302658}
+  - component: {fileID: 64651439744210306}
+  - component: {fileID: 114684903910946546}
+  - component: {fileID: 54599768529129636}
+  m_Layer: 0
+  m_Name: Iron_Ore
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4304350315674750
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1056361635174502}
+  m_LocalRotation: {x: -0.000001032599, y: 0.7071059, z: 0.0000010325965, w: 0.7071077}
+  m_LocalPosition: {x: -152.3244, y: 15.166, z: 63.692215}
+  m_LocalScale: {x: 0.8, y: 0.65, z: 0.8}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 90.00001, z: 0}
+--- !u!23 &23966664186269606
+MeshRenderer:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1056361635174502}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_Materials:
+  - {fileID: -33714328, guid: 8b2d8bc2dcb34014aac3828cb876045c, type: 3}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!33 &33424530133053470
+MeshFilter:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1056361635174502}
+  m_Mesh: {fileID: 4300022, guid: 81278e68a6749e241ae1e29732c1afaf, type: 3}
+--- !u!54 &54599768529129636
+Rigidbody:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1056361635174502}
+  serializedVersion: 2
+  m_Mass: 0.5
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!64 &64651439744210306
+MeshCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1056361635174502}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 1
+  m_CookingOptions: 14
+  m_SkinWidth: 0.01
+  m_Mesh: {fileID: 4300022, guid: 81278e68a6749e241ae1e29732c1afaf, type: 3}
+--- !u!114 &114149672150764366
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1056361635174502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a28858bd824b7df4e936b1c9b92280e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectName: Iron_Ore
+  impactSound: {fileID: 8300000, guid: 5fb50044d3560bb4b966ae1a8d68adff, type: 3}
+  isAvailable: 1
+  price: 25
+  canStoreInInventory: 1
+  itemId: 0
+  itemIcon: {fileID: 0}
+  holdStyle: 0
+  primaryAction: 0
+  secondaryAction: 1
+  positionOffset: {x: 0, y: 0, z: 0}
+  speedMultiplier: 1
+  canRunWith: 1
+  pickupSound: {fileID: 0}
+  myHitMask:
+    serializedVersion: 2
+    m_Bits: 0
+  player: {fileID: 0}
+  fireMode: 0
+  rpm: 50
+  slashDamage: 6
+  bluntDamage: 6
+  piercingDamage: 6
+  woodcuttingBonus: 0
+  miningBonus: 0
+  harvestingBonus: 0
+  impactFX: {fileID: 114339121599838044, guid: 5df671e9e9489574bb08ad6bb0775d0d, type: 2}
+  shootSound: {fileID: 8300000, guid: 7209df69f9c268a4d92332c97bb435c0, type: 3}
+  meleeRange: 2
+  hitDelay: 0.15
+  audioDelay: 0.15
+  impactForce: 3
+  impactAudio: {fileID: 8300000, guid: 2fc8c34d80db79d488b94acd87d7e98b, type: 3}
+--- !u!114 &114343130268302658
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1056361635174502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e030f4a7cb32ae34586f0e5500a973e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefix: default
+  startingHealth: 50
+  slashResistance: 90
+  bluntResistance: 0
+  piercingResistance: 0
+  professionWeakness: 1
+  weaknessAmount: 100
+  impactSound: {fileID: 8300000, guid: 5fb50044d3560bb4b966ae1a8d68adff, type: 3}
+  destroyOnDeath: 0
+  deathReceiver: {fileID: 0}
+  originalPrefab: {fileID: 114988886934263314, guid: 9c8420015c65f394183af93c3bdda027,
+    type: 2}
+  chunkMeshes:
+  - {fileID: 4300008, guid: f0b523a83d444df44a8c08dcf3c09f31, type: 3}
+  - {fileID: 4300006, guid: f0b523a83d444df44a8c08dcf3c09f31, type: 3}
+  - {fileID: 4300004, guid: f0b523a83d444df44a8c08dcf3c09f31, type: 3}
+  - {fileID: 4300002, guid: f0b523a83d444df44a8c08dcf3c09f31, type: 3}
+--- !u!114 &114684903910946546
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1056361635174502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 16
+    i1: 127
+    i2: 20
+    i3: 235
+    i4: 41
+    i5: 245
+    i6: 177
+    i7: 148
+    i8: 73
+    i9: 142
+    i10: 137
+    i11: 71
+    i12: 25
+    i13: 245
+    i14: 120
+    i15: 46
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 1
