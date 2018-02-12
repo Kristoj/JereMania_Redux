@@ -120,7 +120,7 @@ public class PlayerController : NetworkBehaviour {
 			QueueJump ();
 			if (controller.isGrounded)
 				GroundMove ();
-			else if (!controller.isGrounded || isSliding) {
+			else if (!controller.isGrounded) {
 				AirMove ();
 			}
 			Move (playerVelocity * Time.deltaTime);
@@ -345,11 +345,9 @@ public class PlayerController : NetworkBehaviour {
 		Accelerate (wishdir, wishspeed, curAcceleration);
 		//}
 
-		if (!isSliding) {
-			Vector3 vel = controller.velocity;
-			vel.y = 0;
-			playerVelocity.y = 0;
-		}
+		Vector3 vel = controller.velocity;
+		vel.y = 0;
+		playerVelocity.y = 0;
 
 
 		if (absoluteGroundMode) {
@@ -608,7 +606,7 @@ public class PlayerController : NetworkBehaviour {
 
 
 		// Move the controller
-		if (IsHardGrounded () && !wishJump && controller.velocity.y <= 0 && !isSliding) {
+		if (IsHardGrounded () && !wishJump && controller.velocity.y <= 0) {
 			playerVelocity.y = 0;
 			controller.transform.position = new Vector3 (controller.transform.position.x, hardGroundPoint.y + controller.skinWidth + (controller.height / 2), controller.transform.position.z);
 		}
