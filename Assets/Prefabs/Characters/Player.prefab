@@ -4258,7 +4258,7 @@ MonoBehaviour:
   - {fileID: 137288435004032866}
   - {fileID: 137369148075990694}
   serverMeshesToDisable:
-  - {fileID: 0}
+  - {fileID: 1087642792420844}
 --- !u!124 &124294426395103120
 Behaviour:
   m_ObjectHideFlags: 1
