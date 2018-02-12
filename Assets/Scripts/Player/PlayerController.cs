@@ -7,6 +7,7 @@ public class PlayerController : NetworkBehaviour {
 
 	[Header ("Movement")]
 	/* Frame occuring factors */
+	public bool test;
 	public float gravity  = 20.0f;
 	public float friction  = 6f;                // Ground friction
 
@@ -16,7 +17,9 @@ public class PlayerController : NetworkBehaviour {
 	public float speedMultiplier = 1f;
 	[HideInInspector]
 	public float curSpeed;
-	public float runAcceleration = 14;   // Ground accel
+	public float moveAcceleration = 14;
+	public float runAcceleration = 10;   // Ground accel
+	private float curAcceleration;
 	public float runDeacceleration = 10;   // Deacceleration that occurs when running on the ground
 	public float airAcceleration = 2.0f;  // Air accel
 	public float airDeacceleration = 2.0f;    // Deacceleration experienced when opposite strafing
@@ -46,13 +49,20 @@ public class PlayerController : NetworkBehaviour {
 
 	private Player player;
 	private CharacterController controller;
+	private GunController gunController;
 	private PlayerStats playerStats;
 	private Vector3 playerVelocity = Vector3.zero;
+	private Vector3 hardGroundPoint;
+	public LayerMask hardGroundLayer;
 
 	// Q3: players can queue the next jump just before he hits the ground
 	private bool wishJump = false;
 	private bool canJump = true;
 	private bool jumpIssued = false;
+	public bool isSliding = false;
+	public bool canSlide = false;
+	public float xEuler;
+	public float zEuler;
 	[HideInInspector]
 	public bool canRun = true;
 
@@ -75,9 +85,11 @@ public class PlayerController : NetworkBehaviour {
 	void Start() {
 		player = GetComponent<Player>();
 		controller = GetComponent<CharacterController> ();
+		gunController = GetComponent<GunController> ();
 		playerStats = GetComponent<PlayerStats> ();
 		curViewOffset = playerViewYOffset;
 		curSpeed = moveSpeed;
+		curAcceleration = moveAcceleration;
 		playerView = player.cam.transform;
 		camRotY = transform.eulerAngles.y;
 		Application.targetFrameRate = 60;
@@ -108,12 +120,11 @@ public class PlayerController : NetworkBehaviour {
 			QueueJump ();
 			if (controller.isGrounded)
 				GroundMove ();
-			else if (!controller.isGrounded) {
+			else if (!controller.isGrounded || isSliding) {
 				AirMove ();
 			}
-
-			// Move the controller
 			Move (playerVelocity * Time.deltaTime);
+			test = IsHardGrounded();
 		}
 		CheckPlayerInput ();
 	}
@@ -154,7 +165,7 @@ public class PlayerController : NetworkBehaviour {
 
 	// Called when player is no longer grounded
 	IEnumerator OnPlayerAirborne() {
-
+		float heightPeak = transform.position.y;
 		if (jumpIssued) {
 			//canGroundStrafe = false;
 			absoluteGroundMode = false;
@@ -164,13 +175,18 @@ public class PlayerController : NetworkBehaviour {
 
 		yield return new WaitForSeconds (.02f);
 
-		float fallPosY = transform.position.y;
+		// While airborne
 		while (!IsGrounded()) {
+			// Get the highest peak in the jump
+			if (transform.position.y > heightPeak) {
+				heightPeak = transform.position.y;
+			}
 			yield return null;
 		}
 
-		if (Mathf.Abs ((transform.position.y - fallPosY)) > .09f && transform.position.y < fallPosY) {
-			AudioManager.instance.CmdPlayCustomSound2D ("Jump_Land1", transform.position, transform.name, .35f);
+		if (Mathf.Abs ((transform.position.y - heightPeak)) > .09f && transform.position.y < heightPeak && !IsHardGrounded()) {
+			AudioManager.instance.CmdPlaySound2D ("Jump_Land1", transform.position, transform.name, .35f);
+			gunController.AddSway (new Vector3 (0, -.5f, 0));
 		}
 
 		jumpIssued = false;
@@ -248,7 +264,6 @@ public class PlayerController : NetworkBehaviour {
 			AirControl(wishdir, wishspeed2);
 		// !CPM: Aircontrol
 
-		//Apply gravity
 		playerVelocity.y -= gravity * Time.deltaTime;
 
 		//LEGACY MOVEMENT SEE BOTTOM
@@ -327,11 +342,14 @@ public class PlayerController : NetworkBehaviour {
 		}**/
 
 		//if (canGroundStrafe) {
-			Accelerate (wishdir, wishspeed, runAcceleration);
+		Accelerate (wishdir, wishspeed, curAcceleration);
 		//}
 
-		Vector3 vel = controller.velocity;
-		vel.y = 0;
+		if (!isSliding) {
+			Vector3 vel = controller.velocity;
+			vel.y = 0;
+			playerVelocity.y = 0;
+		}
 
 
 		if (absoluteGroundMode) {
@@ -339,15 +357,14 @@ public class PlayerController : NetworkBehaviour {
 			playerVelocity.z = Mathf.Clamp (playerVelocity.z, -curSpeed, curSpeed);
 		}
 
-		// Reset the gravity velocity
-		playerVelocity.y = 0;
-
 		if (wishJump) {
 			playerVelocity.y = jumpSpeed;
 			wishJump = false;
-			AudioManager.instance.CmdPlayCustomSound2D ("Jump_Vocal", transform.position, transform.name, .5f);
-			AudioManager.instance.CmdPlayCustomSound2D ("Jump_Start1", transform.position, transform.name, .5f);
-			playerStats.RemoveFatique (.7f);
+			AudioManager.instance.CmdPlaySound2D ("Jump_Vocal", transform.position, transform.name, .5f);
+			AudioManager.instance.CmdPlaySound2D ("Jump_Start1", transform.position, transform.name, .5f);
+			gunController.AddSway (new Vector3 (0, -.5f, 0));
+			playerStats.StaminaRemove (25f, true);
+			playerStats.FatiqueRemove (.1f);
 		}
 	}
 
@@ -474,12 +491,23 @@ public class PlayerController : NetworkBehaviour {
 		// Running
 		if (Input.GetKeyDown (KeyCode.LeftShift) && isActive && isEnabled && cmd.forwardmove > 0 && canRun) {
 			curSpeed = runSpeed;
+			curAcceleration = runAcceleration;
 			targetFov = 105;
+			playerStats.StaminaDrain (true);
+		}
+
+		if (Input.GetKeyUp (KeyCode.LeftShift)) {
+			curSpeed = moveSpeed;
+			playerStats.StaminaDrain (false);
+		}
+
+		if (playerStats.stamina <= 0) {
+			curSpeed = moveSpeed;
 		}
 
 		if (curSpeed == moveSpeed) {
-			curSpeed = moveSpeed;
 			targetFov = 90;
+			curAcceleration = moveAcceleration;
 		}
 
 		if (cmd.forwardmove <= 0) {
@@ -516,6 +544,46 @@ public class PlayerController : NetworkBehaviour {
 		}
 	}
 
+	public bool IsHardGrounded() {
+		Ray ray = new Ray (transform.position, -Vector3.up);
+		RaycastHit hit;
+		if (Physics.Raycast (ray, out hit, controller.bounds.size.y / 2 + .25f, hardGroundLayer, QueryTriggerInteraction.Ignore)) {
+			hardGroundPoint.y = hit.point.y;
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	void OnControllerColliderHit(ControllerColliderHit hit) {
+		float hitAngle = Vector3.Angle (hit.normal, transform.up);
+		if (hitAngle > 45) {
+			if (!isSliding) {
+				StartCoroutine (Slide ());
+			}
+			canSlide = true;
+		} else {
+			canSlide = false;
+		}
+	}
+
+	IEnumerator Slide() {
+
+		float t = 0;
+		float slideTime = .5f;
+		isSliding = true;
+
+		// While sliding
+		while (t < slideTime) {
+			t += Time.deltaTime;
+			if (canSlide) {
+				t = 0;
+			}
+			yield return null;
+		}
+		isSliding = false;
+	}
+
 	public void SetPlayerActive (bool state) {
 		if (state) {
 			isActive = true;
@@ -537,6 +605,13 @@ public class PlayerController : NetworkBehaviour {
 
 	void Move(Vector3 vel) {
 		controller.Move (vel);
+
+
+		// Move the controller
+		if (IsHardGrounded () && !wishJump && controller.velocity.y <= 0 && !isSliding) {
+			playerVelocity.y = 0;
+			controller.transform.position = new Vector3 (controller.transform.position.x, hardGroundPoint.y + controller.skinWidth + (controller.height / 2), controller.transform.position.z);
+		}
 	}
 
 	public void SetCameraOffset (float f) {

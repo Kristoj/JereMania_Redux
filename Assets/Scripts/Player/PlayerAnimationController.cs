@@ -19,8 +19,10 @@ public class PlayerAnimationController : NetworkBehaviour {
 	// id
 	[HideInInspector]
 	public int lastAttackId = 1;
+	private int thisAttackId = 0;
 	private int primaryActionId = 0;
 	private int secondaryActionId = 0;
+	private float vmMoveSpeed = 0;
 
 	// Use this for initialization
 	void Start () {
@@ -51,19 +53,25 @@ public class PlayerAnimationController : NetworkBehaviour {
 
 	void MoveAnimation() {
 		float percentage = controller.velocity.magnitude / playerController.moveSpeed;
-
 		animator.SetFloat ("moveSpeed", percentage);
+
+
+		if (playerController.IsGrounded() || playerController.IsHardGrounded ()) {
+			vmMoveSpeed = Mathf.Lerp (vmMoveSpeed, (new Vector2 (controller.velocity.x, controller.velocity.z).magnitude) / playerController.runSpeed, .2f);
+		} else {
+			vmMoveSpeed = Mathf.Lerp (vmMoveSpeed, 0, .25f);
+		}
+		viewAnimator.SetFloat ("holdId", vmMoveSpeed);
 	}
 
 	public void Attack() {
 		if (viewModel != null && viewModelEnabled) {
-			int attackId = 0;
 			if (lastAttackId == 0) {
-				attackId = 1;
+				thisAttackId = 1;
 			} else {
-				attackId = 0;
+				thisAttackId = 0;
 			}
-			lastAttackId = attackId;
+			lastAttackId = thisAttackId;
 
 			viewAnimator.SetFloat ("attackId", (float)lastAttackId);
 			viewAnimator.SetTrigger ("Attack");
@@ -72,7 +80,7 @@ public class PlayerAnimationController : NetworkBehaviour {
 
 	public void MeleeImpact() {
 		if (viewModelEnabled && viewModel != null) {
-			//viewAnimator.SetTrigger ("AttackImpact");
+			viewAnimator.SetTrigger ("AttackImpact");
 		}
 	}
 
@@ -106,11 +114,8 @@ public class PlayerAnimationController : NetworkBehaviour {
 
 	public void PickupItem(int buttonId) {
 		if (viewModelEnabled && viewModel != null) {
+			viewAnimator.SetFloat ("pickupId", buttonId);
 			viewAnimator.SetTrigger ("PickupItem");
-			if (buttonId == 1) {
-				//weaponController.canChangeEquipment = false;
-				//StartCoroutine (PickupDelay ());
-			}
 		}
 	}
 

@@ -13,8 +13,8 @@ public class Equipment : Item {
 	public ActionType primaryAction = ActionType.Attack;
 	public ActionType secondaryAction = ActionType.Throw;
 	public enum ActionType{Attack, Throw, Block, Consume, Custom};
-	public ImpactSoundSet impactSoundSet;
-	public enum ImpactSoundSet {Metal_Slash, Metal_Blunt}
+	public WeaponImpactSoundMaterial weaponImpactSoundMaterial;
+	public enum WeaponImpactSoundMaterial {Metal_Slash, Metal_Blunt}
 
 	[Header ("Equipment Properties")]
 	public Vector3 positionOffset;
@@ -40,7 +40,7 @@ public class Equipment : Item {
 	public virtual void OnPrimaryAction() {
 		if (!weaponController.isChargingSecondaryAction) {
 			// Attack
-			if (primaryAction == ActionType.Attack && playerStats.fatique > 0) {
+			if (primaryAction == ActionType.Attack && playerStats.fatique > 0 && playerStats.stamina > 0) {
 				Attack ();
 			}
 		// Throw
@@ -151,7 +151,7 @@ public class Equipment : Item {
 
 	IEnumerator ConsumeItem() {
 		EquipmentLibrary.instance.ConsumeItem (this.objectName, owner.name);
-		AudioManager.instance.CmdPlayCustomSound2D ("UI_Eat1",transform.position, owner.name, 1);
+		AudioManager.instance.CmdPlaySound2D ("UI_Eat1",transform.position, owner.name, 1);
 		weaponController.DestroyCurrentEquipment ();
 		yield return new WaitForSeconds (1);
 	}
@@ -162,7 +162,7 @@ public class Equipment : Item {
 		if (isAvailable) {
 			// Play sound
 			if (pickupSound != null) {
-				AudioManager.instance.CmdPlayCustomSound (pickupSound.name, transform.position, "", 1);
+				AudioManager.instance.CmdPlaySound (pickupSound.name, transform.position, "", 1);
 			}
 			PlayerInteraction playerIntera = GameManager.instance.localPlayer.GetComponent<PlayerInteraction> ();
 			playerIntera.StartCoroutine ("PickupItemFollow", objectName);
@@ -176,7 +176,7 @@ public class Equipment : Item {
 
 			// Play sound
 			if (pickupSound != null) {
-				AudioManager.instance.CmdPlayCustomSound (pickupSound.name, transform.position, "", 1);
+				AudioManager.instance.CmdPlaySound (pickupSound.name, transform.position, "", 1);
 			}
 			weaponController.EquipEquipment (this, 1);
 		}

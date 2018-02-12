@@ -15,7 +15,7 @@ public class Resource : MeleeWeapon {
 			lastShotTime = Time.time;
 			// Audio
 			if (attackSound != null) {
-				AudioManager.instance.PlaySound2D (attackSound, 1);
+				AudioManager.instance.CmdPlaySound2D (attackSound.name, transform.position, transform.name, 1);
 			}
 
 			yield return new WaitForSeconds (hitDelay);
@@ -33,11 +33,6 @@ public class Resource : MeleeWeapon {
 				Quaternion impactRot = Quaternion.identity;
 				if (hit.normal != Vector3.zero) {
 					impactRot = Quaternion.LookRotation (hit.normal);
-				}
-
-				// Audio
-				if (attackSound != null) {
-					AudioManager.instance.PlaySound2D (impactAudio, 1);
 				}
 
 				// Tell server to spawn tracer for all clients

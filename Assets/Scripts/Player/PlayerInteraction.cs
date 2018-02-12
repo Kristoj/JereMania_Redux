@@ -23,6 +23,7 @@ public class PlayerInteraction : NetworkBehaviour {
 	private Player player;
 	private GunController weaponController;
 	private PlayerAnimationController animationController;
+	private bool isPickingUpEquipment = false;
 
 	// Use this for initialization
 	void Start () {
@@ -62,14 +63,28 @@ public class PlayerInteraction : NetworkBehaviour {
 			focusIntera = hit.collider.GetComponent<Interactable> ();
 			if (focusIntera != null) {
 				targetIntera = focusIntera;
-				CmdUseRay (cam.transform.position, cam.forward, GetComponent<NetworkIdentity>(), targetIntera.netId, buttonId);
+
+				// Add pickup delay if picking up an item using F
+				if (buttonId == 1) {
+					if (!isPickingUpEquipment) {
+						StartCoroutine (PickupDelay (buttonId));
+					}
+				} else {
+					CmdUseRay (cam.transform.position, cam.forward, GetComponent<NetworkIdentity> (), targetIntera.netId, buttonId);
+				}
 
 				// Animation
-				animationController.PickupItem(buttonId);
+				animationController.PickupItem (buttonId);
 			}
 		}
 	}
 
+	IEnumerator PickupDelay(int buttonId) {
+		isPickingUpEquipment = true;
+		yield return new WaitForSeconds (.25f);
+		isPickingUpEquipment = false;
+		CmdUseRay (cam.transform.position, cam.forward, GetComponent<NetworkIdentity> (), targetIntera.netId, buttonId);
+	}
 	// SERVER Focus Ray
 	[Command]
 	void CmdUseRay(Vector3 pos, Vector3 dir, NetworkIdentity targetPlayer, NetworkInstanceId interaId, int buttonId) {

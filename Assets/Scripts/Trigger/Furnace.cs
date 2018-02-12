@@ -28,7 +28,7 @@ public class Furnace : NetworkBehaviour {
 	}
 
 	void Start() {
-		StartCoroutine (UpdateUI ());
+		//StartCoroutine (UpdateUI ());
 	}
 
 	void OnTriggerEnter (Collider c) {

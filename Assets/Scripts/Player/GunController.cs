@@ -23,9 +23,6 @@ public class GunController : NetworkBehaviour {
 	public PlayerAnimationController animController;
 	private PlayerController playerController;
 	private CharacterController controller;
-	[HideInInspector]
-	public SoundLibrary soundLibrary;
-	//private PlayerUI playerUI;
 
 	[Header ("Sway")]
 	public Vector3 weaponOffset;
@@ -42,13 +39,13 @@ public class GunController : NetworkBehaviour {
 	public float swayReturnSpeedZ = 5f;
 	private Vector3 originalViewPos;
 	private Vector3 swayPosition;
+	private Vector3 swayTargetPosition;
 
 	[Header ("Bobbing")]
 	public float bobSpeed = 1f;
 	public float bobSmooth = 20f;
-	public float horizontalRange = .1f;
-	public float verticalRange = .1f;
-	public AudioClip[] footStepSounds;
+	public float horizontalRange = .2f;
+	public float verticalRange = .2f;
 	private float curHorizontalRange;
 	private float curVerticalRange;
 	private bool hPositive = true;
@@ -60,7 +57,7 @@ public class GunController : NetworkBehaviour {
 	private Vector3 kickPosVector;
 	private Vector2 targetRecoilVector;
 	private Vector2 curRecoilVector;
-
+	private static float bobTime;
 
 	// Misc
 	//[HideInInspector]
@@ -87,10 +84,7 @@ public class GunController : NetworkBehaviour {
 		animController = GetComponent<PlayerAnimationController> ();
 		playerController = GetComponent<PlayerController> ();
 		controller = GetComponent<CharacterController> ();
-		soundLibrary = GameObject.Find ("#GAMEMANAGER").GetComponent<SoundLibrary> ();
-		//playerUI = GetComponent<PlayerUI> ();
 		kickPosVector = Vector3.zero;
-
 
 		// Get GunHolds
 		gunHoldR = transform.Find ("Main Camera").transform.Find("Arm Holder").transform.Find("View_Model").transform.Find("Game_engine").transform.Find("spine_03").transform.Find("clavicle_r").transform.Find("upperarm_r").
@@ -426,88 +420,93 @@ public class GunController : NetworkBehaviour {
 				speedMultiplier = .1f;
 				aimMoveMultiplier = 2f;
 			}
-				
+
 			bobVector = Vector3.Lerp (bobVector, bobPos, bobSmooth * Time.deltaTime);
+			bobVector.x = Mathf.Clamp (bobVector.x, -horizontalRange, horizontalRange);
+			bobVector.y = Mathf.Clamp (bobVector.y, -horizontalRange, horizontalRange);
+			bobPos.x = Mathf.Clamp (bobPos.x, -horizontalRange, horizontalRange);
+			bobPos.y = Mathf.Clamp (bobPos.y, -horizontalRange, horizontalRange);
+
 
 			// Add input to position
 			if (playerController.isEnabled) {
-				swayPosition.x -= xInput * swaySpeedX * Time.deltaTime / 10 * speedMultiplier;
-				swayPosition.y -= yInput * swaySpeedY * Time.deltaTime / 10 * speedMultiplier;
-				swayPosition.z -= zInput * swaySpeedZ * Time.deltaTime / 10 * speedMultiplier;
+				swayTargetPosition.x -= xInput * swaySpeedX * Time.deltaTime / 10 * speedMultiplier;
+				swayTargetPosition.y -= yInput * swaySpeedY * Time.deltaTime / 10 * speedMultiplier;
+				swayTargetPosition.z -= zInput * swaySpeedZ * Time.deltaTime / 10 * speedMultiplier;
 			}
 
 			// Retrun to original pos overtime
-			swayPosition.x = Mathf.Lerp (swayPosition.x, originalViewPos.x + curOffset.x, swayReturnSpeedX * Time.deltaTime * aimMoveMultiplier);
-			swayPosition.y = Mathf.Lerp (swayPosition.y, originalViewPos.y + curOffset.y, swayReturnSpeedY * Time.deltaTime * aimMoveMultiplier);
-			swayPosition.z = Mathf.Lerp (swayPosition.z, originalViewPos.z + curOffset.z, swayReturnSpeedZ * Time.deltaTime * aimMoveMultiplier);
+			swayTargetPosition.x = Mathf.Lerp (swayTargetPosition.x, originalViewPos.x + curOffset.x, swayReturnSpeedX * Time.deltaTime * aimMoveMultiplier);
+			swayTargetPosition.y = Mathf.Lerp (swayTargetPosition.y, originalViewPos.y + curOffset.y, swayReturnSpeedY * Time.deltaTime * aimMoveMultiplier);
+			swayTargetPosition.z = Mathf.Lerp (swayTargetPosition.z, originalViewPos.z + curOffset.z, swayReturnSpeedZ * Time.deltaTime * aimMoveMultiplier);
 
 			// Clamp swayPosition
-			swayPosition.x = Mathf.Clamp (swayPosition.x, -swayScaleX, swayScaleX);
-			swayPosition.y = Mathf.Clamp (swayPosition.y, -swayScaleY, swayScaleY);
-			swayPosition.z = Mathf.Clamp (swayPosition.z, -swayScaleZ, swayScaleZ);
+			swayTargetPosition.x = Mathf.Clamp (swayTargetPosition.x, -swayScaleX, swayScaleX);
+			swayTargetPosition.y = Mathf.Clamp (swayTargetPosition.y, -swayScaleY, swayScaleY);
+			swayTargetPosition.z = Mathf.Clamp (swayTargetPosition.z, -swayScaleZ, swayScaleZ);
+
+			swayPosition = Vector3.Lerp (swayPosition, swayTargetPosition, 9 * Time.deltaTime);
 
 			armHolder.transform.localPosition = swayPosition + bobVector + kickPosVector + weaponOffset;
 		}
 	}
 
 	void AnimateBob() {
-		if (controller.isGrounded && controller.velocity.magnitude > 0 && playerController.isActive) {
+		if ((controller.isGrounded || playerController.IsHardGrounded()) && controller.velocity.magnitude > 0 && playerController.isActive) {
 
-			float aimRangeMultiplier = 1f;
-			float aimSpeedMultiplier = 1f;
 
 			// Set move multiplier according to if player is sprinting or not
 			float moveMultiplier = 1;
-			float bobScaleMultiplier = 1;
 			if (playerController.curSpeed == playerController.runSpeed) {
 				moveMultiplier = 1.4f;
-				bobScaleMultiplier = 3f;
 			} else {
 				moveMultiplier = 1f;
-				bobScaleMultiplier = 1f;
 			}
 
-			// Smaller bob range when aiming
-			if (isChargingSecondaryAction) {
-				aimRangeMultiplier = .4f;
-				aimSpeedMultiplier = .3f;
-			}
-
+			moveMultiplier = new Vector2 (controller.velocity.x, controller.velocity.z).magnitude / 5;
 			// HORIZONTAL
 			//float perc = 1 / (playerController.moveSpeed / controller.velocity.magnitude);
 			if (hPositive) {
-				curHorizontalRange += (Time.deltaTime * bobSpeed / 2 * aimSpeedMultiplier * playerController.speedMultiplier * moveMultiplier);
-				if (curHorizontalRange >= horizontalRange * aimRangeMultiplier) {
-					curHorizontalRange = horizontalRange * aimRangeMultiplier;
+				curHorizontalRange += (Time.deltaTime * bobSpeed / 2 * playerController.speedMultiplier * moveMultiplier);
+				if (curHorizontalRange >= horizontalRange) {
+					curHorizontalRange = horizontalRange;
 					hPositive = false;
-					AudioManager.instance.PlaySound2D (footStepSounds [UnityEngine.Random.Range (0, footStepSounds.Length)], .1f);
+					AudioManager.instance.CmdPlayGroupSound2D ("Foot_Step", transform.position, transform.name, .1f);
 				}
 			} else {
-				curHorizontalRange -= (Time.deltaTime * bobSpeed / 2 * aimSpeedMultiplier * playerController.speedMultiplier * moveMultiplier);
-				if (curHorizontalRange <= -horizontalRange * aimRangeMultiplier) {
-					curHorizontalRange = -horizontalRange * aimRangeMultiplier;
+				curHorizontalRange -= (Time.deltaTime * bobSpeed / 2 * playerController.speedMultiplier * moveMultiplier);
+				if (curHorizontalRange <= -horizontalRange) {
+					curHorizontalRange = -horizontalRange;
 					hPositive = true;
-					AudioManager.instance.PlaySound2D (footStepSounds [UnityEngine.Random.Range (0, footStepSounds.Length)], .1f);
+					AudioManager.instance.CmdPlayGroupSound2D ("Foot_Step", transform.position, transform.name, .1f);
 				}
 			}
 
 			// VERTICAL
 			if (vPositive) {
-				curVerticalRange += (Time.deltaTime * bobSpeed * aimSpeedMultiplier * playerController.speedMultiplier * moveMultiplier);
-				if (curVerticalRange >= verticalRange * aimRangeMultiplier) {
-					curVerticalRange = verticalRange * aimRangeMultiplier;
+				curVerticalRange += (Time.deltaTime * bobSpeed * playerController.speedMultiplier * moveMultiplier);
+				if (curVerticalRange >= verticalRange) {
+					curVerticalRange = verticalRange;
 					vPositive = false;
 				}
 			} else {
-				curVerticalRange -= (Time.deltaTime * bobSpeed * aimSpeedMultiplier * playerController.speedMultiplier * moveMultiplier);
-				if (curVerticalRange <= -verticalRange * aimRangeMultiplier) {
-					curVerticalRange = -verticalRange * aimRangeMultiplier;
+				curVerticalRange -= (Time.deltaTime * bobSpeed * playerController.speedMultiplier * moveMultiplier);
+				if (curVerticalRange <= -verticalRange) {
+					curVerticalRange = -verticalRange;
 					vPositive = true;
 				}
 			}
-		
-			bobPos.y += curVerticalRange * Time.deltaTime * bobScaleMultiplier;
-			bobPos.x += curHorizontalRange * Time.deltaTime * bobScaleMultiplier;
+
+			curHorizontalRange = Mathf.Clamp (curHorizontalRange, -horizontalRange, horizontalRange);
+			curVerticalRange = Mathf.Clamp (curVerticalRange, -verticalRange, verticalRange);
+			//bobPos.y += curVerticalRange * Time.deltaTime;
+			//bobPos.x += curHorizontalRange * Time.deltaTime;
+
 		}
+
+	}
+
+	public void AddSway (Vector3 swayAmount) {
+		swayTargetPosition += swayAmount;
 	}
 }

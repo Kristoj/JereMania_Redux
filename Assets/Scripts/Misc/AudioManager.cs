@@ -15,6 +15,7 @@ public class AudioManager : NetworkBehaviour {
 
 	public static AudioManager instance;
 	private SoundLibrary soundLibrary;
+	private EntitySoundManager entitySoundManager;
 
 
 	void Start() {
@@ -47,33 +48,48 @@ public class AudioManager : NetworkBehaviour {
 		StartCoroutine (AnimateMusicCrossfade (fadeDuration));
 	}
 
-
-	public void PlaySound (string soundName, Vector3 soundPos, bool abParent) {
-
-		if (abParent) {
-			GameObject newSFXSource = new GameObject ("SFX2D source");
-			newSFXSource.transform.parent = transform;
-			StartCoroutine (DestroyCustomSFXSource (newSFXSource));
-		}
+	[Command]
+	public void CmdPlaySound (string clipName, Vector3 soundPos, string entityToFollowName, float volume) {
+		RpcPlayCustomSound (clipName, soundPos, entityToFollowName, volume, false);
 	}
 
 	[Command]
-	public void CmdPlayCustomSound (string clip, Vector3 soundPos, string masterId, float volume) {
-		RpcPlayCustomSound (clip, soundPos, masterId, volume);
+	public void CmdPlaySound2D (string clipName, Vector3 soundPos, string localPlayerName, float volume) {
+		RpcPlayCustomSound2D (clipName, soundPos, localPlayerName, volume, false);
 	}
 
 	[Command]
-	public void CmdPlayCustomSound2D (string clip, Vector3 soundPos, string masterId, float volume) {
-		RpcPlayCustomSound2D (clip, soundPos, masterId, volume);
+	public void CmdPlayGroupSound (string groupName, Vector3 soundPos, string entityToFollowName, float volume) {
+		RpcPlayCustomSound (groupName, soundPos, entityToFollowName, volume, true);
 	}
 
+	[Command]
+	public void CmdPlayGroupSound2D (string groupName, Vector3 soundPos, string localPlayerName, float volume) {
+		RpcPlayCustomSound2D (groupName, soundPos, localPlayerName, volume, true);
+	}
+
+	// Entity impact sound
+	[Command]
+	public void CmdPlayEntityImpactSound (string entityType, string equipmentType, Vector3 soundPos, string masterId, float volume) {
+		string clipToPlay = soundLibrary.GetEntityImpactSound (entityType, equipmentType).name;
+		RpcPlayCustomSound (clipToPlay, soundPos, masterId, volume, false);
+	}
+		
 	[ClientRpc]
-	public void RpcPlayCustomSound (string clip,Vector3 soundPos, string entityToFollow, float volume) {
-
+	public void RpcPlayCustomSound (string clip,Vector3 soundPos, string entityToFollow, float volume, bool useGroup) {
 		Transform sourcePlayer = null;
 		if (GameManager.GetCharacter (entityToFollow) != null) {
 			sourcePlayer = GameManager.GetCharacter (entityToFollow).transform;
 		}
+
+		// Get correct audio clip to play
+		AudioClip clipToPlay = null;
+		if (useGroup) {
+			clipToPlay = soundLibrary.GetGroupClip (clip);
+		} else {
+			clipToPlay = soundLibrary.GetClip (clip);
+		}
+
 		if (sourcePlayer != null) {
 			// Setup sound game object
 			GameObject newSFXSource = new GameObject ("SFX2D source");
@@ -83,23 +99,31 @@ public class AudioManager : NetworkBehaviour {
 			newAudioSource.maxDistance = 30;
 			newAudioSource.spatialBlend = .96f;
 			// Play audio and destroy it after X amount of time
-			newAudioSource.PlayOneShot (soundLibrary.GetClip(clip), masterVolume * sfxVolume * volume);
+			newAudioSource.PlayOneShot (clipToPlay, masterVolume * sfxVolume * volume * volume);
 			StartCoroutine (DestroyCustomSFXSource (newSFXSource));
 		} else {
-			AudioSource.PlayClipAtPoint (soundLibrary.GetClip(clip), soundPos, sfxVolume * masterVolume * volume);
+			AudioSource.PlayClipAtPoint (clipToPlay, soundPos, sfxVolume * masterVolume * volume);
 		}
 	}
 
 	[ClientRpc]
-	public void RpcPlayCustomSound2D (string clip,Vector3 soundPos, string masterId, float volume) {
+	public void RpcPlayCustomSound2D (string clip,Vector3 soundPos, string masterId, float volume, bool useGroup) {
 
 		Transform sourcePlayer = null;
 		if (GameManager.GetCharacter (masterId) != null) {
 			sourcePlayer = GameManager.GetCharacter (masterId).transform;
 		}
 
+		// Get correct audio clip to play
+		AudioClip clipToPlay = null;
+		if (useGroup) {
+			clipToPlay = soundLibrary.GetGroupClip (clip);
+		} else {
+			clipToPlay = soundLibrary.GetClip (clip);
+		}
+
 		if (GameManager.instance.localPlayer.name == masterId) {
-			sfx2DSource.PlayOneShot (soundLibrary.GetClip (clip), masterVolume * sfxVolume * volume);
+			sfx2DSource.PlayOneShot (clipToPlay, masterVolume * sfxVolume * volume);
 		} else {
 			// Setup sound game object
 			GameObject newSFXSource = new GameObject ("SFX2D source");
@@ -110,41 +134,9 @@ public class AudioManager : NetworkBehaviour {
 			newAudioSource.maxDistance = 30;
 			newAudioSource.spatialBlend = .96f;
 			// Play audio and destroy it after X amount of time
-			newAudioSource.PlayOneShot (soundLibrary.GetClip (clip), masterVolume * sfxVolume * volume);
+			newAudioSource.PlayOneShot (clipToPlay, masterVolume * sfxVolume * volume);
 			StartCoroutine (DestroyCustomSFXSource (newSFXSource));
 		}
-	}
-
-	public void PlayCustomSoundForDuration (AudioClip clip, Vector3 soundPosition, bool abParent, float duration) {
-
-		if (abParent) {
-			GameObject newSFXSource = new GameObject ("SFX2D source");
-			AudioSource newAudioSource = newSFXSource.AddComponent<AudioSource> ();
-			newAudioSource.maxDistance = 30;
-			newAudioSource.spatialBlend = .96f;
-			newAudioSource.PlayOneShot (clip, masterVolume * sfxVolume);
-			newSFXSource.transform.parent = transform;
-			StartCoroutine (DestroyCustomSFXSource (newSFXSource));
-			StartCoroutine (StopAudio (newAudioSource, duration));
-		} else {
-			AudioSource.PlayClipAtPoint (clip, soundPosition, sfxVolume * masterVolume);
-		}
-	}
-
-	public void PlaySound2D (AudioClip clip, float vol) {
-		sfx2DSource.PlayOneShot (clip, masterVolume * sfxVolume * vol);
-	}
-
-	public void PlaySoundWithVolume (AudioClip clip, Vector3 soundPosition, float vol) {
-		GameObject newSFXObject = new GameObject ("Custom SFX Source");
-		newSFXObject.transform.position = soundPosition;
-		AudioSource newSFXSource = newSFXObject.AddComponent<AudioSource> ();
-		newSFXSource.clip = clip;
-		newSFXSource.volume = sfxVolume * masterVolume * vol;
-		newSFXSource.maxDistance = 30;
-		newSFXSource.spatialBlend = .96f;
-		newSFXSource.Play ();
-		StartCoroutine (DestroyCustomSFXSource (newSFXObject));
 	}
 
 	IEnumerator DestroyCustomSFXSource(GameObject obj) {

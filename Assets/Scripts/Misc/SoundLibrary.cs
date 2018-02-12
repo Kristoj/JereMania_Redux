@@ -8,26 +8,18 @@ public class SoundLibrary : MonoBehaviour {
 	public EntitySoundManager[] entitySoundManagers;
 	public static SoundLibrary instance;
 
-	//private Dictionary<string, AudioClip[]> groupDictionary = new Dictionary<string, AudioClip[]>();
+	private Dictionary<string, AudioClip[]> groupDictionary = new Dictionary<string, AudioClip[]>();
 	public AudioClip[] sounds;
 
 	void Awake() {
 		instance = this;
-		foreach (SoundGroup soundGroup in soundGroups) {
-			//groupDictionary.Add (soundGroup.groupId, soundGroup.group);
-		}
 	}
 
-	/**
-	public AudioClip GetClip (string name) {
-		if (groupDictionary.ContainsKey (name)) {
-			AudioClip[] sounds = groupDictionary [name];
-			return sounds [Random.Range (0, sounds.Length)];
-		} else {
-			return null;
+	void Start() {
+		foreach (SoundGroup soundGroup in soundGroups) {
+			groupDictionary.Add (soundGroup.groupId, soundGroup.group);
 		}
 	}
-	**/
 
 	public AudioClip GetClip (string clipName) {
 		foreach (AudioClip a in sounds) {
@@ -36,6 +28,15 @@ public class SoundLibrary : MonoBehaviour {
 			}
 		}
 		return null;
+	}
+
+	public AudioClip GetGroupClip (string name) {
+		if (groupDictionary.ContainsKey (name)) {
+			AudioClip[] sounds = groupDictionary [name];
+			return sounds [Random.Range (0, sounds.Length)];
+		} else {
+			return null;
+		}
 	}
 
 	public AudioClip GetEntityImpactSound(string entityType, string equipmentType) {

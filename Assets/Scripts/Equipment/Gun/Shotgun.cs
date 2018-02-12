@@ -65,11 +65,6 @@ public class Shotgun : Gun {
 				// Tell server to spawn tracer for all clients
 				CmdOnProjectileHit (hitPoint, owner.name, Quaternion.Euler (tracerRot), impactRot);
 			}
-				
-			// Audio
-			if (attackSound != null) {
-				AudioManager.instance.PlaySound2D (attackSound, 1);
-			}
 
 			// Animation
 			lastShotTime = Time.time;

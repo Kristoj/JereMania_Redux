@@ -22,11 +22,12 @@ public class MeleeWeapon : Weapon {
 		if (fireMode == FireMode.Semi && !weaponController.mouseLeftReleased) {
 			yield break;
 		}
-			
+
 		if (Time.time - lastShotTime > timeBetweenShots) {
 			playerAnimationController.Attack();
 			lastShotTime = Time.time;
 			weaponController.isAttacking = true;
+			playerStats.StaminaRemove (3f, true);
 			// Audio
 			if (attackSound != null) {
 				StartCoroutine (HitAudioDelay ());
@@ -49,7 +50,7 @@ public class MeleeWeapon : Weapon {
 				if (livingEntity != null) {
 					TakeDamage (hit.collider.name, transform.name);
 					if (playerStats != null) {
-						playerStats.RemoveFatique (.4f);
+						playerStats.FatiqueRemove (.4f);
 					}
 				}
 
@@ -79,14 +80,11 @@ public class MeleeWeapon : Weapon {
 
 				// Play impact audio
 				if (entity != null) {
-					AudioClip impactClip = SoundLibrary.instance.GetEntityImpactSound (entity.entitySoundSet.ToString (), impactSoundSet.ToString ());
-					if (impactClip != null) {
-						AudioManager.instance.CmdPlayCustomSound (impactClip.name, hit.point, "", 1);
-					}
+					AudioManager.instance.CmdPlayEntityImpactSound (entity.entitySoundMaterial.ToString(), this.weaponImpactSoundMaterial.ToString(), hit.point, "", 1f);
 				} else {
-					AudioClip genericClip = SoundLibrary.instance.GetEntityImpactSound ("Generic", impactSoundSet.ToString());
+					AudioClip genericClip = SoundLibrary.instance.GetEntityImpactSound ("Generic", weaponImpactSoundMaterial.ToString());
 					if (genericClip != null) {
-						AudioManager.instance.CmdPlayCustomSound (genericClip.name, hit.point, "", 1);
+						AudioManager.instance.CmdPlaySound (genericClip.name, hit.point, "", 1);
 					}
 				}
 
@@ -144,7 +142,7 @@ public class MeleeWeapon : Weapon {
 
 	IEnumerator HitAudioDelay() {
 		yield return new WaitForSeconds (audioDelay);
-		AudioManager.instance.CmdPlayCustomSound2D (attackSound.name, transform.position, owner.name, 1);
+		AudioManager.instance.CmdPlaySound2D (attackSound.name, transform.position, owner.name, 1);
 	}
 
 	public float CalculateDamage(float slashResistance, float bluntResistance, float piercingResistance, LivingEntity.ProfessionWeakness professionWeakness, float weaknessAmount) {
