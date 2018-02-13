@@ -10,6 +10,13 @@ public class Interactable : Entity {
 	public bool isAvailable = true;
 	protected Transform owner;
 
+	public override void OnStartClient() {
+		if (objectName != "") {
+			prefix = objectName;
+		}
+		base.OnStartClient ();
+	}
+
 	public virtual void OnStartInteraction(string masterId) {
 		if (isAvailable) {
 			owner = GameManager.GetCharacter (masterId).transform;

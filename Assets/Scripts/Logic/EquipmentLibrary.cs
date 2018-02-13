@@ -5,8 +5,12 @@ using UnityEngine;
 public class EquipmentLibrary : MonoBehaviour {
 
 	public FarmPlant[] farmPlant;
-	public Equipment[] equipmentList;
+	public List<Equipment> equipmentList = new List<Equipment>();
 	public static EquipmentLibrary instance;
+
+	void Awake() {
+		GetComponent<AutomaticObjectAssignerScript> ().AssignObjects ();
+	}
 
 	void Start() {
 		instance = this;
@@ -53,6 +57,10 @@ public class EquipmentLibrary : MonoBehaviour {
 			GameManager.GetCharacter (consumer).GetComponent<PlayerStats>().FatiqueAdd (100);
 			GameManager.GetCharacter (consumer).GetComponent<PlayerStats>().StaminaAdd (100);
 		}
+	}
+
+	public static class GetEntity {
+
 	}
 }
 

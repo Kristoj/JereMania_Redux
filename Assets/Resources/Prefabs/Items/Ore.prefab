@@ -128,6 +128,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefix: default
+  entitySoundMaterial: 0
   hurtSound: {fileID: 8300000, guid: 7db4a6d7e11ab374bb4715d62ab2601c, type: 3}
   objectName: Ore
   isAvailable: 1
@@ -138,6 +139,7 @@ MonoBehaviour:
   holdStyle: 0
   primaryAction: 0
   secondaryAction: 1
+  weaponImpactSoundMaterial: 0
   positionOffset: {x: 0, y: 0, z: 0}
   speedMultiplier: 1
   canRunWith: 1
@@ -173,6 +175,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefix: default
+  entitySoundMaterial: 0
   hurtSound: {fileID: 0}
   startingHealth: 180
   slashResistance: 90

@@ -10,6 +10,10 @@ public class PlayerInventory : Container {
 	private Container targetContainer;
 	public Slot targetSlot;
 
+	public override void OnStartClient() {
+		
+	}
+
 	public override void Start() {
 		playerController = GetComponent<PlayerController> ();
 		playerInventory = GetComponent<PlayerInventory> ();

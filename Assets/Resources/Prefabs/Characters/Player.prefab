@@ -3759,7 +3759,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c75a842000e60ba4e8b514545d8a19a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  test: 0
   gravity: 25
   friction: 5
   moveSpeed: 4.4

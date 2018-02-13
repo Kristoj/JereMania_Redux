@@ -16,7 +16,6 @@ public class Entity : NetworkBehaviour {
 
 	public virtual void Start() {
 		rig = GetComponent<Rigidbody> ();
-
 	}
 
 	public override void OnStartClient() {

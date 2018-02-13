@@ -533,7 +533,7 @@ public class PlayerController : NetworkBehaviour {
 		RaycastHit hit;
 
 
-		if (Physics.SphereCast (ray, controller.height / 2, -Vector3.up, out hit, .34f)) {
+		if (Physics.SphereCast (ray, controller.height / 2, -Vector3.up, out hit, .34f, hardGroundLayer, QueryTriggerInteraction.Ignore)) {
 			return true;
 		} else {
 			return false;

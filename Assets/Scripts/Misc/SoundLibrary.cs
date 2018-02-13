@@ -9,7 +9,7 @@ public class SoundLibrary : MonoBehaviour {
 	public static SoundLibrary instance;
 
 	private Dictionary<string, AudioClip[]> groupDictionary = new Dictionary<string, AudioClip[]>();
-	public AudioClip[] sounds;
+	public List<AudioClip> sounds = new List<AudioClip>();
 
 	void Awake() {
 		instance = this;

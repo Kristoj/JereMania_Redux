@@ -7,9 +7,11 @@ public class TimeManager : NetworkBehaviour {
 
 	public float dayLength = 360f;
 	public float startTime = 140f;
+	public float sunRotationUpdateRate = 0f;
 	[SyncVar]
 	public float timeOfDay;
 	public float curDay;
+	public bool canRotate = true;
 
 	[Header("Lighting")]
 	public Light sun;
@@ -20,16 +22,15 @@ public class TimeManager : NetworkBehaviour {
 	void Start () {
 		timeOfDay = startTime;
 		ogAmbientIntensity = RenderSettings.ambientIntensity;
+		if (sun != null) {
+			StartCoroutine (UpdateSunRotation ());
+		}
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		if (isServer) {
 			UpdateTime ();
-		}
-
-		if (sun != null) {
-			RotateSun ();
 		}
 	}
 
@@ -42,14 +43,16 @@ public class TimeManager : NetworkBehaviour {
 		}
 	}
 
-	void RotateSun() {
-		float cyclePercentage = timeOfDay / dayLength;
+	IEnumerator UpdateSunRotation() {
+		while (canRotate) {
+			float cyclePercentage = timeOfDay / dayLength;
 
-		Vector3 sunRot = new Vector3 (360 * cyclePercentage, sun.transform.rotation.y, sun.transform.rotation.z);
-		sun.transform.rotation = Quaternion.Euler (sunRot);
-
-		// Lighting
-		sun.intensity = lightCurve.Evaluate (cyclePercentage);
-		RenderSettings.ambientIntensity = ogAmbientIntensity * lightCurve.Evaluate (cyclePercentage);
+			Vector3 sunRot = new Vector3 (360 * cyclePercentage, sun.transform.rotation.y, sun.transform.rotation.z);
+			sun.transform.rotation = Quaternion.Euler (sunRot);
+			// Lighting
+			sun.intensity = lightCurve.Evaluate (cyclePercentage);
+			RenderSettings.ambientIntensity = ogAmbientIntensity * lightCurve.Evaluate (cyclePercentage);
+			yield return new WaitForSeconds (sunRotationUpdateRate);
+		}
 	}
 }

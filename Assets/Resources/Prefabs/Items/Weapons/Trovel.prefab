@@ -225,7 +225,7 @@ MonoBehaviour:
     m_Bits: 0
   player: {fileID: 0}
   fireMode: 0
-  rpm: 100
+  rpm: 80
   slashDamage: 4
   bluntDamage: 4
   piercingDamage: 0
