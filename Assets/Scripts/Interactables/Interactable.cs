@@ -19,13 +19,13 @@ public class Interactable : Entity {
 
 	public virtual void OnStartInteraction(string masterId) {
 		if (isAvailable) {
-			owner = GameManager.GetCharacter (masterId).transform;
+			owner = GameManager.GetPlayer (masterId).transform;
 		}
 	}
 
 	public virtual void OnStartPickup(string masterId) {
 		if (isAvailable) {
-			owner = GameManager.GetCharacter (masterId).transform;
+			owner = GameManager.GetPlayer (masterId).transform;
 		}
 	}
 

@@ -359,7 +359,7 @@ public class PlayerController : NetworkBehaviour {
 			AudioManager.instance.CmdPlaySound2D ("Jump_Vocal", transform.position, transform.name, .5f);
 			AudioManager.instance.CmdPlaySound2D ("Jump_Start1", transform.position, transform.name, .5f);
 			gunController.AddSway (new Vector3 (0, -.5f, 0));
-			playerStats.StaminaRemove (25f, true);
+			playerStats.StaminaRemove (18f, true);
 			playerStats.FatiqueRemove (.1f);
 		}
 	}

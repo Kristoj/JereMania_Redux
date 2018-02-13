@@ -9,6 +9,12 @@ public class Player : LivingEntity {
 	[HideInInspector]
 	public short myMsgId = 1000;
 
+	public override void OnStartClient() {
+		string myID = GetComponent<NetworkIdentity> ().netId.ToString ();
+		LivingEntity entity = GetComponent<LivingEntity> ();
+		GameManager.RegisterPlayer (myID, entity, prefix);
+	}
+
 	public override void Start() {
 		base.Start ();
 		if (gameObject.activeSelf) {

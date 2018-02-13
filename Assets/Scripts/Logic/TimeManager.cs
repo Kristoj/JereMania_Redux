@@ -17,6 +17,12 @@ public class TimeManager : NetworkBehaviour {
 	public Light sun;
 	public AnimationCurve lightCurve;
 	private float ogAmbientIntensity;
+	private int playersSleeping;
+	public static TimeManager instance;
+
+	void Awake() {
+		instance = this;
+	}
 
 	// Use this for initialization
 	void Start () {
@@ -54,5 +60,40 @@ public class TimeManager : NetworkBehaviour {
 			RenderSettings.ambientIntensity = ogAmbientIntensity * lightCurve.Evaluate (cyclePercentage);
 			yield return new WaitForSeconds (sunRotationUpdateRate);
 		}
+	}
+
+	public void OnPlayerStartSleeping() {
+		playersSleeping++;
+		StartCoroutine (SleepCycle ());
+	}
+
+	IEnumerator SleepCycle() {
+
+		float t = 3;
+		Debug.Log ("sleep");
+		while (playersSleeping > 0 && t >= 0) {
+			Debug.Log (GameManager.instance.GetPlayerCount ()-1);
+			if (playersSleeping >= GameManager.instance.GetPlayerCount()-1) {
+				t -= Time.deltaTime;
+			}
+			yield return null;
+		}
+		timeOfDay = dayLength / 10;
+		playersSleeping = 0;
+	}
+
+	public void OnPlayerStopSleeping() {
+		playersSleeping--;
+		playersSleeping = Mathf.Clamp (playersSleeping, 0, GameManager.instance.GetPlayerCount ());
+
+		// Add boons to players
+		LivingEntity[] players = GameManager.GetAllPlayers();
+		foreach (LivingEntity l in players) {
+
+		}
+	}
+
+	public float GetDayPercentage() {
+		return timeOfDay / dayLength;
 	}
 }

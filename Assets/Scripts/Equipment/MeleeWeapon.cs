@@ -93,14 +93,14 @@ public class MeleeWeapon : Weapon {
 	}
 
 	IEnumerator TrackEquipmentVelocity() {
-		Vector3 a = transform.position;
+		Vector3 equipmentA = transform.position;
 		Vector3 playerA = owner.transform.position;
 		yield return new WaitForSeconds (.03f);
-		Vector3 b = transform.position;
+		Vector3 equipmentB = transform.position;
 		Vector3 playerB = owner.transform.position;
-		equipmentVelocity = (a-b);
-		equipmentVelocity -= (playerA - playerB) * 2;
+		equipmentVelocity = (equipmentA-equipmentB);
 		equipmentVelocity = equipmentVelocity.normalized;
+		equipmentVelocity -= (playerA - playerB).normalized;
 	}
 
 	[Command]

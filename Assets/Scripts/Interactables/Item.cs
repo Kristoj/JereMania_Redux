@@ -59,7 +59,7 @@ public class Item : Interactable {
 			rig.isKinematic = false;
 			float massMultiplier = rig.mass;
 			massMultiplier = Mathf.Clamp (massMultiplier, .3f, 1.4f);
-			rig.AddForce (dropDir / massMultiplier * rig.mass * dropForce + (GameManager.GetCharacter(masterId).GetComponent<CharacterController>().velocity * rig.mass), ForceMode.Impulse);
+			rig.AddForce (dropDir / massMultiplier * rig.mass * dropForce + (GameManager.GetPlayer(masterId).GetComponent<CharacterController>().velocity * rig.mass), ForceMode.Impulse);
 		}
 	}
 

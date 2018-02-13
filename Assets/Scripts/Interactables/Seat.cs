@@ -27,18 +27,28 @@ public class Seat : Interactable {
 
 	[Command]
 	public virtual void CmdEnterSeat(string masterId) {
+		OnServerEnterSeat ();
 		RpcEnterSeat (masterId);
+	}
+
+	public virtual void OnServerEnterSeat() {
+
 	}
 
 	[Command]
 	public virtual void CmdExitSeat(string masterId) {
+		OnServerExitSeat ();
 		RpcExitSeat (masterId);
+	}
+
+	public virtual void OnServerExitSeat() {
+
 	}
 		
 	[ClientRpc]
 	public virtual void RpcExitSeat(string masterId) {
 		isAvailable = true;
-		PlayerController controller = GameManager.GetCharacter (masterId).GetComponent<PlayerController> ();
+		PlayerController controller = GameManager.GetPlayer (masterId).GetComponent<PlayerController> ();
 		NetworkTransform netTransform = controller.GetComponent<NetworkTransform> ();
 
 		// Teleport player
@@ -60,7 +70,7 @@ public class Seat : Interactable {
 	[ClientRpc]
 	void RpcEnterSeat(string masterId) {
 		isAvailable = false;
-		PlayerController controller = GameManager.GetCharacter (masterId).GetComponent<PlayerController> ();
+		PlayerController controller = GameManager.GetPlayer (masterId).GetComponent<PlayerController> ();
 		NetworkTransform netTransform = controller.GetComponent<NetworkTransform> ();
 
 		// Disable network position sync
