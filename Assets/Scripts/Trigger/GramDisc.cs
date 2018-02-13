@@ -7,11 +7,9 @@ public class GramDisc : NetworkBehaviour {
 
 	void OnTriggerEnter (Collider c) {
 		if (isServer) {
-			AudioSource aud = c.GetComponent<AudioSource> ();
 			Equipment Disc = c.GetComponent<Equipment> ();
 			Rigidbody rg = c.GetComponent<Rigidbody>();
 			Item discItem = c.GetComponent<Item>();
-			aud.enabled = false;
 			if (discItem != null) {
 				if(Disc.isAvailable == true){
 					if (discItem.objectName == "Disc_Jere" || discItem.objectName == "Disc_Elmu") {
@@ -19,7 +17,6 @@ public class GramDisc : NetworkBehaviour {
 						Vector3 discPosition = transform.position + new Vector3 (0, 0.5949595f, 0);
 						c.transform.position = discPosition;
 						c.transform.eulerAngles = transform.eulerAngles;
-						aud.enabled = true;
 						RpcInsertDisk (c.name, discPosition, transform.rotation);
 					}
 				}
@@ -35,6 +32,8 @@ public class GramDisc : NetworkBehaviour {
 			rg.isKinematic = true;
 			rg.transform.position = discPosition;
 			rg.transform.rotation = diskRot;
+			AudioSource aud = diskObject.GetComponent<AudioSource> ();
+			aud.enabled = true;
 		}
 
 		// Play sound

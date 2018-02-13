@@ -7,7 +7,6 @@ public class PlayerController : NetworkBehaviour {
 
 	[Header ("Movement")]
 	/* Frame occuring factors */
-	public bool test;
 	public float gravity  = 20.0f;
 	public float friction  = 6f;                // Ground friction
 
@@ -124,7 +123,6 @@ public class PlayerController : NetworkBehaviour {
 				AirMove ();
 			}
 			Move (playerVelocity * Time.deltaTime);
-			test = IsHardGrounded();
 		}
 		CheckPlayerInput ();
 	}
