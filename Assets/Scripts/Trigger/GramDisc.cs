@@ -16,14 +16,28 @@ public class GramDisc : NetworkBehaviour {
 				if(Disc.isAvailable == true){
 					if (discItem.objectName == "Disc_Jere" || discItem.objectName == "Disc_Elmu") {
 						rg.isKinematic = true;
-						AudioManager.instance.CmdPlaySound2D ("UI_Transaction", transform.position, GameManager.instance.localPlayer.name, 1);
-						c.transform.position = transform.position + new Vector3 (0, 0.5949595f, 0);
+						Vector3 discPosition = transform.position + new Vector3 (0, 0.5949595f, 0);
+						c.transform.position = discPosition;
 						c.transform.eulerAngles = transform.eulerAngles;
 						aud.enabled = true;
-
+						RpcInsertDisk (c.name, discPosition, transform.rotation);
 					}
 				}
 			}
 		}
+	}
+
+	[ClientRpc]
+	void RpcInsertDisk(string diskName, Vector3 discPosition, Quaternion diskRot) {
+		GameObject diskObject = GameManager.GetEntity (diskName).gameObject;
+		if (diskObject != null) {
+			Rigidbody rg = diskObject.GetComponent<Rigidbody> ();
+			rg.isKinematic = true;
+			rg.transform.position = discPosition;
+			rg.transform.rotation = diskRot;
+		}
+
+		// Play sound
+		AudioManager.instance.CmdPlaySound2D ("Recordscratch", transform.position, GameManager.instance.localPlayer.name, 1);
 	}
 }
