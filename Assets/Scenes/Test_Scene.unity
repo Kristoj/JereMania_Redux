@@ -1024,6 +1024,7 @@ MonoBehaviour:
   - {fileID: 1668032195330740, guid: 3ce7fcf7e4a8e62418d8fc239ecda1b0, type: 2}
   - {fileID: 1727188779923378, guid: e625dee9078a79348b148ba845e77cf5, type: 2}
   - {fileID: 1727188779923378, guid: 7104abcabc6886d41ba41075117fb1cf, type: 2}
+  - {fileID: 1226634185797244, guid: 7b851eace4c493c489d6927048c37cf2, type: 2}
   m_CustomConfig: 1
   m_MaxConnections: 4
   m_ConnectionConfig:
@@ -1079,7 +1080,7 @@ MonoBehaviour:
   matchSize: 4
   isNetworkActive: 0
   matchMaker: {fileID: 0}
-  fastHost: 1
+  fastHost: 0
   startHostButton: {fileID: 1243809042}
   joinGameButton: {fileID: 133294077}
   inputField: {fileID: 1126542242}
@@ -1104,7 +1105,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 273557022}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 227461547, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
   m_Name: 
@@ -6186,6 +6187,11 @@ Prefab:
       propertyPath: m_LocalEulerAnglesHint.y
       value: 44.852
       objectReference: {fileID: 0}
+    - target: {fileID: 114067237122848614, guid: 7b851eace4c493c489d6927048c37cf2,
+        type: 2}
+      propertyPath: m_LocalPlayerAuthority
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7b851eace4c493c489d6927048c37cf2, type: 2}
   m_IsPrefabParent: 0
@@ -8041,7 +8047,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: aa742e5263d382e429424962856be88e, type: 3}
   - {fileID: 8300000, guid: 5d0dcdb1c284f334a8c7adfb2390896d, type: 3}
   - {fileID: 8300000, guid: dc4b45db27bc57b4abd321b32e735ff7, type: 3}
-  - {fileID: 8300000, guid: 5e4ac5840998fc34fa65103eda63e1bb, type: 3}
+  - {fileID: 0}
   - {fileID: 8300000, guid: 458dac67596b5c94ba1eec338fcee2a5, type: 3}
   - {fileID: 8300000, guid: 55a276b209703604295561f060005e98, type: 3}
   - {fileID: 8300000, guid: 4e86abcf43b33ee4b81c5c7a2be207f1, type: 3}
