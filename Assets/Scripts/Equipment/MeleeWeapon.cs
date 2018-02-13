@@ -11,6 +11,7 @@ public class MeleeWeapon : Weapon {
 	public float audioDelay = .15f;
 	public float impactForce = 5f;
 	public AudioClip impactAudio;
+	private Vector3 equipmentVelocity;
 
 	public override void ShootPrimary() {
 		if (!weaponController.isChargingSecondaryAction && weaponController.canAttack) {
@@ -34,6 +35,7 @@ public class MeleeWeapon : Weapon {
 			}
 
 			StartCoroutine (AttackCycle ());
+			StartCoroutine (TrackEquipmentVelocity ());
 
 			yield return new WaitForSeconds (hitDelay);
 			// Rot
@@ -57,16 +59,7 @@ public class MeleeWeapon : Weapon {
 				// Add impact force
 				Entity entity = hit.collider.GetComponent<Entity>();
 				if (entity != null) {
-					Vector3 meleeForce = Vector3.zero;
-					if (playerAnimationController.lastAttackId == 0) {
-						meleeForce = -player.transform.right;
-						meleeForce += player.transform.forward * .15f;
-						meleeForce *= impactForce;
-					} else if (playerAnimationController.lastAttackId == 1) {
-						meleeForce = player.transform.right;
-						meleeForce += player.transform.forward * .15f;
-						meleeForce *= impactForce;
-					}
+					Vector3 meleeForce = equipmentVelocity * impactForce;
 					CmdAddImpactForce (meleeForce, hit.point, hit.collider.name);
 				}
 
@@ -97,6 +90,17 @@ public class MeleeWeapon : Weapon {
 	IEnumerator AttackCycle() {
 		yield return new WaitForSeconds (60 / rpm);
 		weaponController.isAttacking = false;
+	}
+
+	IEnumerator TrackEquipmentVelocity() {
+		Vector3 a = transform.position;
+		Vector3 playerA = owner.transform.position;
+		yield return new WaitForSeconds (.03f);
+		Vector3 b = transform.position;
+		Vector3 playerB = owner.transform.position;
+		equipmentVelocity = (a-b);
+		equipmentVelocity -= (playerA - playerB) * 2;
+		equipmentVelocity = equipmentVelocity.normalized;
 	}
 
 	[Command]

@@ -63,3 +63,8 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 168f4a3527421a642967225ad42e7448, type: 3}
     - {fileID: 8300000, guid: 7db4a6d7e11ab374bb4715d62ab2601c, type: 3}
     - {fileID: 8300000, guid: dc12f2213cb07264a96844b199a5083e, type: 3}
+  - branchName: Trovel
+    branchClips:
+    - {fileID: 8300000, guid: 168f4a3527421a642967225ad42e7448, type: 3}
+    - {fileID: 8300000, guid: 7db4a6d7e11ab374bb4715d62ab2601c, type: 3}
+    - {fileID: 8300000, guid: dc12f2213cb07264a96844b199a5083e, type: 3}

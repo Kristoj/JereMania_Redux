@@ -56,7 +56,7 @@ Transform:
   m_GameObject: {fileID: 1898672491041380}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 7.5864215, y: 2, z: 2.484488}
-  m_LocalScale: {x: 1.9, y: 1.9, z: 1.9}
+  m_LocalScale: {x: 1.65, y: 1.65, z: 1.65}
   m_Children:
   - {fileID: 4992570057264166}
   m_Father: {fileID: 0}
@@ -204,7 +204,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefix: default
-  entitySoundMaterial: 0
+  entitySoundMaterial: 1
   hurtSound: {fileID: 0}
   objectName: Trovel
   isAvailable: 1
@@ -212,11 +212,11 @@ MonoBehaviour:
   canStoreInInventory: 1
   itemId: 0
   itemIcon: {fileID: 21300000, guid: ea5873cfd9158664f89459f0c9e1d853, type: 3}
-  holdStyle: 0
+  holdStyle: 1
   primaryAction: 0
   secondaryAction: 2
-  weaponImpactSoundMaterial: 1
-  positionOffset: {x: 0, y: 0, z: -0.075}
+  weaponImpactSoundMaterial: 2
+  positionOffset: {x: 0.015, y: -0.07, z: -0.09}
   speedMultiplier: 1
   canRunWith: 1
   pickupSound: {fileID: 0}
@@ -225,7 +225,7 @@ MonoBehaviour:
     m_Bits: 0
   player: {fileID: 0}
   fireMode: 0
-  rpm: 80
+  rpm: 70
   slashDamage: 4
   bluntDamage: 4
   piercingDamage: 0
@@ -235,7 +235,7 @@ MonoBehaviour:
   impactFX: {fileID: 114339121599838044, guid: 5df671e9e9489574bb08ad6bb0775d0d, type: 2}
   attackSound: {fileID: 8300000, guid: 7209df69f9c268a4d92332c97bb435c0, type: 3}
   meleeRange: 3
-  hitDelay: 0.35
-  audioDelay: 0.15
-  impactForce: 0.3
+  hitDelay: 0.5
+  audioDelay: 0.25
+  impactForce: 4
   impactAudio: {fileID: 8300000, guid: aa742e5263d382e429424962856be88e, type: 3}

@@ -18,10 +18,11 @@ public class PlayerAnimationController : NetworkBehaviour {
 
 	// id
 	[HideInInspector]
-	public int lastAttackId = 1;
-	private int thisAttackId = 0;
 	private int primaryActionId = 0;
 	private int secondaryActionId = 0;
+	private int attackAnimationStartIndex = 0;
+	private int attackAnimationCount = 2;
+	private int curAttackCycleCount;
 	private float vmMoveSpeed = 0;
 
 	// Use this for initialization
@@ -66,15 +67,13 @@ public class PlayerAnimationController : NetworkBehaviour {
 
 	public void Attack() {
 		if (viewModel != null && viewModelEnabled) {
-			if (lastAttackId == 0) {
-				thisAttackId = 1;
-			} else {
-				thisAttackId = 0;
-			}
-			lastAttackId = thisAttackId;
-
-			viewAnimator.SetFloat ("attackId", (float)lastAttackId);
+			curAttackCycleCount++;
+			// Get animation id
+			viewAnimator.SetFloat ("attackId", (float)attackAnimationStartIndex + curAttackCycleCount-1);
 			viewAnimator.SetTrigger ("Attack");
+			if (curAttackCycleCount >= attackAnimationCount) {
+				curAttackCycleCount = 0;	
+			}
 		}
 	}
 
@@ -118,14 +117,18 @@ public class PlayerAnimationController : NetworkBehaviour {
 			viewAnimator.SetTrigger ("PickupItem");
 		}
 	}
-
+		
 	public void SetGunAnimationIds (int[] ids) {
 		if (viewModel != null) {
 			viewAnimator.SetFloat ("holdId", ids[0]);
 			primaryActionId = ids[1];
 			secondaryActionId = ids[2];
+			attackAnimationStartIndex = ids[3];
+			attackAnimationCount = ids[4];
+			curAttackCycleCount = 0;
 		}
 	}
+
 
 	public void EnableViewModel(bool state) {
 		if (state) {

@@ -674,7 +674,7 @@ MonoBehaviour:
     m_Bits: 0
   player: {fileID: 0}
   fireMode: 0
-  rpm: 50
+  rpm: 60
   slashDamage: 0
   bluntDamage: 20
   piercingDamage: 8
@@ -686,7 +686,7 @@ MonoBehaviour:
   meleeRange: 3
   hitDelay: 0.35
   audioDelay: 0.15
-  impactForce: 4
+  impactForce: 6
   impactAudio: {fileID: 8300000, guid: 3a6146214b063c54f8d9279c1b4469a2, type: 3}
 --- !u!114 &114998385406267376
 MonoBehaviour:

@@ -389,7 +389,7 @@ MonoBehaviour:
   primaryAction: 0
   secondaryAction: 2
   weaponImpactSoundMaterial: 1
-  positionOffset: {x: 0, y: 0, z: -0.05}
+  positionOffset: {x: -0.04, y: -0.04, z: -0.1}
   speedMultiplier: 1
   canRunWith: 1
   pickupSound: {fileID: 0}
@@ -410,5 +410,5 @@ MonoBehaviour:
   meleeRange: 3
   hitDelay: 0.35
   audioDelay: 0.15
-  impactForce: 4
+  impactForce: 5
   impactAudio: {fileID: 8300000, guid: 3a6146214b063c54f8d9279c1b4469a2, type: 3}

@@ -9,12 +9,12 @@ public class Equipment : Item {
 
 	[Header ("Equipment Type")]
 	public HoldStyle holdStyle;
-	public enum HoldStyle {Hammer};
+	public enum HoldStyle {Hammer, Trovel};
 	public ActionType primaryAction = ActionType.Attack;
 	public ActionType secondaryAction = ActionType.Throw;
 	public enum ActionType{Attack, Throw, Block, Consume, Custom};
 	public WeaponImpactSoundMaterial weaponImpactSoundMaterial;
-	public enum WeaponImpactSoundMaterial {Metal_Slash, Metal_Blunt}
+	public enum WeaponImpactSoundMaterial {Metal_Slash, Metal_Blunt, Trovel}
 
 	[Header ("Equipment Properties")]
 	public Vector3 positionOffset;
@@ -183,12 +183,28 @@ public class Equipment : Item {
 	}
 
 	public int[] GetAnimationIds() {
-		int[] actionIds = new int[3];
+		int[] actionIds = new int[5];
+		/////////
+		/// 
+		/// 
+		// ActionID - 0 - = Hold Animation
+		// ActionID - 1 - = Primary Action
+		// ActionID - 2 - = Secondary Action
+		// ActionID - 3 - = Attack animation Start Index
+		// ActionID - 4 - = Attack animation count
+
 
 		// Hold id
 		// Attack
 		if (holdStyle == HoldStyle.Hammer) {
 			actionIds [0] = 0;
+			actionIds[3] = 0;
+			actionIds [4] = 2;
+		}
+
+		if (holdStyle == HoldStyle.Trovel) {
+			actionIds[3] = 2;
+			actionIds [4] = 1;
 		}
 
 		// Primary action type id
