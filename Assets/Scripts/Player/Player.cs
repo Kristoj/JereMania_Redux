@@ -28,16 +28,18 @@ public class Player : LivingEntity {
 	[Command]
 	void CmdSetAuthority(NetworkInstanceId objectId, NetworkIdentity targetPlayer) {
 		GameObject targetObject = NetworkServer.FindLocalObject (objectId);
-		NetworkIdentity targetIdentity = targetObject.GetComponent<NetworkIdentity>();
-		var currentOwner = targetIdentity.clientAuthorityOwner;
+		if (targetObject != null) {
+			NetworkIdentity targetIdentity = targetObject.GetComponent<NetworkIdentity> ();
+			var currentOwner = targetIdentity.clientAuthorityOwner;
 
-		if (currentOwner == targetPlayer.connectionToClient) {
-			return;
-		} else {
-			if (currentOwner != null) {
-				targetIdentity.RemoveClientAuthority (currentOwner);
+			if (currentOwner == targetPlayer.connectionToClient) {
+				return;
+			} else {
+				if (currentOwner != null) {
+					targetIdentity.RemoveClientAuthority (currentOwner);
+				}
+				targetIdentity.AssignClientAuthority (targetPlayer.connectionToClient);
 			}
-			targetIdentity.AssignClientAuthority (targetPlayer.connectionToClient);
 		}
 	}
 }
