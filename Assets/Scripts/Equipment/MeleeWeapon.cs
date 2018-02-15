@@ -50,17 +50,20 @@ public class MeleeWeapon : Weapon {
 				// Take damage
 				LivingEntity livingEntity = hit.collider.GetComponent<LivingEntity>();
 				if (livingEntity != null) {
-					TakeDamage (hit.collider.name, transform.name);
+					TakeDamage (hit.collider.name, livingEntity.entityGroupIndex, transform.name);
 					if (playerStats != null) {
 						playerStats.FatiqueRemove (.4f);
 					}
+					// Add force
+					Vector3 meleeForce = equipmentVelocity * impactForce;
+					CmdAddImpactForce (meleeForce, hit.point, hit.collider.name, livingEntity.entityGroupIndex);
 				}
 
 				// Add impact force
 				Entity entity = hit.collider.GetComponent<Entity>();
 				if (entity != null) {
 					Vector3 meleeForce = equipmentVelocity * impactForce;
-					CmdAddImpactForce (meleeForce, hit.point, hit.collider.name);
+					CmdAddImpactForce (meleeForce, hit.point, hit.collider.name, entity.entityGroupIndex);
 				}
 
 				// Animation
@@ -104,27 +107,27 @@ public class MeleeWeapon : Weapon {
 	}
 
 	[Command]
-	void CmdTakeDamage (string victimId, string playerId) {
-		if (GameManager.GetCharacter (victimId) != null) {
+	void CmdTakeDamage (string victimId, int targetGroup, string playerId) {
+		if (GameManager.instance.GetLivingEntity (victimId, targetGroup) != null) {
 			// Calculate Damage
-			LivingEntity victim = GameManager.GetCharacter (victimId);
+			LivingEntity victim = GameManager.instance.GetLivingEntity (victimId, targetGroup);
 			float dmg = CalculateDamage(victim.slashResistance, victim.bluntResistance, victim.piercingResistance, victim.professionWeakness, victim.weaknessAmount);
 			victim.TakeDamage (dmg, playerId);
 		}
 	}
 
-	public virtual void TakeDamage(string victimId, string playerId) {
-		CmdTakeDamage (victimId, playerId);
+	public virtual void TakeDamage(string victimId, int targetGroup, string playerId) {
+		CmdTakeDamage (victimId, targetGroup, playerId);
 	}
 
 	[Command]
-	void CmdAddImpactForce(Vector3 meleeForce, Vector3 forcePoint, string targetName) {
+	void CmdAddImpactForce(Vector3 meleeForce, Vector3 forcePoint, string targetName, int targetGroup) {
 
-		Entity targetLivingEntity = GameManager.GetCharacter (targetName);
+		LivingEntity targetLivingEntity = GameManager.instance.GetLivingEntity (targetName, targetGroup);
 		if (targetLivingEntity != null) {
 			targetLivingEntity.AddImpactForce (meleeForce, forcePoint);
 		} else {
-			Entity targetEntity = GameManager.GetEntity (targetName);
+			Entity targetEntity = GameManager.instance.GetEntity (targetName, targetGroup);
 			if (targetEntity != null) {
 				targetEntity.AddImpactForce (meleeForce, forcePoint);
 			}

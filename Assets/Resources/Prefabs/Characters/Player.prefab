@@ -3826,6 +3826,7 @@ MonoBehaviour:
   prefix: Player
   entitySoundMaterial: 0
   hurtSound: {fileID: 0}
+  entityGroupIndex: 0
   startingHealth: 100
   slashResistance: 25
   bluntResistance: 25
@@ -3979,7 +3980,7 @@ MonoBehaviour:
   curCarryDistance: 0
   focusMask:
     serializedVersion: 2
-    m_Bits: 4294960585
+    m_Bits: 4294952393
   useMask:
     serializedVersion: 2
     m_Bits: 1
@@ -3999,8 +4000,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxFatique: 100
   maxStamina: 100
-  staminaRechargeRate: 6
-  staminaDrainRate: 7
+  staminaRechargeRate: 6.8
+  staminaDrainRate: 6
   fatique: 0
   stamina: 0
 --- !u!114 &114685996574289016
@@ -4152,6 +4153,7 @@ MonoBehaviour:
   prefix: default
   entitySoundMaterial: 0
   hurtSound: {fileID: 0}
+  entityGroupIndex: 0
   objectName: PlayerInventory
   isAvailable: 1
   slotCountX: 4
@@ -4202,7 +4204,7 @@ MonoBehaviour:
   weapon03: {fileID: 114464691599615374, guid: 445539f5653c16e4f8a96e752884adff, type: 2}
   hitMask:
     serializedVersion: 2
-    m_Bits: 4294960639
+    m_Bits: 4294952447
   currentEquipment: {fileID: 0}
   animController: {fileID: 0}
   weaponOffset: {x: 0, y: 0, z: 0}

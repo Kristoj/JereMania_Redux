@@ -39,27 +39,27 @@ public class EquipmentLibrary : MonoBehaviour {
 	public void ConsumeItem(string itemName, string consumer) {
 		// Mushroom
 		if (itemName == "Mushroom") {
-			GameManager.GetCharacter (consumer).GetComponent<PlayerStats>().FatiqueAdd (10);
-			GameManager.GetCharacter (consumer).GetComponent<PlayerStats>().StaminaAdd (60);
+			GameManager.GetPlayerByName (consumer).GetComponent<PlayerStats>().FatiqueAdd (10);
+			GameManager.GetPlayerByName (consumer).GetComponent<PlayerStats>().StaminaAdd (60);
 		}
 		// Potato
 		if (itemName == "Potato") {
-			GameManager.GetCharacter (consumer).GetComponent<PlayerStats>().FatiqueAdd (7);
-			GameManager.GetCharacter (consumer).GetComponent<PlayerStats>().StaminaAdd (50);
+			GameManager.GetPlayerByName (consumer).GetComponent<PlayerStats>().FatiqueAdd (7);
+			GameManager.GetPlayerByName (consumer).GetComponent<PlayerStats>().StaminaAdd (50);
 		}
 		// Carrot
 		if (itemName == "Carrot") {
-			GameManager.GetCharacter (consumer).GetComponent<PlayerStats> ().FatiqueAdd (16);
-			GameManager.GetCharacter (consumer).GetComponent<PlayerStats>().StaminaAdd (80);
+			GameManager.GetPlayerByName (consumer).GetComponent<PlayerStats> ().FatiqueAdd (16);
+			GameManager.GetPlayerByName (consumer).GetComponent<PlayerStats>().StaminaAdd (80);
 		}
 		// Food Ratio
 		if (itemName == "Food_Ratio") {
-			GameManager.GetCharacter (consumer).GetComponent<PlayerStats>().FatiqueAdd (100);
-			GameManager.GetCharacter (consumer).GetComponent<PlayerStats>().StaminaAdd (100);
+			GameManager.GetPlayerByName (consumer).GetComponent<PlayerStats>().FatiqueAdd (100);
+			GameManager.GetPlayerByName (consumer).GetComponent<PlayerStats>().StaminaAdd (100);
 		}
 	}
 
-	public static class GetEntity {
+	public static void GetEntityByName(string entityName, int entityGroupIndex) {
 
 	}
 }

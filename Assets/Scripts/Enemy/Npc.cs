@@ -67,7 +67,7 @@ public class Npc : LivingEntity {
 			if (dead) {
 				yield break;
 			}
-			target = GameManager.instance.localPlayer;
+			target = GameManager.GetLocalPlayer().transform;
 			if (target != null) {
 				agent.SetDestination (target.position);
 

@@ -5,7 +5,7 @@ using UnityEngine;
 public class Bed : Seat {
 
 	public override void OnStartInteraction(string masterId) {
-		if (TimeManager.instance.GetDayPercentage () > .6f) {
+		if (TimeManager.instance.GetDayPercentage () > .5f) {
 			base.OnStartInteraction (masterId);
 		}
 	}

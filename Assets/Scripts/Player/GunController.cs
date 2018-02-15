@@ -216,11 +216,11 @@ public class GunController : NetworkBehaviour {
 					currentEquipment.CmdDropItem (currentEquipment.objectName, transform.name, gunHoldR.position, gunHoldR.rotation, player.cam.transform.forward, dropForce);
 				}
 			}
-			CmdDestroyCurrentEquipment ();
+
 		}
 		yield return new WaitForSeconds (.15f);
 		// Spawn new gun
-		CmdSpawnEquipment (equipmentToEquip.objectName, netId);
+		CmdDestroyCurrentEquipment (equipmentToEquip.objectName, equipmentToEquip.entityGroupIndex, netId);
 	}
 
 	public void DestroyCurrentEquipment() {
@@ -228,23 +228,33 @@ public class GunController : NetworkBehaviour {
 		canAttack = false;
 
 		animController.ChangeWeapon ();
-		CmdDestroyCurrentEquipment ();
-		CmdSpawnEquipment (weapon01.objectName, netId);
+		CmdDestroyCurrentEquipment (weapon01.objectName, currentEquipment.entityGroupIndex, netId);
+		//CmdSpawnEquipment (weapon01.objectName, netId);
 	}
 
-	[Command]
-	void CmdDestroyCurrentEquipment() {
-		NetworkServer.Destroy (currentEquipment.gameObject);
-	}
 
 	[Command]
+	void CmdDestroyCurrentEquipment(string equName, int equIndex, NetworkInstanceId ownerId) {
+		StartCoroutine (CmdEquipmentSpawnDelay (equName, equIndex, ownerId));
+	}
+
+
+	IEnumerator CmdEquipmentSpawnDelay (string equName, int equIndex, NetworkInstanceId ownerId) {
+		if (currentEquipment != null) {
+			currentEquipment.DestroyEntity ();
+		}
+		yield return new WaitForSeconds (.1f);;
+
+		CmdSpawnEquipment(equName, ownerId);
+	}
+		
 	void CmdSpawnEquipment (string _name, NetworkInstanceId ownerId) {
 
 		Equipment equipmentRef = EquipmentLibrary.instance.GetEquipment (_name);
 		Equipment clone = Instantiate (equipmentRef, serverGunHold.position, serverGunHold.rotation, serverGunHold.transform) as Equipment;
 		clone.GetComponent<Rigidbody> ().isKinematic = true;
 		currentEquipment = clone;
-		currentEquipment.gameObject.layer = LayerMask.NameToLayer ("LocalPlayer");
+		currentEquipment.gameObject.layer = LayerMask.NameToLayer ("ViewModel");
 		currentEquipment.isAvailable = false;
 		NetworkServer.Spawn (clone.gameObject);
 		RpcSpawnEquipment (clone.netId, ownerId);
@@ -258,6 +268,7 @@ public class GunController : NetworkBehaviour {
 
 		base.connectionToClient.Send(player.myMsgId, msg);
 	}
+
 
 	[ClientRpc]
 	void RpcSpawnEquipment (NetworkInstanceId cloneId, NetworkInstanceId ownerId) {
@@ -306,10 +317,10 @@ public class GunController : NetworkBehaviour {
 		UpdateWeaponHolster ();
 
 		// Set layers
-		currentEquipment.gameObject.layer = LayerMask.NameToLayer ("LocalPlayer");
+		currentEquipment.gameObject.layer = LayerMask.NameToLayer ("ViewModel");
 		if (currentEquipment.transform.childCount > 0) {
 			for (int i = 0; i < currentEquipment.transform.childCount; i++) {
-				currentEquipment.transform.GetChild (i).gameObject.layer = LayerMask.NameToLayer ("LocalPlayer");
+				currentEquipment.transform.GetChild (i).gameObject.layer = LayerMask.NameToLayer ("ViewModel");
 			}
 		}
 		// Misc

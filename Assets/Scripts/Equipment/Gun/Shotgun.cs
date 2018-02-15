@@ -73,7 +73,7 @@ public class Shotgun : Gun {
 
 	[Command]
 	void CmdShootPrimary(string id) {
-		if (GameManager.GetCharacter (id) != null) {
+		if (GameManager.GetCharacterByName (id) != null) {
 			//GameManager.GetCharacter (id).TakeDamage (damage, transform.name);
 		}
 	}
@@ -87,7 +87,7 @@ public class Shotgun : Gun {
 	[ClientRpc]
 	void RpcOnProjectileHit(Vector3 hitPoint, string id, Quaternion tracerRot, Quaternion impactRot) {
 
-		Vector3 pos = GameManager.GetCharacter (id).GetComponent<Player>().cam.transform.position;
+		Vector3 pos = GameManager.GetPlayerByName (id).GetComponent<Player>().cam.transform.position;
 		pos.y -= .15f;
 
 		// Spawn tracer

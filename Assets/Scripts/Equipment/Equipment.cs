@@ -164,7 +164,7 @@ public class Equipment : Item {
 			if (pickupSound != null) {
 				AudioManager.instance.CmdPlaySound (pickupSound.name, transform.position, "", 1);
 			}
-			PlayerInteraction playerIntera = GameManager.instance.localPlayer.GetComponent<PlayerInteraction> ();
+			PlayerInteraction playerIntera = GameManager.GetLocalPlayer().GetComponent<PlayerInteraction> ();
 			playerIntera.StartCoroutine ("PickupItemFollow", objectName);
 		}
 	}

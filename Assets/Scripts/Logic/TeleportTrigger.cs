@@ -19,6 +19,6 @@ public class TeleportTrigger : MonoBehaviour {
 	}
 
 	void RpcTeleportPlayer(string id) {
-		GameManager.GetEntity (id).transform.position = teleportPos;
+		//GameManager.instance.GetEntity (id).transform.position = teleportPos;
 	}
 }

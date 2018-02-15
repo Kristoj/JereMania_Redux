@@ -17,7 +17,7 @@ public class GramDisc : NetworkBehaviour {
 						Vector3 discPosition = transform.position + new Vector3 (0, 0.5949595f, 0);
 						c.transform.position = discPosition;
 						c.transform.eulerAngles = transform.eulerAngles;
-						RpcInsertDisk (c.name, discPosition, transform.rotation);
+						RpcInsertDisk (c.name, discItem.entityGroupIndex, discPosition, transform.rotation);
 					}
 				}
 			}
@@ -25,8 +25,8 @@ public class GramDisc : NetworkBehaviour {
 	}
 
 	[ClientRpc]
-	void RpcInsertDisk(string diskName, Vector3 discPosition, Quaternion diskRot) {
-		GameObject diskObject = GameManager.GetEntity (diskName).gameObject;
+	void RpcInsertDisk(string diskName, int diskGroupIndex, Vector3 discPosition, Quaternion diskRot) {
+		GameObject diskObject = GameManager.instance.GetEntity (diskName, diskGroupIndex).gameObject;
 		if (diskObject != null) {
 			Rigidbody rg = diskObject.GetComponent<Rigidbody> ();
 			rg.isKinematic = true;
@@ -37,6 +37,6 @@ public class GramDisc : NetworkBehaviour {
 		}
 
 		// Play sound
-		AudioManager.instance.CmdPlaySound2D ("Recordscratch", transform.position, GameManager.instance.localPlayer.name, 1);
+		AudioManager.instance.CmdPlaySound2D ("Recordscratch", transform.position, GameManager.GetLocalPlayer().name, 1);
 	}
 }

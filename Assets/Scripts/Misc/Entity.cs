@@ -13,6 +13,9 @@ public class Entity : NetworkBehaviour {
 
 	protected Rigidbody rig;
 	public AudioClip hurtSound;
+	//[HideInInspector]
+	[SyncVar]
+	public int entityGroupIndex;
 
 	public virtual void Start() {
 		rig = GetComponent<Rigidbody> ();
@@ -22,13 +25,17 @@ public class Entity : NetworkBehaviour {
 		base.OnStartClient ();
 
 		if (GetComponent<LivingEntity> () == null) {
-			string myID = GetComponent<NetworkIdentity> ().netId.ToString ();
-			Entity entity = GetComponent<Entity> ();
-			GameManager.RegisterEntity (myID, entity, prefix);
+			if (isServer) {
+				string myID = GetComponent<NetworkIdentity> ().netId.ToString ();
+				Entity entity = GetComponent<Entity> ();
+				GameManager.instance.RegisterEntity (myID, entity, prefix);
+			}
 		} else {
-			string myID = GetComponent<NetworkIdentity> ().netId.ToString ();
-			LivingEntity entity = GetComponent<LivingEntity> ();
-			GameManager.RegisterCharacter (myID, entity, prefix);
+			if (isServer) {
+				string myID = GetComponent<NetworkIdentity> ().netId.ToString ();
+				LivingEntity entity = GetComponent<LivingEntity> ();
+				GameManager.instance.RegisterLivingEntity (myID, entity, prefix);
+			}
 		}
 	}
 
@@ -52,5 +59,15 @@ public class Entity : NetworkBehaviour {
 		if (rig != null) {
 			rig.AddForceAtPosition (impactForce, impactPos, ForceMode.Impulse);
 		}
+	}
+
+	public void SetGroupId (int i) {
+		entityGroupIndex = i;
+	}
+
+	public virtual void DestroyEntity() {
+		OnEntityDestroy ();
+		GameManager.instance.RemoveEntity (this, entityGroupIndex);
+		NetworkServer.Destroy (this.gameObject);
 	}
 }

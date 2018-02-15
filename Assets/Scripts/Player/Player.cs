@@ -20,7 +20,7 @@ public class Player : LivingEntity {
 		if (gameObject.activeSelf) {
 			if (isLocalPlayer) {
 				NetworkManager.singleton.client.RegisterHandler (myMsgId, GetComponent<GunController> ().OnSpawnNewWeapon);
-				GameManager.instance.localPlayer = this.transform;
+				GameManager.instance.SetLocalPlayer(this);
 				CmdSetAuthority (GameManager.instance.netId, GetComponent<NetworkIdentity> ());
 			}
 		}

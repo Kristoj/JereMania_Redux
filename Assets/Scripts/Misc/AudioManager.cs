@@ -78,8 +78,8 @@ public class AudioManager : NetworkBehaviour {
 	[ClientRpc]
 	public void RpcPlayCustomSound (string clip,Vector3 soundPos, string entityToFollow, float volume, bool useGroup) {
 		Transform sourcePlayer = null;
-		if (GameManager.GetCharacter (entityToFollow) != null) {
-			sourcePlayer = GameManager.GetCharacter (entityToFollow).transform;
+		if (GameManager.GetPlayerByName (entityToFollow) != null) {
+			sourcePlayer = GameManager.GetPlayerByName (entityToFollow).transform;
 		}
 
 		// Get correct audio clip to play
@@ -110,8 +110,8 @@ public class AudioManager : NetworkBehaviour {
 	public void RpcPlayCustomSound2D (string clip,Vector3 soundPos, string masterId, float volume, bool useGroup) {
 
 		Transform sourcePlayer = null;
-		if (GameManager.GetCharacter (masterId) != null) {
-			sourcePlayer = GameManager.GetCharacter (masterId).transform;
+		if (GameManager.GetPlayerByName (masterId) != null) {
+			sourcePlayer = GameManager.GetPlayerByName (masterId).transform;
 		}
 
 		// Get correct audio clip to play
@@ -122,7 +122,7 @@ public class AudioManager : NetworkBehaviour {
 			clipToPlay = soundLibrary.GetClip (clip);
 		}
 
-		if (GameManager.instance.localPlayer.name == masterId) {
+		if (GameManager.GetLocalPlayer().name == masterId) {
 			sfx2DSource.PlayOneShot (clipToPlay, masterVolume * sfxVolume * volume);
 		} else {
 			// Setup sound game object

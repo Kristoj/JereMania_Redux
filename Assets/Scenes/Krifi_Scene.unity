@@ -344,6 +344,7 @@ MonoBehaviour:
   prefix: default
   entitySoundMaterial: 0
   hurtSound: {fileID: 0}
+  entityGroupIndex: 0
 --- !u!64 &62306524
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -970,7 +971,7 @@ Transform:
   - {fileID: 1657510323}
   - {fileID: 1767082356}
   - {fileID: 762737523}
-  - {fileID: 521382066}
+  - {fileID: 1531612030}
   - {fileID: 1003651648}
   - {fileID: 704070416}
   - {fileID: 1288289729}
@@ -1126,7 +1127,7 @@ MonoBehaviour:
   matchSize: 4
   isNetworkActive: 0
   matchMaker: {fileID: 0}
-  fastHost: 1
+  fastHost: 0
   startHostButton: {fileID: 1243809042}
   joinGameButton: {fileID: 133294077}
   inputField: {fileID: 1126542242}
@@ -1617,7 +1618,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4264398045525854, guid: 7104abcabc6886d41ba41075117fb1cf, type: 2}
       propertyPath: m_RootOrder
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7104abcabc6886d41ba41075117fb1cf, type: 2}
@@ -1676,48 +1677,6 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f19fe54ff2996994b9b81be2305a55b8, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &521382065
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 521382066}
-  - component: {fileID: 521382067}
-  m_Layer: 0
-  m_Name: WindZone
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &521382066
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 521382065}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 241230202}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!182 &521382067
-WindZone:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 521382065}
-  m_Enabled: 1
-  m_Mode: 0
-  m_Radius: 20
-  m_WindMain: 1
-  m_WindTurbulence: 0.3
-  m_WindPulseMagnitude: 0.1
-  m_WindPulseFrequency: 0.15
 --- !u!1001 &529777108
 Prefab:
   m_ObjectHideFlags: 0
@@ -2491,16 +2450,6 @@ Prefab:
     - target: {fileID: 4569514612361114, guid: e8d310f905eaf7441b3d539f0b529d89, type: 2}
       propertyPath: m_RootOrder
       value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 114645103441171424, guid: e8d310f905eaf7441b3d539f0b529d89,
-        type: 2}
-      propertyPath: staminaRechargeRate
-      value: 6.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 114645103441171424, guid: e8d310f905eaf7441b3d539f0b529d89,
-        type: 2}
-      propertyPath: staminaDrainRate
-      value: 6.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e8d310f905eaf7441b3d539f0b529d89, type: 2}
@@ -3582,7 +3531,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4413035739677932, guid: ac33476bef2ba764195430dfb22f7dfd, type: 2}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ac33476bef2ba764195430dfb22f7dfd, type: 2}
@@ -3729,6 +3678,7 @@ MonoBehaviour:
   prefix: default
   entitySoundMaterial: 1
   hurtSound: {fileID: 0}
+  entityGroupIndex: 0
 --- !u!64 &1041561771
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -5732,7 +5682,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4264398045525854, guid: e625dee9078a79348b148ba845e77cf5, type: 2}
       propertyPath: m_RootOrder
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e625dee9078a79348b148ba845e77cf5, type: 2}
@@ -6214,6 +6164,48 @@ Transform:
   m_PrefabParentObject: {fileID: 4085801762434992, guid: f19fe54ff2996994b9b81be2305a55b8,
     type: 2}
   m_PrefabInternal: {fileID: 1509100123}
+--- !u!1 &1531612029
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1531612030}
+  - component: {fileID: 1531612031}
+  m_Layer: 0
+  m_Name: WindZone
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1531612030
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1531612029}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 58.11, y: 4.7, z: -39.25}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 241230202}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!182 &1531612031
+WindZone:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1531612029}
+  m_Enabled: 1
+  m_Mode: 0
+  m_Radius: 20
+  m_WindMain: 1
+  m_WindTurbulence: 1
+  m_WindPulseMagnitude: 0.5
+  m_WindPulseFrequency: 0.01
 --- !u!1001 &1536209836
 Prefab:
   m_ObjectHideFlags: 0
@@ -6536,7 +6528,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4814803319053724, guid: 3ce7fcf7e4a8e62418d8fc239ecda1b0, type: 2}
       propertyPath: m_RootOrder
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 3ce7fcf7e4a8e62418d8fc239ecda1b0, type: 2}
@@ -7612,7 +7604,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1898999829
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7819,7 +7811,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4778451902362138, guid: a263de3b903d049478a9104af34ce7fb, type: 2}
       propertyPath: m_RootOrder
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4778451902362138, guid: a263de3b903d049478a9104af34ce7fb, type: 2}
       propertyPath: m_LocalEulerAnglesHint.y
@@ -7927,7 +7919,7 @@ Transform:
   m_Children:
   - {fileID: 1731081087}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2052376543
 MonoBehaviour:
@@ -7940,7 +7932,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ed2cf2cf42b2f44dac7c9a1eb7f8048, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  localPlayer: {fileID: 0}
+  entityGroups: []
+  livingEntityGroups: []
   money: 25
 --- !u!114 &2052376544
 MonoBehaviour:
@@ -7953,8 +7946,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48775892e6c4ee34e84aad122db28b03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dayLength: 30
-  startTime: 0
+  dayLength: 200
+  startTime: 15
   sunRotationUpdateRate: 0.045
   timeOfDay: 0
   curDay: 0
@@ -8381,6 +8374,7 @@ MonoBehaviour:
   prefix: default
   entitySoundMaterial: 2
   hurtSound: {fileID: 0}
+  entityGroupIndex: 0
 --- !u!114 &2088814784
 MonoBehaviour:
   m_ObjectHideFlags: 0

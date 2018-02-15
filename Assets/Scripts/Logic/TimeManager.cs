@@ -6,7 +6,7 @@ using UnityEngine.Networking;
 public class TimeManager : NetworkBehaviour {
 
 	public float dayLength = 360f;
-	public float startTime = 140f;
+	public float startTime = 80;
 	public float sunRotationUpdateRate = 0f;
 	[SyncVar]
 	public float timeOfDay;
@@ -69,28 +69,34 @@ public class TimeManager : NetworkBehaviour {
 
 	IEnumerator SleepCycle() {
 
-		float t = 3;
-		Debug.Log ("sleep");
+		float t = 5;
 		while (playersSleeping > 0 && t >= 0) {
-			Debug.Log (GameManager.instance.GetPlayerCount ()-1);
 			if (playersSleeping >= GameManager.instance.GetPlayerCount()-1) {
 				t -= Time.deltaTime;
 			}
 			yield return null;
 		}
-		timeOfDay = dayLength / 10;
+		timeOfDay = startTime;
 		playersSleeping = 0;
+
+		RpcOnPlayerWakeUp ();
+	}
+
+	[ClientRpc]
+	void RpcOnPlayerWakeUp() {
+		// Add boons to players
+		Player localPlayer = GameManager.GetLocalPlayer();
+
+		if (localPlayer != null) {
+			PlayerStats playerStats = localPlayer.GetComponent<PlayerStats> ();
+			playerStats.FatiqueAdd (100);
+			playerStats.StaminaAdd (100);
+		}
 	}
 
 	public void OnPlayerStopSleeping() {
 		playersSleeping--;
 		playersSleeping = Mathf.Clamp (playersSleeping, 0, GameManager.instance.GetPlayerCount ());
-
-		// Add boons to players
-		LivingEntity[] players = GameManager.GetAllPlayers();
-		foreach (LivingEntity l in players) {
-
-		}
 	}
 
 	public float GetDayPercentage() {

@@ -21,7 +21,8 @@ public class Item : Interactable {
 
 	public override void OnStartInteraction(string masterId) {
 		if (canStoreInInventory && isAvailable) {
-			PickUpItem (GameManager.GetCharacter (masterId).GetComponent<PlayerInventory> ());
+			PickUpItem (GameManager.GetPlayerByName (masterId).GetComponent<PlayerInventory> ());
+			DestroyEntity ();
 		}
 	}
 
@@ -59,13 +60,12 @@ public class Item : Interactable {
 			rig.isKinematic = false;
 			float massMultiplier = rig.mass;
 			massMultiplier = Mathf.Clamp (massMultiplier, .3f, 1.4f);
-			rig.AddForce (dropDir / massMultiplier * rig.mass * dropForce + (GameManager.GetPlayer(masterId).GetComponent<CharacterController>().velocity * rig.mass), ForceMode.Impulse);
+			rig.AddForce (dropDir / massMultiplier * rig.mass * dropForce + (GameManager.GetPlayerByName(masterId).GetComponent<CharacterController>().velocity * rig.mass), ForceMode.Impulse);
 		}
 	}
 
 	[Command]
 	public void CmdOnPickup() {
-		OnEntityDestroy ();
-		NetworkServer.Destroy (this.gameObject);
+		DestroyEntity ();
 	}
 }

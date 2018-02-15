@@ -56,4 +56,9 @@ public class LivingEntity : Entity{
 			Destroy (gameObject);
 		}
 	}
+
+	public override void DestroyEntity() {
+		GameManager.instance.RemoveLivingEntity (this, entityGroupIndex);
+		NetworkServer.Destroy (this.gameObject);
+	}
 }

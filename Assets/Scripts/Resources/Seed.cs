@@ -12,8 +12,8 @@ public class Seed : MeleeWeapon {
 		myHitMask = seedPlantLayer;
 	}
 
-	public override void TakeDamage (string victimId, string playerId) {
-		FarmPatch farmPatch = GameManager.GetCharacter (victimId).GetComponent<FarmPatch> ();
+	public override void TakeDamage (string victimId, int targetGroup, string playerId) {
+		FarmPatch farmPatch = GameManager.instance.GetEntity (victimId, targetGroup).GetComponent<FarmPatch> ();
 		if (!farmPatch.hasPlant) {
 			CmdPlantSeed (victimId, playerId);
 			weaponController.DestroyCurrentEquipment ();
@@ -22,7 +22,7 @@ public class Seed : MeleeWeapon {
 
 	[Command]
 	void CmdPlantSeed(string victimId, string playerId) {
-		FarmPatch farmPatch = GameManager.GetCharacter (victimId).GetComponent<FarmPatch> ();
+		FarmPatch farmPatch = GameManager.GetCharacterByName (victimId).GetComponent<FarmPatch> ();
 		if (!farmPatch.hasPlant) {
 			farmPatch.PlantSeed(seedName);
 		}

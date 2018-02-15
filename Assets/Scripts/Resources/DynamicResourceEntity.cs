@@ -21,7 +21,7 @@ public class DynamicResourceEntity : Resource {
 			clone.GetComponent<Item> ().isAvailable = false;
 			clone.GetComponent<LivingEntity> ().deathEvent += OnChunkDeath;
 			// StartCoroutine (SetHarvestModeDelay (clone.transform.name, i));
-			RpcSetHarvestMode (clone.transform.name, i);
+			RpcSetHarvestMode (clone.transform.name, clone.GetComponent<LivingEntity>().entityGroupIndex , i);
 
 			Collider mycollider = GetComponent<Collider> ();
 			if (mycollider != null) {
@@ -35,26 +35,30 @@ public class DynamicResourceEntity : Resource {
 	}
 
 	[ClientRpc]
-	void RpcSetHarvestMode(string cloneName, int i) {
-		GameManager.GetCharacter(cloneName).GetComponent<ResourceChunk> ().SetHarvestMode (i, netId);
-	}
+	void RpcSetHarvestMode(string cloneName, int cloneGroupIndex, int i) {
+		float t = 0;
+		bool pass = false;
+		GameManager.instance.GetLivingEntity(cloneName, cloneGroupIndex).GetComponent<ResourceChunk> ().SetHarvestMode (i, netId);
+		while (!pass) {
+			t += Time.deltaTime;
 
-	IEnumerator SetHarvestModeDelay(string cloneName, int i) {
-		yield return new WaitForSeconds (.5f);
-		Debug.Log (i);
+			if (t >= .5f) {
+				
+				pass = true;
+			}
+		}
 	}
 
 	[ClientRpc]
 	void RpcSetStatic(string _name) {
-		GameManager.GetEntity (_name).gameObject.SetActive (false);
+		GameManager.instance.GetEntity (_name, entityGroupIndex).gameObject.SetActive (false);
 	}
 
 	public void OnChunkDeath() {
 		chunkCount--;
 
 		if (chunkCount <= 0) {
-			OnEntityDestroy ();
-			Destroy (this.gameObject);
+			DestroyEntity ();
 		}
 	}
 }
