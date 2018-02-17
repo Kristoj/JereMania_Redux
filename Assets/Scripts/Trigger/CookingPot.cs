@@ -28,22 +28,22 @@ public class CookingPot : NetworkBehaviour {
 			Resource dynamicEntity = c.GetComponent<Resource> ();
 
 			if (dynamicEntity != null && dynamicEntity.isAvailable) {
-				if (dynamicEntity.objectName == "Potato" && potatoCount < 1) {
+				if (dynamicEntity.entityName == "Potato" && potatoCount < 1) {
 					potatoCount++;
 					NetworkServer.Destroy (c.gameObject);
 				}
 					
-				if (dynamicEntity.objectName == "Carrot" && carrotCount < 1) {
+				if (dynamicEntity.entityName == "Carrot" && carrotCount < 1) {
 					carrotCount++;
 					NetworkServer.Destroy (c.gameObject);
 				}
 
-				if (dynamicEntity.objectName == "Mushroom" && mushroomCount < 1) {
+				if (dynamicEntity.entityName == "Mushroom" && mushroomCount < 1) {
 					mushroomCount++;
 					NetworkServer.Destroy (c.gameObject);
 				}
 
-				if (dynamicEntity.objectName == "Wood") {
+				if (dynamicEntity.entityName == "Wood") {
 					fuel += 30;
 					fuel = Mathf.Clamp (fuel, 0, 100);
 					NetworkServer.Destroy (c.gameObject);

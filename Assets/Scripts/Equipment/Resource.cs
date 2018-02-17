@@ -2,6 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Resource : MeleeWeapon {
+public class Resource : Equipment {
 
 }

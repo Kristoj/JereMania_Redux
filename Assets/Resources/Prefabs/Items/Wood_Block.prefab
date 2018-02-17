@@ -429,10 +429,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b17cc52f75f94ae40b0fa3e318ec8228, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefix: default
-  entitySoundSet: 0
+  entityName: Wood_Block
+  entitySoundMaterial: 0
   hurtSound: {fileID: 8300000, guid: 5fb50044d3560bb4b966ae1a8d68adff, type: 3}
-  objectName: Wood_Block
+  entityGroupIndex: 0
   isAvailable: 1
   price: 10
   canStoreInInventory: 0
@@ -441,7 +441,7 @@ MonoBehaviour:
   holdStyle: 0
   primaryAction: 0
   secondaryAction: 1
-  impactSoundSet: 0
+  weaponImpactSoundMaterial: 1
   positionOffset: {x: 0, y: 0, z: 0}
   speedMultiplier: 0.85
   canRunWith: 0
@@ -460,8 +460,8 @@ MonoBehaviour:
   harvestingBonus: 0
   impactFX: {fileID: 0}
   attackSound: {fileID: 8300000, guid: 8594a808b506aa149864ce7d6fe6e580, type: 3}
-  meleeRange: 2
-  hitDelay: 0.15
+  meleeRange: 3
+  hitDelay: 0.35
   audioDelay: 0.15
   impactForce: 8
   impactAudio: {fileID: 8300000, guid: 5fb50044d3560bb4b966ae1a8d68adff, type: 3}

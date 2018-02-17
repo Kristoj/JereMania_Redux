@@ -253,8 +253,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 777879b1e11512948a6aa1ac698b8d22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectName: Shop_Carrot
-  impactSound: {fileID: 8300000, guid: 1ff4f6c5149b42a438a89892d6e077bc, type: 3}
+  entityName: Shop_Carrot
+  entitySoundMaterial: 0
+  hurtSound: {fileID: 0}
+  entityGroupIndex: 0
   isAvailable: 1
   price: 100
   saleItem: {fileID: 54107561830553218, guid: a29a0288d8e8e694cba308f3778052b9, type: 2}

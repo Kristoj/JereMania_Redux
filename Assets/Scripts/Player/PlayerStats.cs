@@ -5,11 +5,15 @@ using UnityEngine;
 public class PlayerStats : MonoBehaviour {
 
 	public float maxFatique = 100f;
+	public float fatiqueDrainRate = .1f;
 	public float maxStamina = 100f;
 	public float staminaRechargeRate = 5f;
 	public float staminaDrainRate = 10f;
+	public float maxHunger = 100f;
+	public float hungerDrainRate = .2f;
 	public float fatique;
 	public float stamina;
+	public float hunger;
 
 	// Bools
 	private bool canRechargeStamina = true;
@@ -17,6 +21,7 @@ public class PlayerStats : MonoBehaviour {
 	// Classes
 	private PlayerUI playerUI;
 	private PlayerController playerController;
+	private Player player;
 
 	// Misc
 	private Coroutine staminaDrainCoroutine;
@@ -25,11 +30,14 @@ public class PlayerStats : MonoBehaviour {
 	void Start() {
 		playerUI = GetComponent<PlayerUI> ();
 		playerController = GetComponent<PlayerController> ();
+		player = GetComponent<Player> ();
 		fatique = maxFatique;
 		stamina = maxStamina;
+		hunger = maxHunger;
 	}
 
 	void Update() {
+		DrainBaseStats ();
 		if (playerController.curSpeed == playerController.moveSpeed && canRechargeStamina) {
 			stamina += staminaRechargeRate * Time.deltaTime;
 			stamina = Mathf.Clamp (stamina, 0, maxStamina);
@@ -48,6 +56,22 @@ public class PlayerStats : MonoBehaviour {
 	public void FatiqueRemove(float f) {
 		fatique -= f;
 		fatique = Mathf.Clamp (fatique, 0, maxFatique);
+
+		playerUI.UpdateFatiqueBar ();
+	}
+
+	// Add hunger
+	public void HungerAdd (float f) {
+		hunger += f;
+		hunger = Mathf.Clamp (hunger, 0, maxHunger);
+
+		playerUI.UpdateFatiqueBar ();
+	}
+
+	// Remove hunger
+	public void HungerRemove(float f) {
+		hunger -= f;
+		hunger = Mathf.Clamp (hunger, 0, maxHunger);
 
 		playerUI.UpdateFatiqueBar ();
 	}
@@ -94,5 +118,17 @@ public class PlayerStats : MonoBehaviour {
 		canRechargeStamina = false;
 		yield return new WaitForSeconds (1f);
 		canRechargeStamina = true;
+	}
+
+	void DrainBaseStats() {
+		hunger -= hungerDrainRate * Time.deltaTime;
+		fatique -= fatiqueDrainRate * Time.deltaTime;
+
+		hunger = Mathf.Clamp (hunger, 0, maxHunger);
+		fatique = Mathf.Clamp (fatique, 0, maxFatique);
+
+		if (fatique <= 0 || hunger <= 0) {
+			player.CmdKillPlayer ();
+		}
 	}
 }

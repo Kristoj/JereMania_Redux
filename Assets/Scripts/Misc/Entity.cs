@@ -5,7 +5,7 @@ using UnityEngine.Networking;
 
 public class Entity : NetworkBehaviour {
 
-	public string prefix = "default";
+	public string entityName = "Entity";
 	public delegate void DeathDelegate ();
 	public DeathDelegate deathEvent;
 	public EntitySoundMaterial entitySoundMaterial;
@@ -25,17 +25,14 @@ public class Entity : NetworkBehaviour {
 		base.OnStartClient ();
 
 		if (GetComponent<LivingEntity> () == null) {
-			if (isServer) {
-				string myID = GetComponent<NetworkIdentity> ().netId.ToString ();
-				Entity entity = GetComponent<Entity> ();
-				GameManager.instance.RegisterEntity (myID, entity, prefix);
-			}
+			string myID = GetComponent<NetworkIdentity> ().netId.ToString ();
+			Entity entity = GetComponent<Entity> ();
+			GameManager.instance.RegisterEntity (myID, entity, entityName);
+
 		} else {
-			if (isServer) {
-				string myID = GetComponent<NetworkIdentity> ().netId.ToString ();
-				LivingEntity entity = GetComponent<LivingEntity> ();
-				GameManager.instance.RegisterLivingEntity (myID, entity, prefix);
-			}
+			string myID = GetComponent<NetworkIdentity> ().netId.ToString ();
+			LivingEntity entity = GetComponent<LivingEntity> ();
+			GameManager.instance.RegisterLivingEntity (myID, entity, entityName);
 		}
 	}
 

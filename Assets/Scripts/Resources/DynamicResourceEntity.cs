@@ -30,28 +30,22 @@ public class DynamicResourceEntity : Resource {
 			rig = GetComponent<Rigidbody> ();
 			rig.isKinematic = true;
 		}
-		RpcSetStatic (transform.name);
+		RpcSetStatic ();
 		// Misc
 	}
 
 	[ClientRpc]
 	void RpcSetHarvestMode(string cloneName, int cloneGroupIndex, int i) {
-		float t = 0;
-		bool pass = false;
-		GameManager.instance.GetLivingEntity(cloneName, cloneGroupIndex).GetComponent<ResourceChunk> ().SetHarvestMode (i, netId);
-		while (!pass) {
-			t += Time.deltaTime;
-
-			if (t >= .5f) {
-				
-				pass = true;
-			}
+		LivingEntity rc = GameManager.instance.GetLivingEntity (cloneName, cloneGroupIndex);
+		if (rc != null) {
+			rc.GetComponent<ResourceChunk> ().SetHarvestMode (i, netId);
 		}
 	}
 
 	[ClientRpc]
-	void RpcSetStatic(string _name) {
-		GameManager.instance.GetEntity (_name, entityGroupIndex).gameObject.SetActive (false);
+	void RpcSetStatic() {
+		//GameManager.instance.GetEntity (_name, entityGroupIndex).gameObject.SetActive (false);
+		this.gameObject.SetActive(false);
 	}
 
 	public void OnChunkDeath() {

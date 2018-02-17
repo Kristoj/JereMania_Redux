@@ -11,12 +11,11 @@ public class Timber : LivingEntity {
 	public Rigidbody dropResource;
 
 	public override void Die() {
-		base.Die ();
-
 		// Drop resources
 		for (int i = 0; i < dropCount; i++) {
 			CmdDropResource ();
 		}
+		base.Die ();
 	}
 
 	[Command]

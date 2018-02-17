@@ -12,7 +12,7 @@ public class GramDisc : NetworkBehaviour {
 			Item discItem = c.GetComponent<Item>();
 			if (discItem != null) {
 				if(Disc.isAvailable == true){
-					if (discItem.objectName == "Disc_Jere" || discItem.objectName == "Disc_Elmu") {
+					if (discItem.entityName == "Disc_Jere" || discItem.entityName == "Disc_Elmu") {
 						rg.isKinematic = true;
 						Vector3 discPosition = transform.position + new Vector3 (0, 0.5949595f, 0);
 						c.transform.position = discPosition;

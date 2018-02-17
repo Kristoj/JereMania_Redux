@@ -4,16 +4,12 @@ using System.Collections;
 
 public class Interactable : Entity {
 
-	public string objectName;
 	[HideInInspector]
 	[SyncVar]
 	public bool isAvailable = true;
 	protected Transform owner;
 
 	public override void OnStartClient() {
-		if (objectName != "") {
-			prefix = objectName;
-		}
 		base.OnStartClient ();
 	}
 

@@ -16,9 +16,9 @@ public class EquipmentLibrary : MonoBehaviour {
 		instance = this;
 	}
 
-	public Equipment GetEquipment (string _name) {
+	public Equipment GetEquipment (string _entityName) {
 		foreach (Equipment e in equipmentList) {
-			if (e.objectName == _name) {
+			if (e.entityName == _entityName) {
 				return e;
 			}
 		}
@@ -38,29 +38,30 @@ public class EquipmentLibrary : MonoBehaviour {
 
 	public void ConsumeItem(string itemName, string consumer) {
 		// Mushroom
+		PlayerStats consumerStats = GameManager.GetPlayerByName (consumer).GetComponent<PlayerStats>();
 		if (itemName == "Mushroom") {
-			GameManager.GetPlayerByName (consumer).GetComponent<PlayerStats>().FatiqueAdd (10);
-			GameManager.GetPlayerByName (consumer).GetComponent<PlayerStats>().StaminaAdd (60);
+			consumerStats.FatiqueAdd (.5f);
+			consumerStats.StaminaAdd (60);
+			consumerStats.HungerAdd (17);
 		}
 		// Potato
-		if (itemName == "Potato") {
-			GameManager.GetPlayerByName (consumer).GetComponent<PlayerStats>().FatiqueAdd (7);
-			GameManager.GetPlayerByName (consumer).GetComponent<PlayerStats>().StaminaAdd (50);
+		else if (itemName == "Potato") {
+			consumerStats.FatiqueAdd (.75f);
+			consumerStats.StaminaAdd (50);
+			consumerStats.HungerAdd (15);
 		}
 		// Carrot
-		if (itemName == "Carrot") {
-			GameManager.GetPlayerByName (consumer).GetComponent<PlayerStats> ().FatiqueAdd (16);
-			GameManager.GetPlayerByName (consumer).GetComponent<PlayerStats>().StaminaAdd (80);
+		else if (itemName == "Carrot") {
+			consumerStats.FatiqueAdd (1);
+			consumerStats.StaminaAdd (80);
+			consumerStats.HungerAdd (28);
 		}
 		// Food Ratio
-		if (itemName == "Food_Ratio") {
-			GameManager.GetPlayerByName (consumer).GetComponent<PlayerStats>().FatiqueAdd (100);
-			GameManager.GetPlayerByName (consumer).GetComponent<PlayerStats>().StaminaAdd (100);
+		else if (itemName == "Food_Ratio") {
+			consumerStats.FatiqueAdd (3);
+			consumerStats.StaminaAdd (100);
+			consumerStats.HungerAdd (100);
 		}
-	}
-
-	public static void GetEntityByName(string entityName, int entityGroupIndex) {
-
 	}
 }
 

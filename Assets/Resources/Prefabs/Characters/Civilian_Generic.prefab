@@ -2705,9 +2705,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3104f1531086bf4449fc8b0a3a9c1f83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefix: default
+  entityName: Civilian_Generic
+  entitySoundMaterial: 0
+  hurtSound: {fileID: 0}
+  entityGroupIndex: 0
   startingHealth: 100
-  impactSound: {fileID: 0}
+  slashResistance: 25
+  bluntResistance: 25
+  piercingResistance: 25
+  professionWeakness: 0
+  weaknessAmount: 25
   destroyOnDeath: 0
   pathUpdateRate: 0.15
   damage: 25

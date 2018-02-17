@@ -18,7 +18,7 @@ public class LivingEntity : Entity{
 	[Header ("FX")]
 	public bool destroyOnDeath = false;
 	[SyncVar]
-	protected int health;
+	public int health;
 	protected bool dead;
 
 	public override void Start() {
@@ -27,14 +27,16 @@ public class LivingEntity : Entity{
 	}
 
 	public virtual void TakeDamage (float damage, string masterId) {
-		health -= (int)damage;
+		if (!dead) {
+			health -= (int)damage;
 
-		// Sound
-		if (hurtSound != null) {
-			AudioManager.instance.CmdPlaySound (hurtSound.name, transform.position, "", 1);
-		}
-		if (health <= 0 && !dead) {
-			Die ();
+			// Sound
+			if (hurtSound != null) {
+				AudioManager.instance.CmdPlaySound (hurtSound.name, transform.position, "", 1);
+			}
+			if (health <= 0 && !dead) {
+				Die ();
+			}
 		}
 	}
 
@@ -44,12 +46,16 @@ public class LivingEntity : Entity{
 	}
 
 	[ClientRpc]
-	public virtual void RpcDie() {
+	void RpcDie() {
+		dead = true;
+		OnClientDie();
+	}
 
+	public virtual void OnClientDie() {
+		AchievementProgressTracker.instance.AddAchievementProgress (entityName);
 	}
 		
 	public virtual void Die() {
-		dead = true;
 		RpcDie ();
 		OnEntityDestroy ();
 		if (destroyOnDeath) {

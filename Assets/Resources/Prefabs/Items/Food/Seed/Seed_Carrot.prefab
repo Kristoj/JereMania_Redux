@@ -304,8 +304,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a89a9b28066fae4385f311138afe93f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectName: Seed_Carrot
-  impactSound: {fileID: 0}
+  entityName: Seed_Carrot
+  entitySoundMaterial: 0
+  hurtSound: {fileID: 0}
+  entityGroupIndex: 0
   isAvailable: 1
   price: 7
   canStoreInInventory: 1
@@ -314,6 +316,7 @@ MonoBehaviour:
   holdStyle: 0
   primaryAction: 0
   secondaryAction: 1
+  weaponImpactSoundMaterial: 0
   positionOffset: {x: 0, y: 0, z: 0}
   speedMultiplier: 1
   canRunWith: 1
@@ -331,7 +334,7 @@ MonoBehaviour:
   miningBonus: 0
   harvestingBonus: 0
   impactFX: {fileID: 0}
-  shootSound: {fileID: 0}
+  attackSound: {fileID: 0}
   meleeRange: 3
   hitDelay: 0.35
   audioDelay: 0.15

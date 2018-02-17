@@ -152,10 +152,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ceb72524175e396459d61c199677315f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefix: default
+  entityName: Bed
   entitySoundMaterial: 0
   hurtSound: {fileID: 0}
-  objectName: Bed
+  entityGroupIndex: 0
   isAvailable: 1
   sitPosition: {x: 0, y: 0, z: 0}
   exitPosition: {x: 0, y: 0, z: 0}

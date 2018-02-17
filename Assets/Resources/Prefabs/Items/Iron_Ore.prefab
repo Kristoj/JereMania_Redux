@@ -40,7 +40,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1056361635174502}
   m_LocalRotation: {x: -0.000001032599, y: 0.7071059, z: 0.0000010325965, w: 0.7071077}
-  m_LocalPosition: {x: -152.3244, y: 15.166, z: 63.692215}
+  m_LocalPosition: {x: 23.371, y: 0.553, z: 17.490479}
   m_LocalScale: {x: 0.8, y: 0.65, z: 0.8}
   m_Children: []
   m_Father: {fileID: 0}
@@ -60,7 +60,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: -33714328, guid: 8b2d8bc2dcb34014aac3828cb876045c, type: 3}
+  - {fileID: 2100000, guid: c1f49ec881d38b741b6161cc95167ea5, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -127,9 +127,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a28858bd824b7df4e936b1c9b92280e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefix: default
-  impactSound: {fileID: 8300000, guid: 5fb50044d3560bb4b966ae1a8d68adff, type: 3}
-  objectName: Iron_Ore
+  entityName: Iron_Ore
+  entitySoundMaterial: 0
+  hurtSound: {fileID: 0}
+  entityGroupIndex: 0
   isAvailable: 1
   price: 30
   canStoreInInventory: 1
@@ -138,6 +139,7 @@ MonoBehaviour:
   holdStyle: 0
   primaryAction: 0
   secondaryAction: 1
+  weaponImpactSoundMaterial: 0
   positionOffset: {x: 0, y: 0, z: 0}
   speedMultiplier: 1
   canRunWith: 1
@@ -155,9 +157,9 @@ MonoBehaviour:
   miningBonus: 0
   harvestingBonus: 0
   impactFX: {fileID: 114339121599838044, guid: 5df671e9e9489574bb08ad6bb0775d0d, type: 2}
-  shootSound: {fileID: 8300000, guid: 7209df69f9c268a4d92332c97bb435c0, type: 3}
+  attackSound: {fileID: 0}
   meleeRange: 2
-  hitDelay: 0.15
+  hitDelay: 0.35
   audioDelay: 0.15
   impactForce: 3
   impactAudio: {fileID: 8300000, guid: 2fc8c34d80db79d488b94acd87d7e98b, type: 3}
@@ -172,8 +174,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e030f4a7cb32ae34586f0e5500a973e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefix: default
-  impactSound: {fileID: 8300000, guid: 5fb50044d3560bb4b966ae1a8d68adff, type: 3}
+  entityName: Iron_Ore
+  entitySoundMaterial: 2
+  hurtSound: {fileID: 0}
+  entityGroupIndex: 0
   startingHealth: 50
   slashResistance: 90
   bluntResistance: 0
@@ -181,6 +185,7 @@ MonoBehaviour:
   professionWeakness: 1
   weaknessAmount: 100
   destroyOnDeath: 0
+  health: 0
   originalPrefab: {fileID: 114988886934263314, guid: 9c8420015c65f394183af93c3bdda027,
     type: 2}
 --- !u!114 &114684903910946546

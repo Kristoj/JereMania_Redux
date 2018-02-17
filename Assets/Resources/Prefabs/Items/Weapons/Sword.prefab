@@ -634,28 +634,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5b1f863c5c85fd4cbb37f5b6d7d34ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectName: Sword
-  impactSound: {fileID: 8300000, guid: 2fc8c34d80db79d488b94acd87d7e98b, type: 3}
+  entityName: Sword
+  entitySoundMaterial: 0
+  hurtSound: {fileID: 0}
+  entityGroupIndex: 0
   isAvailable: 1
+  price: 10
   canStoreInInventory: 1
   itemId: 0
   itemIcon: {fileID: 0}
-  positionOffset: {x: 0, y: -0.05, z: 0.05}
-  speedMultiplier: 1
-  canRunWith: 1
   holdStyle: 0
   primaryAction: 0
   secondaryAction: 2
+  weaponImpactSoundMaterial: 0
+  positionOffset: {x: 0, y: -0.05, z: 0.05}
+  speedMultiplier: 1
+  canRunWith: 1
   pickupSound: {fileID: 0}
   myHitMask:
     serializedVersion: 2
     m_Bits: 0
   player: {fileID: 0}
   fireMode: 0
-  damage: 100
   rpm: 85
+  slashDamage: 6
+  bluntDamage: 6
+  piercingDamage: 6
+  woodcuttingBonus: 0
+  miningBonus: 0
+  harvestingBonus: 0
   impactFX: {fileID: 114339121599838044, guid: e1b39d973dfd0c94295a06ab9474612e, type: 2}
-  shootSound: {fileID: 8300000, guid: 7209df69f9c268a4d92332c97bb435c0, type: 3}
+  attackSound: {fileID: 0}
   meleeRange: 3
   hitDelay: 0.35
   audioDelay: 0.15

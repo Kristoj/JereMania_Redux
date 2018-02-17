@@ -11,6 +11,10 @@ public class ResourceChunk : LivingEntity {
 	private Item item;
 	public DynamicResourceEntity originalPrefab;
 
+	void Awake() {
+		dead = true;
+	}
+
 	public override void Start() {
 		base.Start ();
 		item = GetComponent<Item> ();
@@ -21,26 +25,19 @@ public class ResourceChunk : LivingEntity {
 		rig.isKinematic = false;
 		item.isAvailable = true;
 	}
-
-	[ClientRpc]
-	public override void RpcDie() {
+		
+	public override void OnClientDie() {
+		base.OnClientDie ();
 		rig = GetComponent<Rigidbody> ();
 		rig.isKinematic = false;
 	}
 
-	public void SetStatic() {
+	void SetStatic() {
 		rig = GetComponent<Rigidbody> ();
 		item = GetComponent<Item> ();
 		item.isAvailable = false;
 		rig.isKinematic = true;
-	}
-
-	[ClientRpc]
-	public void RpcSetStatic() {
-		rig = GetComponent<Rigidbody> ();
-		item = GetComponent<Item> ();
-		item.isAvailable = false;
-		rig.isKinematic = true;
+		dead = false;
 	}
 		
 	public void SetHarvestMode(int chunkId, NetworkInstanceId blockNetId) {

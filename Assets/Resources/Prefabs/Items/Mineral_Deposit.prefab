@@ -951,9 +951,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b17cc52f75f94ae40b0fa3e318ec8228, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefix: default
+  entityName: Mineral_Deposit
+  entitySoundMaterial: 2
   hurtSound: {fileID: 8300000, guid: 7db4a6d7e11ab374bb4715d62ab2601c, type: 3}
-  objectName: Mineral_Deposit
+  entityGroupIndex: 0
   isAvailable: 1
   price: 10
   canStoreInInventory: 0
@@ -962,6 +963,7 @@ MonoBehaviour:
   holdStyle: 0
   primaryAction: 0
   secondaryAction: 1
+  weaponImpactSoundMaterial: 0
   positionOffset: {x: 0, y: 0, z: 0}
   speedMultiplier: 1
   canRunWith: 0

@@ -7,10 +7,10 @@ public class GameManager : NetworkBehaviour {
 
 	private static Dictionary <string, LivingEntity> players = new Dictionary<string, LivingEntity>();
 	private static Dictionary <string, LivingEntity> characters = new Dictionary<string, LivingEntity>();
-	//private static Dictionary <string, Entity> entities = new Dictionary<string, Entity>();
+	private static Dictionary <string, Entity> entities = new Dictionary<string, Entity>();
+	private static Dictionary <string, LivingEntity> livingEntities = new Dictionary<string, LivingEntity>();
 	public List<EntityGroup> entityGroups = new List<EntityGroup> ();
 	public List<LivingEntityGroup> livingEntityGroups = new List<LivingEntityGroup> ();
-	//public EntityGroup[] testGroup = new EntityGroup[5];
 	private int groupLength = 30;
 	[HideInInspector]
 	private static Player localPlayer;
@@ -81,10 +81,10 @@ public class GameManager : NetworkBehaviour {
 		}
 
 		// Entity list
-		//if (!entities.ContainsKey (prefix + netId)) {
-			//entities.Add (prefix + netId, entity);
-			//entity.transform.name = prefix + netId;
-		//}
+		if (!entities.ContainsKey (prefix + netId)) {
+			entities.Add (prefix + netId, entity);
+			entity.transform.name = prefix + netId;
+		}
 	}
 
 	public void RegisterLivingEntity(string netId, LivingEntity entity, string prefix) {
@@ -102,6 +102,12 @@ public class GameManager : NetworkBehaviour {
 			livingEntityGroups.Add (new LivingEntityGroup ());
 			livingEntityGroups [livingEntityGroups.Count - 1].AddLivingEntityToGroup (entity);
 			entity.SetGroupId (livingEntityGroups.Count - 1);
+		}
+
+		// Entity list
+		if (!livingEntities.ContainsKey (prefix + netId)) {
+			livingEntities.Add (prefix + netId, entity);
+			entity.transform.name = prefix + netId;
 		}
 	}
 
@@ -128,21 +134,35 @@ public class GameManager : NetworkBehaviour {
 
 
 	public Entity GetEntity(string entityName, int entityGroupIndex) {
-		Entity e = entityGroups[entityGroupIndex].GetEntityFromGroup (entityName);
+		Entity e = null;
+		if (entityGroupIndex <= entityGroups.Count - 1) {
+			e = entityGroups [entityGroupIndex].GetEntityFromGroup (entityName);
+		}
 		if (e == null) {
-			//if (entities.ContainsKey (entityName)) {
-			//	e = entities [entityName];
-			//}
+			if (entities.ContainsKey (entityName)) {
+				e = entities [entityName];
+				if (e != null) {
+					//Debug.LogWarning ("Used alternative fetch method on a entity");
+				} else {
+					Debug.LogError ("Could not find target entity");
+				}
+			}
 		}
 		return e;
 	}
 
 	public LivingEntity GetLivingEntity(string entityName, int entityGroupIndex) {
 		LivingEntity l = livingEntityGroups[entityGroupIndex].GetLivingEntityFromGroup (entityName);
-		if (l== null) {
-			//if (entities.ContainsKey (entityName)) {
-			//	e = entities [entityName];
-			//}
+		if (l == null) {
+			if (livingEntities.ContainsKey (entityName)) {
+				l = livingEntities [entityName];
+				if (l != null) {
+					//Debug.LogWarning ("Used alternative fetch method on a living entity");
+				} else {
+					Debug.LogError ("Could not find target living entity");
+				}
+
+			}
 		}
 		return l;
 	}

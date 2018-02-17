@@ -1578,9 +1578,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38d8f620745db844c9e2e1c25da6f198, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefix: Worker
+  entityName: Worker
+  entitySoundMaterial: 0
+  hurtSound: {fileID: 0}
+  entityGroupIndex: 0
   startingHealth: 100
-  impactSound: {fileID: 0}
+  slashResistance: 25
+  bluntResistance: 25
+  piercingResistance: 25
+  professionWeakness: 0
+  weaknessAmount: 25
   destroyOnDeath: 0
   shitRate: 4
   shitLoopTime: 10

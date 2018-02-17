@@ -9,7 +9,7 @@ public class SellingPoint : NetworkBehaviour {
 		if (isServer) {
 			Item sellItem = c.GetComponent<Item> ();
 			if (sellItem != null) {
-				if (sellItem.objectName == "Iron_Ore" || sellItem.objectName == "Potato" ||sellItem.objectName == "Carrot" && sellItem.isAvailable) {
+				if (sellItem.entityName == "Iron_Ore" || sellItem.entityName == "Potato" ||sellItem.entityName == "Carrot" && sellItem.isAvailable) {
 					AudioManager.instance.CmdPlaySound2D ("UI_Transaction", transform.position, GameManager.GetLocalPlayer().name, 1);
 					GameManager.instance.GiveMoney (sellItem.price);
 					NetworkServer.Destroy (sellItem.gameObject);

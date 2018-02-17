@@ -652,10 +652,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81ff7e7b6d4744343aef285b70789d77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefix: default
+  entityName: Pickaxe
   entitySoundMaterial: 0
   hurtSound: {fileID: 0}
-  objectName: Pickaxe
+  entityGroupIndex: 0
   isAvailable: 1
   price: 10
   canStoreInInventory: 1

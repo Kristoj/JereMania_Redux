@@ -204,8 +204,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6f388e0b579a3d47a45211d07073758, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectName: 
-  impactSound: {fileID: 8300000, guid: 5fb50044d3560bb4b966ae1a8d68adff, type: 3}
+  entityName: Crate_Wood
+  entitySoundMaterial: 0
+  hurtSound: {fileID: 0}
+  entityGroupIndex: 0
   isAvailable: 1
   slotCountX: 4
   slotCountY: 3

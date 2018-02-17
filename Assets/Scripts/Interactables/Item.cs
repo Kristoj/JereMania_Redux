@@ -21,8 +21,10 @@ public class Item : Interactable {
 
 	public override void OnStartInteraction(string masterId) {
 		if (canStoreInInventory && isAvailable) {
-			PickUpItem (GameManager.GetPlayerByName (masterId).GetComponent<PlayerInventory> ());
-			DestroyEntity ();
+			PlayerInventory targetInventory = GameManager.GetPlayerByName (masterId).GetComponent<PlayerInventory>();
+			if (!targetInventory.isFull) {
+				PickUpItem (targetInventory);
+			}
 		}
 	}
 

@@ -54,7 +54,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4264398045525854}
-  - component: {fileID: 95106357737057522}
   - component: {fileID: 54907222832002396}
   - component: {fileID: 114963260738796314}
   - component: {fileID: 114864005991994102}
@@ -311,23 +310,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
---- !u!95 &95106357737057522
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1727188779923378}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 4dac0d7a50482ef45a8d6844e6527a78, type: 3}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
 --- !u!114 &114864005991994102
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -371,10 +353,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45af4825de888854e90af899d092bc7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefix: default
+  entityName: Disc_Elmu
   entitySoundMaterial: 0
   hurtSound: {fileID: 0}
-  objectName: Disc_Elmu
+  entityGroupIndex: 0
   isAvailable: 1
   price: 10
   canStoreInInventory: 0

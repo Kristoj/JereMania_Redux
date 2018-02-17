@@ -58,7 +58,7 @@ public class PlayerAnimationController : NetworkBehaviour {
 
 
 		if (playerController.IsGrounded() || playerController.IsHardGrounded ()) {
-			vmMoveSpeed = Mathf.Lerp (vmMoveSpeed, (new Vector2 (controller.velocity.x, controller.velocity.z).magnitude) / playerController.runSpeed, .2f);
+			vmMoveSpeed = Mathf.Lerp (vmMoveSpeed, (new Vector2 (controller.velocity.x, controller.velocity.z).magnitude) / playerController.runSpeed, .25f);
 		} else {
 			vmMoveSpeed = Mathf.Lerp (vmMoveSpeed, 0, .25f);
 		}

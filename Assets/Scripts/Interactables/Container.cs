@@ -13,6 +13,7 @@ public class Container : Interactable {
 	public List<Slot> slots = new List<Slot>();
 	public float slotGap = .25f;
 	protected bool isOpen = false;
+	public bool isFull = false;
 
 	[Header ("Assignables")]
 	public RectTransform containerWindow;
@@ -104,13 +105,25 @@ public class Container : Interactable {
 	}
 
 	public void AddItem (Item itemToAdd, int index) {
-		slots [index].AddItem (itemToAdd.objectName);
+		slots [index].AddItem (itemToAdd.entityName);
+
+		int openSlots = slotCountX * slotCountY;
+		foreach (Slot s in slots) {
+			if (s.slotItem != null) {
+				openSlots--;
+			}
+		}
+		if (openSlots <= 0) {
+			isFull = true;
+		} else {
+			isFull = false;
+		}
 	}
 
 	public void DropItem(Slot dropSlot) {
 		if (dropSlot.slotItem != null) {
 			Camera playerCam = GetComponent<Player> ().cam;
-			CmdDropItem (playerCam.transform.position + playerCam.transform.forward, dropSlot.slotItem.objectName);
+			CmdDropItem (playerCam.transform.position + playerCam.transform.forward, dropSlot.slotItem.entityName);
 			dropSlot.ClearSlot ();
 		}
 	}
@@ -125,8 +138,15 @@ public class Container : Interactable {
 
 	void MoveItem(Slot startSlot, Slot endSlot) {
 		if (endSlot.slotItem == null) {
-			endSlot.AddItem (startSlot.slotItem.objectName);
+			endSlot.AddItem (startSlot.slotItem.entityName);
 			startSlot.ClearSlot ();
+		}
+	}
+
+	public void FlushInventory() {
+		foreach (Slot s in slots) {
+			s.ClearSlot ();
+			isFull = false;
 		}
 	}
 

@@ -25,7 +25,7 @@ public class ForestrySpawner : NetworkBehaviour {
 
 	}
 	IEnumerator GrowForestry() {
-		yield return new WaitForSeconds (30);
+		yield return new WaitForSeconds (1);
 		while (canGrown) {
 			yield return new WaitForSeconds (spawnInterval);
 
@@ -48,16 +48,20 @@ public class ForestrySpawner : NetworkBehaviour {
 			Entity cloneEntity = clone.GetComponent<Entity> ();
 			cloneEntity.deathEvent += RemoveForestry;
 			curForestryCount++;
-			StartCoroutine (DelaySpawn (clone.GetComponent<NetworkIdentity>().netId, spawnPos));
+			StartCoroutine (DelaySpawn (cloneEntity.name, cloneEntity.entityGroupIndex, spawnPos));
 		}
 	}
 
-	IEnumerator DelaySpawn(NetworkInstanceId cloneId, Vector3 spawnPos) {
-		yield return new WaitForSeconds (1);
-		DynamicResourceEntity dynamicResourceClone = NetworkServer.FindLocalObject(cloneId).GetComponent<DynamicResourceEntity> ();
-		if (dynamicResourceClone) {
-			dynamicResourceClone.SetupChunks (spawnPos);
+	IEnumerator DelaySpawn(string cloneName, int cloneGroup , Vector3 spawnPos) {
+		yield return new WaitForSeconds (.05f);
+		Entity e = GameManager.instance.GetEntity (cloneName, cloneGroup);
+		if (e != null) {
+			DynamicResourceEntity dynamicResourceClone = e.GetComponent<DynamicResourceEntity> ();
+			if (dynamicResourceClone) {
+				dynamicResourceClone.SetupChunks (spawnPos);
+			}
 		}
+
 	}
 
 	public void RemoveForestry() {

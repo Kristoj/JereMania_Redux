@@ -37,12 +37,12 @@ public class Furnace : NetworkBehaviour {
 			Resource dynamicEntity = c.GetComponent<Resource> ();
 
 			if (dynamicEntity != null && dynamicEntity.isAvailable) {
-				if (dynamicEntity.objectName == "Ore" && oreCount < maxOreCount) {
+				if (dynamicEntity.entityName == "Ore" && oreCount < maxOreCount) {
 					oreCount++;
 					NetworkServer.Destroy (c.gameObject);
 				}
 
-				if (dynamicEntity.objectName == "Wood") {
+				if (dynamicEntity.entityName == "Wood") {
 					fuel += 20;
 					fuel = Mathf.Clamp (fuel, 0, 100);
 					NetworkServer.Destroy (c.gameObject);

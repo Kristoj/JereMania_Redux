@@ -134,7 +134,8 @@ public class FarmPatch : LivingEntity {
 		hasPlant = false;
 	}
 
-	public override void RpcDie () { 
+	public override void OnClientDie () { 
+		base.OnClientDie ();
 		gameObject.layer = LayerMask.NameToLayer ("MeleeInteraction");
 		meshFilter.mesh = null;
 

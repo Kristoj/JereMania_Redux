@@ -9,9 +9,11 @@ public class PlayerUI : MonoBehaviour {
 	// Bars
 	public Transform fatiqueBar;
 	public Transform staminaBar;
+	public Transform hungerBar;
 	// Bar scales
 	private Vector3 fatiqueBarScale;
 	private Vector3 staminaBarScale;
+	private Vector3 hungerBarScale;
 	public Text moneyText;
 	public Text focusText;
 
@@ -29,6 +31,7 @@ public class PlayerUI : MonoBehaviour {
 		if (fatiqueBar != null) {
 			fatiqueBarScale = fatiqueBar.localScale;
 			staminaBarScale = staminaBar.localScale;
+			hungerBarScale = hungerBar.localScale;
 		}
 	}
 	
@@ -39,6 +42,7 @@ public class PlayerUI : MonoBehaviour {
 		}
 		if (staminaBar != null) {
 			UpdateStaminaBar ();
+			UpdateHungerBar ();
 		}
 	}
 
@@ -51,6 +55,12 @@ public class PlayerUI : MonoBehaviour {
 	public void UpdateStaminaBar() {
 		if (staminaBar != null) {
 			staminaBar.localScale = new Vector3 (staminaBarScale.x * (playerStats.stamina / 100), staminaBarScale.y, staminaBarScale.z);
+		}
+	}
+
+	public void UpdateHungerBar() {
+		if (hungerBar != null) {
+			hungerBar.localScale = new Vector3 (hungerBarScale.x * (playerStats.hunger / 100), hungerBarScale.y, hungerBarScale.z);
 		}
 	}
 

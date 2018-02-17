@@ -13,7 +13,6 @@ public class GunController : NetworkBehaviour {
 	public Transform armHolder;
 	public Weapon weapon01;
 	public Weapon weapon02;
-	public Weapon weapon03;
 	public LayerMask hitMask;
 
 	//[HideInInspector]
@@ -63,6 +62,7 @@ public class GunController : NetworkBehaviour {
 	//[HideInInspector]
 	public bool isChargingSecondaryAction = false;
 	public bool canChangeEquipment = true;
+	public bool canSpawnNewEquipment = false;
 	public bool isAttacking = false;
 	public bool canAttack = true;
 
@@ -102,7 +102,7 @@ public class GunController : NetworkBehaviour {
 		}
 
 		if (weapon01 != null) {
-			EquipEquipment (weapon01, 1);
+			EquipEquipment (weapon01, 1, true);
 		}
 	}
 
@@ -125,7 +125,7 @@ public class GunController : NetworkBehaviour {
 
 		// Shooting
 		if (Input.GetButtonDown ("Fire2")) {
-			if (isLocalPlayer && currentEquipment != null) {
+			if (currentEquipment != null) {
 				//Aim ();
 				currentEquipment.OnSecondaryAction();
 			}
@@ -133,8 +133,8 @@ public class GunController : NetworkBehaviour {
 
 		// Shooting
 		if (Input.GetKeyDown (KeyCode.G)) {
-			if (isLocalPlayer && currentEquipment != null && currentEquipment.objectName != "Hammer" && !isAttacking) {
-				EquipEquipment (EquipmentLibrary.instance.GetEquipment ("Hatchet"), 1f);
+			if (currentEquipment != null && !isAttacking) {
+				EquipEquipment (GetWantedWeapon(), 1f, true);
 			}
 		}
 
@@ -145,22 +145,15 @@ public class GunController : NetworkBehaviour {
 
 		// Weapon Equipping
 		if (Input.GetKeyDown(KeyCode.Alpha1)) {
-			if (weapon01 != null && !isAttacking) {
-				EquipEquipment (weapon01, 1);
+			if (weapon01 != null && !isAttacking && currentEquipment.entityName  != weapon01.entityName) {
+				EquipEquipment (weapon01, 0, false);
 			}
 		}
 
 		// Weapon Equipping
 		if (Input.GetKeyDown(KeyCode.Alpha2)) {
-			if (weapon02 != null && !isAttacking) {
-				EquipEquipment (weapon02, 1);
-			}
-		}
-
-		// Weapon Equipping
-		if (Input.GetKeyDown(KeyCode.Alpha3)) {
-			if (weapon03 != null && !isAttacking) {
-				EquipEquipment (weapon03, 1);
+			if (weapon02 != null && !isAttacking && currentEquipment.entityName  != weapon02.entityName) {
+				EquipEquipment (weapon02, 0, false);
 			}
 		}
 
@@ -184,7 +177,7 @@ public class GunController : NetworkBehaviour {
 		}
 	}
 
-	public void EquipEquipment(Equipment equipmentToEquip, float dropForce) {
+	public void EquipEquipment(Equipment equipmentToEquip, float dropForce, bool dropEquipment) {
 		if (!canChangeEquipment) {
 			return;
 		}
@@ -193,34 +186,88 @@ public class GunController : NetworkBehaviour {
 		canAttack = false;
 
 		// Animation
-		if (equipmentToEquip.objectName == weapon01.objectName || equipmentToEquip.objectName == weapon02.objectName || equipmentToEquip.objectName == weapon03.objectName) {
-			animController.ChangeWeapon ();
+		animController.ChangeWeapon();
+
+		Weapon w = null;
+		// Check if new equipment can be placed in a slot
+		if (equipmentToEquip != null) {
+			w = equipmentToEquip.GetComponent<Weapon> ();
+			if (w != null && w.entityName != "Unarmed") {
+				if (weapon01 == null || weapon02 == null) {
+					dropEquipment = false;
+				}
+			}
+		}
+
+		// Drop current equipment before spawning a new one if wanted
+		if (dropEquipment) {
+			if (currentEquipment != null && currentEquipment.entityName != "Unarmed") {
+				DropEquipment (currentEquipment, dropForce, false);
+			}
+		}
+
+		if (w != null) {
+			if (weapon01 == null) {
+				weapon01 = EquipmentLibrary.instance.GetEquipment (w.entityName) as Weapon;
+			}
+			else if (weapon02 == null) {
+				weapon02 = EquipmentLibrary.instance.GetEquipment (w.entityName) as Weapon;
+			}
+		}
+
+		if (equipmentToEquip == null) {
+			equipmentToEquip = GetWantedWeapon ();
 		}
 			
-		StartCoroutine (DropEquipment (equipmentToEquip, dropForce));
+		// Spawn new gun
+		StartCoroutine (CmdEquipmentSpawnDelay (equipmentToEquip.entityName, netId));
 	}
 
-	IEnumerator DropEquipment(Equipment equipmentToEquip, float dropForce) {
+	public void CleanCurrentEquipmentSlot() {
+		if (weapon01 != null) {
+			if (currentEquipment.entityName == weapon01.entityName) {
+				weapon01 = null;
+			}
+		} else if (weapon02 != null) {
+			if (currentEquipment.entityName == weapon02.entityName) {
+				weapon02 = null;
+			}
+		}
+	}
 
+	void DropEquipment(Equipment equipmentToEquip, float dropForce, bool destroyEquipment) {
+		// Store current equipment name
+		string s = "";
+		if (currentEquipment != null) {
+			s = currentEquipment.entityName;
+		}
+
+		Debug.Log ("Drop");
 		// Destroy current weapon if one excists
 		if (currentEquipment != null) {
-			if (currentEquipment.objectName != weapon01.objectName && currentEquipment.objectName != weapon02.objectName && currentEquipment.objectName != weapon03.objectName) {
-				// Raycast drop direction
-				Ray ray = new Ray (player.cam.transform.position, player.cam.transform.forward);
-				RaycastHit hit; 
-				if (Physics.Raycast (ray, out hit, 500, hitMask)) {
-					Vector3 dropDir = ((hit.point + -(transform.right * .6f)) - player.cam.transform.position).normalized;
-					//dropDir.y
-					currentEquipment.CmdDropItem (currentEquipment.objectName, transform.name, gunHoldR.position, gunHoldR.rotation, dropDir, dropForce);
-				} else {
-					currentEquipment.CmdDropItem (currentEquipment.objectName, transform.name, gunHoldR.position, gunHoldR.rotation, player.cam.transform.forward, dropForce);
+			// Raycast drop direction
+			Ray ray = new Ray (player.cam.transform.position, player.cam.transform.forward);
+			RaycastHit hit; 
+			if (Physics.Raycast (ray, out hit, 500, hitMask)) {
+				Vector3 dropDir = ((hit.point + -(transform.right * .6f)) - player.cam.transform.position).normalized;
+				//dropDir.y
+				currentEquipment.CmdDropItem (currentEquipment.entityName, transform.name, gunHoldR.position, gunHoldR.rotation, dropDir, dropForce);
+			} else {
+				currentEquipment.CmdDropItem (currentEquipment.entityName, transform.name, gunHoldR.position, gunHoldR.rotation, player.cam.transform.forward, dropForce);
+			}
+				
+			if (weapon01 != null) {
+				if (s == weapon01.entityName) {
+					weapon01 = null;
 				}
 			}
 
+			if (weapon02 != null) {
+				if (s == weapon02.entityName) {
+					weapon02 = null;
+				}
+			}
 		}
-		yield return new WaitForSeconds (.15f);
-		// Spawn new gun
-		CmdDestroyCurrentEquipment (equipmentToEquip.objectName, equipmentToEquip.entityGroupIndex, netId);
 	}
 
 	public void DestroyCurrentEquipment() {
@@ -228,26 +275,34 @@ public class GunController : NetworkBehaviour {
 		canAttack = false;
 
 		animController.ChangeWeapon ();
-		CmdDestroyCurrentEquipment (weapon01.objectName, currentEquipment.entityGroupIndex, netId);
-		//CmdSpawnEquipment (weapon01.objectName, netId);
+		StartCoroutine (CmdEquipmentSpawnDelay (weapon01.entityName, netId));
 	}
 
+	IEnumerator CmdEquipmentSpawnDelay (string equName, NetworkInstanceId ownerId) {
+		// Send message to the current equipment to destroy itself
 
-	[Command]
-	void CmdDestroyCurrentEquipment(string equName, int equIndex, NetworkInstanceId ownerId) {
-		StartCoroutine (CmdEquipmentSpawnDelay (equName, equIndex, ownerId));
-	}
-
-
-	IEnumerator CmdEquipmentSpawnDelay (string equName, int equIndex, NetworkInstanceId ownerId) {
 		if (currentEquipment != null) {
+			canSpawnNewEquipment = false;
 			currentEquipment.DestroyEntity ();
+		} else {
+			canSpawnNewEquipment = true;
 		}
-		yield return new WaitForSeconds (.1f);;
 
+		// Wait until destroyed entity gives a message that it is destroyed, then spawn the new equipment.... Or 2 second has passed as a failsafe....
+		float t = 2f;
+		while (!canSpawnNewEquipment) {
+			t -= Time.deltaTime;
+
+			if (t <= 0) {
+				canSpawnNewEquipment = true;
+			}
+			yield return null;
+		}
+		// Spawn new equipment
 		CmdSpawnEquipment(equName, ownerId);
 	}
-		
+
+	[Command]
 	void CmdSpawnEquipment (string _name, NetworkInstanceId ownerId) {
 
 		Equipment equipmentRef = EquipmentLibrary.instance.GetEquipment (_name);
@@ -310,7 +365,7 @@ public class GunController : NetworkBehaviour {
 			playerController.curSpeed = playerController.moveSpeed;
 		}
 
-		// Equipment offset and animations and visuals
+		// Equipment offset, animations and visuals
 		weaponOffset = currentEquipment.positionOffset;
 		curOffset = weaponOffset;
 		animController.SetGunAnimationIds (currentEquipment.GetAnimationIds());
@@ -376,19 +431,21 @@ public class GunController : NetworkBehaviour {
 				return;
 			}
 
-			if (currentEquipment.objectName == weapon03.objectName || currentEquipment.objectName == weapon01.objectName) {
-				Equipment cloneL = Instantiate (weapon02, weaponHolsterL.position, weaponHolsterL.rotation) as Equipment;
-				cloneL.enabled = false;
-				cloneL.transform.localScale = weaponHolsterL.transform.localScale;
-				cloneL.transform.SetParent (weaponHolsterL.transform);
-				cloneL.GetComponent<Rigidbody> ().isKinematic = true;
-			}
-			if (currentEquipment.objectName == weapon02.objectName || currentEquipment.objectName == weapon01.objectName) {
-				Equipment cloneR = Instantiate (weapon03, weaponHolsterR.position, weaponHolsterR.rotation) as Equipment;
-				cloneR.enabled = false;
-				cloneR.transform.localScale = weaponHolsterR.transform.localScale;
-				cloneR.transform.SetParent (weaponHolsterR.transform);
-				cloneR.GetComponent<Rigidbody> ().isKinematic = true;
+			if (weapon01 != null && weapon02 != null) {
+				if (currentEquipment.entityName == weapon01.entityName) {
+					Equipment cloneL = Instantiate (weapon02, weaponHolsterL.position, weaponHolsterL.rotation) as Equipment;
+					cloneL.enabled = false;
+					cloneL.transform.localScale = weaponHolsterL.transform.localScale;
+					cloneL.transform.SetParent (weaponHolsterL.transform);
+					cloneL.GetComponent<Rigidbody> ().isKinematic = true;
+				}
+				if (currentEquipment.entityName == weapon02.entityName) {
+					Equipment cloneR = Instantiate (weapon01, weaponHolsterR.position, weaponHolsterR.rotation) as Equipment;
+					cloneR.enabled = false;
+					cloneR.transform.localScale = weaponHolsterR.transform.localScale;
+					cloneR.transform.SetParent (weaponHolsterR.transform);
+					cloneR.GetComponent<Rigidbody> ().isKinematic = true;
+				}
 			}
 		}
 	}
@@ -420,11 +477,12 @@ public class GunController : NetworkBehaviour {
 	void Sway() {
 		if (armHolder != null) {
 
-			// Input
+			// Get input
 			float xInput = Input.GetAxis ("Mouse X");
 			float yInput = Input.GetAxis ("Mouse Y");
 			float zInput = Input.GetAxisRaw ("Vertical");
 
+			// Speed multipliers
 			float speedMultiplier = 1f;
 			float aimMoveMultiplier = 1f;
 			if (isChargingSecondaryAction) {
@@ -432,6 +490,7 @@ public class GunController : NetworkBehaviour {
 				aimMoveMultiplier = 2f;
 			}
 
+			// Limit bob vector and position
 			bobVector = Vector3.Lerp (bobVector, bobPos, bobSmooth * Time.deltaTime);
 			bobVector.x = Mathf.Clamp (bobVector.x, -horizontalRange, horizontalRange);
 			bobVector.y = Mathf.Clamp (bobVector.y, -horizontalRange, horizontalRange);
@@ -519,5 +578,15 @@ public class GunController : NetworkBehaviour {
 
 	public void AddSway (Vector3 swayAmount) {
 		swayTargetPosition += swayAmount;
+	}
+
+	public Equipment GetWantedWeapon() {
+		if (weapon01 != null) {
+			return weapon01;
+		} else if (weapon02 != null) {
+			return weapon02;
+		} else {
+			return EquipmentLibrary.instance.GetEquipment ("Unarmed");
+		}
 	}
 }

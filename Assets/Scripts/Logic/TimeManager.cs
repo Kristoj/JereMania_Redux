@@ -91,6 +91,7 @@ public class TimeManager : NetworkBehaviour {
 			PlayerStats playerStats = localPlayer.GetComponent<PlayerStats> ();
 			playerStats.FatiqueAdd (100);
 			playerStats.StaminaAdd (100);
+			playerStats.HungerAdd (100);
 		}
 	}
 

@@ -38,7 +38,7 @@ public class PlayerController : NetworkBehaviour {
 	public float crouchViewOffset = .4f;
 	public float forwardLean = .2f;
 	public float downwardLean = .2f;
-	private Transform  playerView;  // Must be a camera;  // Must be a camera
+	private Transform  playerView;  // Must be a camera;
 	private float curForwardLean;
 	private float curViewOffset;
 	private float camRotX;
@@ -359,8 +359,8 @@ public class PlayerController : NetworkBehaviour {
 			AudioManager.instance.CmdPlaySound2D ("Jump_Vocal", transform.position, transform.name, .5f);
 			AudioManager.instance.CmdPlaySound2D ("Jump_Start1", transform.position, transform.name, .5f);
 			gunController.AddSway (new Vector3 (0, -.5f, 0));
-			playerStats.StaminaRemove (18f, true);
-			playerStats.FatiqueRemove (.1f);
+			playerStats.StaminaRemove (13f, true);
+			playerStats.HungerRemove (.05f);
 		}
 	}
 
@@ -495,6 +495,11 @@ public class PlayerController : NetworkBehaviour {
 		if (Input.GetKeyUp (KeyCode.LeftShift)) {
 			curSpeed = moveSpeed;
 			playerStats.StaminaDrain (false);
+		}
+
+		if (Input.GetKeyDown (KeyCode.Escape)) {
+			AchievementProgressTracker.instance.SavePlayerProgress ();
+			Application.Quit ();
 		}
 
 		if (playerStats.stamina <= 0) {

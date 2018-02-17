@@ -108,15 +108,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02e444a4718e39d46946da299a0799e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefix: FarmPatch
+  entityName: Farm_Patch
+  entitySoundMaterial: 0
+  hurtSound: {fileID: 0}
+  entityGroupIndex: 0
   startingHealth: 100
   slashResistance: 0
   bluntResistance: 50
   piercingResistance: 80
   professionWeakness: 2
   weaknessAmount: 500
-  impactSound: {fileID: 0}
   destroyOnDeath: 0
+  health: 0
   defaultPlantMesh: {fileID: 4353329698263158, guid: 5adf961aacf908548969b4d33dc8536f,
     type: 2}
   hasPlant: 0
