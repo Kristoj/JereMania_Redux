@@ -55,26 +55,28 @@ public class Equipment : Item {
 	}
 
 	public virtual void OnPrimaryAction() {
-		if (!weaponController.isChargingSecondaryAction) {
-			// Attack
-			if (primaryAction == ActionType.Attack && playerStats.fatique > 0 && playerStats.stamina > 0) {
-				Attack ();
-			}
-		// Throw
-		else if (primaryAction == ActionType.Throw) {
-				StartCoroutine (ActionStart (0));
-			}
-		// Block
-		else if (primaryAction == ActionType.Block) {
-				StartCoroutine (ActionStart (0));
-			}
-		// Consume
-		else if (primaryAction == ActionType.Consume) {
-				StartCoroutine (ActionStart (0));
-			}
-		// Custom
-		else if (primaryAction == ActionType.Custom) {
+		if (weaponController != null) {
+			if (!weaponController.isChargingSecondaryAction) {
+				// Attack
+				if (primaryAction == ActionType.Attack && playerStats.fatique > 0 && playerStats.stamina > 0) {
+					Attack ();
+				}
+				// Throw
+				else if (primaryAction == ActionType.Throw) {
+					StartCoroutine (ActionStart (0));
+				}
+				// Block
+				else if (primaryAction == ActionType.Block) {
+					StartCoroutine (ActionStart (0));
+				}
+				// Consume
+				else if (primaryAction == ActionType.Consume) {
+					StartCoroutine (ActionStart (0));
+				}
+				// Custom
+				else if (primaryAction == ActionType.Custom) {
 
+				}
 			}
 		}
 	}
