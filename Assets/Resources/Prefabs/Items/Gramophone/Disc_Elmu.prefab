@@ -362,6 +362,12 @@ MonoBehaviour:
   canStoreInInventory: 0
   itemId: 0
   itemIcon: {fileID: 0}
+  fireMode: 0
+  rpm: 100
+  meleeRange: 3
+  hitDelay: 0.35
+  audioDelay: 0.15
+  impactForce: 5
   holdStyle: 0
   primaryAction: 0
   secondaryAction: 1
@@ -370,6 +376,8 @@ MonoBehaviour:
   speedMultiplier: 1
   canRunWith: 1
   pickupSound: {fileID: 0}
+  attackSound: {fileID: 0}
+  impactFX: {fileID: 0}
   myHitMask:
     serializedVersion: 2
     m_Bits: 0

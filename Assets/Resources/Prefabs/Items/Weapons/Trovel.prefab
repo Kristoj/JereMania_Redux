@@ -209,7 +209,7 @@ MonoBehaviour:
   entityGroupIndex: 0
   isAvailable: 1
   price: 10
-  canStoreInInventory: 1
+  canStoreInInventory: 0
   itemId: 0
   itemIcon: {fileID: 21300000, guid: ea5873cfd9158664f89459f0c9e1d853, type: 3}
   fireMode: 0
@@ -220,7 +220,7 @@ MonoBehaviour:
   impactForce: 4
   holdStyle: 1
   primaryAction: 0
-  secondaryAction: 2
+  secondaryAction: 1
   weaponImpactSoundMaterial: 2
   positionOffset: {x: 0.015, y: -0.07, z: -0.09}
   speedMultiplier: 1

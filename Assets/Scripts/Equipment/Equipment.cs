@@ -21,7 +21,7 @@ public class Equipment : Item {
 
 	[Header ("Equipment Type")]
 	public HoldStyle holdStyle;
-	public enum HoldStyle {Hammer, Trovel};
+	public enum HoldStyle {Hammer, Trovel, Unarmed};
 	public ActionType primaryAction = ActionType.Attack;
 	public ActionType secondaryAction = ActionType.Throw;
 	public enum ActionType{Attack, Throw, Block, Consume, Custom};
@@ -349,6 +349,13 @@ public class Equipment : Item {
 		}
 
 		if (holdStyle == HoldStyle.Trovel) {
+			actionIds [0] = 0;
+			actionIds[3] = 2;
+			actionIds [4] = 1;
+		}
+
+		if (holdStyle == HoldStyle.Unarmed) {
+			actionIds [0] = 69;
 			actionIds[3] = 2;
 			actionIds [4] = 1;
 		}

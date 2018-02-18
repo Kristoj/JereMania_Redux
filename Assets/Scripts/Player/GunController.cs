@@ -134,7 +134,7 @@ public class GunController : NetworkBehaviour {
 		// Shooting
 		if (Input.GetKeyDown (KeyCode.G)) {
 			if (currentEquipment != null && !isAttacking) {
-				EquipEquipment (GetWantedWeapon(), 1f, true);
+				EquipEquipment (null, 1f, true);
 			}
 		}
 
@@ -188,13 +188,41 @@ public class GunController : NetworkBehaviour {
 		// Animation
 		animController.ChangeWeapon();
 
-		Weapon w = null;
-		// Check if new equipment can be placed in a slot
+		Weapon newEqu = null;
+
+		// Check if current equipment should be dropped or not
 		if (equipmentToEquip != null) {
-			w = equipmentToEquip.GetComponent<Weapon> ();
-			if (w != null && w.entityName != "Unarmed") {
-				if (weapon01 == null || weapon02 == null) {
+			newEqu = EquipmentLibrary.instance.GetEquipment (equipmentToEquip.entityName).GetComponent<Weapon>();
+			if (equipmentToEquip.entityName != "Unarmed") {
+
+				// If there's a free slot don't drop current equipment if it can be stored in a slot
+				if ((weapon01 == null || weapon02 == null)) {
 					dropEquipment = false;
+				} 
+
+				else if (newEqu == null){
+					dropEquipment = false;
+				} 
+					
+				if (currentEquipment != null) {
+					// Make sure that if both equipment slots are full and player has a tool in hand and he picks up a new equipment, it drops the current equipment
+					if (currentEquipment != null && weapon01 != null && weapon02 != null) {
+						if (currentEquipment.GetComponent<Weapon> () != null && newEqu == null && currentEquipment.entityName != weapon01.entityName && currentEquipment.entityName != weapon02.entityName) {
+							dropEquipment = true;
+						}
+					}
+					// Make sure that if player switches between equipments it drops current equipment if it's not stored in a equipment slot
+					string w1Name = "";
+					string w2Name = "";
+					if (weapon01 != null) {
+						w1Name = weapon01.entityName;
+					}
+					if (weapon02 != null) {
+						w2Name = weapon02.entityName;
+					}
+					if (currentEquipment.entityName != w1Name && currentEquipment.entityName != w2Name) {
+						dropEquipment = true;
+					}
 				}
 			}
 		}
@@ -206,12 +234,12 @@ public class GunController : NetworkBehaviour {
 			}
 		}
 
-		if (w != null) {
+		if (newEqu != null) {
 			if (weapon01 == null) {
-				weapon01 = EquipmentLibrary.instance.GetEquipment (w.entityName) as Weapon;
+				weapon01 = EquipmentLibrary.instance.GetEquipment (newEqu.entityName) as Weapon;
 			}
 			else if (weapon02 == null) {
-				weapon02 = EquipmentLibrary.instance.GetEquipment (w.entityName) as Weapon;
+				weapon02 = EquipmentLibrary.instance.GetEquipment (newEqu.entityName) as Weapon;
 			}
 		}
 
@@ -242,7 +270,7 @@ public class GunController : NetworkBehaviour {
 			s = currentEquipment.entityName;
 		}
 
-		Debug.Log ("Drop");
+		Weapon w = EquipmentLibrary.instance.GetEquipment (equipmentToEquip.entityName).GetComponent<Weapon> ();
 		// Destroy current weapon if one excists
 		if (currentEquipment != null) {
 			// Raycast drop direction
@@ -255,16 +283,18 @@ public class GunController : NetworkBehaviour {
 			} else {
 				currentEquipment.CmdDropItem (currentEquipment.entityName, transform.name, gunHoldR.position, gunHoldR.rotation, player.cam.transform.forward, dropForce);
 			}
-				
-			if (weapon01 != null) {
-				if (s == weapon01.entityName) {
-					weapon01 = null;
-				}
-			}
 
-			if (weapon02 != null) {
-				if (s == weapon02.entityName) {
-					weapon02 = null;
+			if (w != null) {
+				if (weapon01 != null) {
+					if (s == weapon01.entityName) {
+						weapon01 = null;
+					}
+				}
+
+				if (weapon02 != null) {
+					if (s == weapon02.entityName) {
+						weapon02 = null;
+					}
 				}
 			}
 		}
@@ -431,20 +461,23 @@ public class GunController : NetworkBehaviour {
 				return;
 			}
 
-			if (weapon01 != null && weapon02 != null) {
-				if (currentEquipment.entityName == weapon01.entityName) {
-					Equipment cloneL = Instantiate (weapon02, weaponHolsterL.position, weaponHolsterL.rotation) as Equipment;
-					cloneL.enabled = false;
-					cloneL.transform.localScale = weaponHolsterL.transform.localScale;
-					cloneL.transform.SetParent (weaponHolsterL.transform);
-					cloneL.GetComponent<Rigidbody> ().isKinematic = true;
-				}
-				if (currentEquipment.entityName == weapon02.entityName) {
+			if (weapon01 != null) {
+				if (currentEquipment.entityName != weapon01.entityName) {
 					Equipment cloneR = Instantiate (weapon01, weaponHolsterR.position, weaponHolsterR.rotation) as Equipment;
 					cloneR.enabled = false;
 					cloneR.transform.localScale = weaponHolsterR.transform.localScale;
 					cloneR.transform.SetParent (weaponHolsterR.transform);
 					cloneR.GetComponent<Rigidbody> ().isKinematic = true;
+				}
+			}
+
+			if (weapon02 != null) {
+				if (currentEquipment.entityName != weapon02.entityName) {
+					Equipment cloneL = Instantiate (weapon02, weaponHolsterL.position, weaponHolsterL.rotation) as Equipment;
+					cloneL.enabled = false;
+					cloneL.transform.localScale = weaponHolsterL.transform.localScale;
+					cloneL.transform.SetParent (weaponHolsterL.transform);
+					cloneL.GetComponent<Rigidbody> ().isKinematic = true;
 				}
 			}
 		}

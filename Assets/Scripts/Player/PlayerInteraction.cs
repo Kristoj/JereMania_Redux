@@ -172,6 +172,11 @@ public class PlayerInteraction : NetworkBehaviour {
 		eq.isAvailable = false;
 		eq.GetComponent<Rigidbody> ().isKinematic = true;
 		eq.GetComponent<Collider> ().enabled = false;
+		for (int i = 0; i < eq.transform.childCount; i++) {
+			if (eq.transform.GetChild (i).GetComponent<Collider>() != null) {
+				eq.transform.GetChild (i).GetComponent<Collider> ().enabled = false;
+			}
+		}
 		yield return new WaitForSeconds (.4f);
 		Destroy (eq.gameObject);
 	}

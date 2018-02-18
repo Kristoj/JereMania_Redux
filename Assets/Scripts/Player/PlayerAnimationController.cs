@@ -18,6 +18,7 @@ public class PlayerAnimationController : NetworkBehaviour {
 
 	// id
 	[HideInInspector]
+	private int holdId = 0;
 	private int primaryActionId = 0;
 	private int secondaryActionId = 0;
 	private int attackAnimationStartIndex = 0;
@@ -60,9 +61,9 @@ public class PlayerAnimationController : NetworkBehaviour {
 		if (playerController.IsGrounded() || playerController.IsHardGrounded ()) {
 			vmMoveSpeed = Mathf.Lerp (vmMoveSpeed, (new Vector2 (controller.velocity.x, controller.velocity.z).magnitude) / playerController.runSpeed, .25f);
 		} else {
-			vmMoveSpeed = Mathf.Lerp (vmMoveSpeed, 0, .25f);
+			vmMoveSpeed = Mathf.Lerp (vmMoveSpeed, holdId, .25f);
 		}
-		viewAnimator.SetFloat ("holdId", vmMoveSpeed);
+		viewAnimator.SetFloat ("holdId", holdId + vmMoveSpeed);
 	}
 
 	public void Attack() {
@@ -120,7 +121,7 @@ public class PlayerAnimationController : NetworkBehaviour {
 		
 	public void SetGunAnimationIds (int[] ids) {
 		if (viewModel != null) {
-			viewAnimator.SetFloat ("holdId", ids[0]);
+			holdId = ids [0];
 			primaryActionId = ids[1];
 			secondaryActionId = ids[2];
 			attackAnimationStartIndex = ids[3];
