@@ -1,0 +1,203 @@
+fileFormatVersion: 2
+guid: 2946d037bbce02d4b8b435f34889f05a
+timeCreated: 1518990853
+licenseType: Free
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: Cube
+    100002: //RootNode
+    100004: Tilewall
+    100006: Brickwall
+    100008: DeadTree
+    100010: Fireplace
+    100012: Firewood
+    100014: Hoop
+    100016: Kiila
+    100018: Ladder
+    100020: Plane
+    100022: Plane_001
+    100024: Plane_002
+    100026: Plane_003
+    100028: Plane_004
+    100030: Plane_005
+    100032: Plane_006
+    100034: Plane_007
+    100036: Plankwall
+    100038: Plankwall_2
+    100040: Roofsupport
+    100042: Support
+    100044: Tire
+    400000: Cube
+    400002: //RootNode
+    400004: Tilewall
+    400006: Brickwall
+    400008: DeadTree
+    400010: Fireplace
+    400012: Firewood
+    400014: Hoop
+    400016: Kiila
+    400018: Ladder
+    400020: Plane
+    400022: Plane_001
+    400024: Plane_002
+    400026: Plane_003
+    400028: Plane_004
+    400030: Plane_005
+    400032: Plane_006
+    400034: Plane_007
+    400036: Plankwall
+    400038: Plankwall_2
+    400040: Roofsupport
+    400042: Support
+    400044: Tire
+    2100000: Material
+    2100002: unnamed
+    2300000: Cube
+    2300002: Tilewall
+    2300004: Brickwall
+    2300006: DeadTree
+    2300008: Fireplace
+    2300010: Firewood
+    2300012: Hoop
+    2300014: Kiila
+    2300016: Ladder
+    2300018: Plane
+    2300020: Plane_001
+    2300022: Plane_002
+    2300024: Plane_003
+    2300026: Plane_004
+    2300028: Plane_005
+    2300030: Plane_006
+    2300032: Plane_007
+    2300034: Plankwall
+    2300036: Plankwall_2
+    2300038: Roofsupport
+    2300040: Support
+    2300042: Tire
+    3300000: Cube
+    3300002: Tilewall
+    3300004: Brickwall
+    3300006: DeadTree
+    3300008: Fireplace
+    3300010: Firewood
+    3300012: Hoop
+    3300014: Kiila
+    3300016: Ladder
+    3300018: Plane
+    3300020: Plane_001
+    3300022: Plane_002
+    3300024: Plane_003
+    3300026: Plane_004
+    3300028: Plane_005
+    3300030: Plane_006
+    3300032: Plane_007
+    3300034: Plankwall
+    3300036: Plankwall_2
+    3300038: Roofsupport
+    3300040: Support
+    3300042: Tire
+    4300000: Tilewall
+    4300002: Cube
+    4300004: Firewood
+    4300006: Plane_007
+    4300008: Ladder
+    4300010: Kiila
+    4300012: Tire
+    4300014: Roofsupport
+    4300016: DeadTree
+    4300018: Plane_006
+    4300020: Plane_005
+    4300022: Plankwall_2
+    4300024: Plane_004
+    4300026: Plane_003
+    4300028: Plane_002
+    4300030: Plane_001
+    4300032: Plane
+    4300034: Fireplace
+    4300036: Hoop
+    4300038: Plankwall
+    4300040: Brickwall
+    4300042: Support
+    7400000: Default Take
+    9500000: //RootNode
+  externalObjects: {}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
