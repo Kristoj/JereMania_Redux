@@ -46,10 +46,19 @@ public class Item : Interactable {
 		}
 	}
 
+	/// <summary>
+	/// Drops the item for all clients.
+	/// </summary>
+	/// <param name="objName">Entity name of the object to drop.</param>
+	/// <param name="masterId">Players name who called this function.</param>
+	/// <param name="dropPos">Position where the item will be dropped.</param>
+	/// <param name="dropRot">Rotation of the item when dropped.</param>
+	/// <param name="dropDir">Direction where force is applied.</param>
+	/// <param name="dropForce">Amount of force added when dropped.</param>
 	[Command]
-	public void CmdDropItem(string objName, string masterId, Vector3 dropPos, Quaternion dropRot, Vector3 dropDir, float dropForce) {
+	public void CmdDropItem(string entityName, string masterId, Vector3 dropPos, Quaternion dropRot, Vector3 dropDir, float dropForce) {
 		// Spawn item on client and then on the server
-		Item clone = Instantiate (EquipmentLibrary.instance.GetEquipment (objName).GetComponent<Item> (), dropPos, dropRot) as Item;
+		Item clone = Instantiate (EquipmentLibrary.instance.GetEquipment (entityName).GetComponent<Item> (), dropPos, dropRot) as Item;
 		NetworkServer.Spawn (clone.gameObject);
 		// Add force to the spawned item
 		clone.RpcDropItem (masterId, dropPos, dropRot, dropDir, dropForce);

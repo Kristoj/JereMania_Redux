@@ -16,7 +16,7 @@ public class Seed : MeleeWeapon {
 		FarmPatch farmPatch = GameManager.instance.GetEntity (victimId, targetGroup).GetComponent<FarmPatch> ();
 		if (!farmPatch.hasPlant) {
 			CmdPlantSeed (victimId, playerId);
-			weaponController.DestroyCurrentEquipment ();
+			weaponController.EquipEquipment(null, false, 0);
 		}
 	}
 

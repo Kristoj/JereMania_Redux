@@ -102,7 +102,7 @@ public class GunController : NetworkBehaviour {
 		}
 
 		if (weapon01 != null) {
-			EquipEquipment (weapon01, 1, true);
+			EquipEquipment (weapon01, false, 0);
 		}
 	}
 
@@ -134,7 +134,7 @@ public class GunController : NetworkBehaviour {
 		// Shooting
 		if (Input.GetKeyDown (KeyCode.G)) {
 			if (currentEquipment != null && !isAttacking) {
-				EquipEquipment (null, 1f, true);
+				EquipEquipment (null, true, 1);
 			}
 		}
 
@@ -146,14 +146,14 @@ public class GunController : NetworkBehaviour {
 		// Weapon Equipping
 		if (Input.GetKeyDown(KeyCode.Alpha1)) {
 			if (weapon01 != null && !isAttacking && currentEquipment.entityName  != weapon01.entityName) {
-				EquipEquipment (weapon01, 0, false);
+				EquipEquipment (weapon01, false, 0);
 			}
 		}
 
 		// Weapon Equipping
 		if (Input.GetKeyDown(KeyCode.Alpha2)) {
 			if (weapon02 != null && !isAttacking && currentEquipment.entityName  != weapon02.entityName) {
-				EquipEquipment (weapon02, 0, false);
+				EquipEquipment (weapon02, false, 0);
 			}
 		}
 
@@ -177,7 +177,8 @@ public class GunController : NetworkBehaviour {
 		}
 	}
 
-	public void EquipEquipment(Equipment equipmentToEquip, float dropForce, bool dropEquipment) {
+
+	public void EquipEquipment(Equipment equipmentToEquip, bool dropEquipment, float dropForce) {
 		if (!canChangeEquipment) {
 			return;
 		}
@@ -251,7 +252,7 @@ public class GunController : NetworkBehaviour {
 		StartCoroutine (CmdEquipmentSpawnDelay (equipmentToEquip.entityName, netId));
 	}
 
-	public void CleanCurrentEquipmentSlot() {
+	public void WipeCurrentEquipmentSlot() {
 		if (weapon01 != null) {
 			if (currentEquipment.entityName == weapon01.entityName) {
 				weapon01 = null;
@@ -300,20 +301,12 @@ public class GunController : NetworkBehaviour {
 		}
 	}
 
-	public void DestroyCurrentEquipment() {
-		canChangeEquipment = false;
-		canAttack = false;
-
-		animController.ChangeWeapon ();
-		StartCoroutine (CmdEquipmentSpawnDelay (weapon01.entityName, netId));
-	}
-
 	IEnumerator CmdEquipmentSpawnDelay (string equName, NetworkInstanceId ownerId) {
 		// Send message to the current equipment to destroy itself
 
 		if (currentEquipment != null) {
 			canSpawnNewEquipment = false;
-			currentEquipment.DestroyEntity ();
+			currentEquipment.CmdDestroyEntity (netId);
 		} else {
 			canSpawnNewEquipment = true;
 		}
@@ -335,22 +328,25 @@ public class GunController : NetworkBehaviour {
 	[Command]
 	void CmdSpawnEquipment (string _name, NetworkInstanceId ownerId) {
 
+		// Spawn new equipment on every client
 		Equipment equipmentRef = EquipmentLibrary.instance.GetEquipment (_name);
 		Equipment clone = Instantiate (equipmentRef, serverGunHold.position, serverGunHold.rotation, serverGunHold.transform) as Equipment;
+		// Modify properties of the equipment on the server
 		clone.GetComponent<Rigidbody> ().isKinematic = true;
+		player = GetComponent<Player>();
 		currentEquipment = clone;
 		currentEquipment.gameObject.layer = LayerMask.NameToLayer ("ViewModel");
 		currentEquipment.isAvailable = false;
+		clone.player = player;
 		NetworkServer.Spawn (clone.gameObject);
+		// Modify properties of the equipment on every client
 		RpcSpawnEquipment (clone.netId, ownerId);
 
-		player = GetComponent<Player> ();
+		// Send message to the client who wants to spawn the weapon so he will get authority for the equipment
 		var msg = new MyMessage();
-		msg.message = _name;
+		msg.message = "Spawn_Equipment";
 		msg.playerId = netId;
 		msg.objectId = clone.netId;
-
-
 		base.connectionToClient.Send(player.myMsgId, msg);
 	}
 
@@ -374,6 +370,7 @@ public class GunController : NetworkBehaviour {
 			}
 		}
 	}
+
 
 	public void ClientSpawnWeapon(NetworkInstanceId gunObjecetId, string owner) {
 
@@ -424,27 +421,6 @@ public class GunController : NetworkBehaviour {
 		isAttacking = false;
 	}
 
-	public void OnSpawnNewWeapon(NetworkMessage netMsg) {
-
-		var msg = netMsg.ReadMessage<MyMessage>();
-		PlayerInteraction pi = GetComponent<PlayerInteraction> ();
-		// INTERA
-		if (msg.message == "Interact") {
-
-			if (pi.targetIntera != null) {
-				pi.targetIntera.OnStartInteraction (transform.name);
-			}
-		} else if (msg.message == "Pickup") {
-			Equipment qe = pi.targetIntera.GetComponent<Equipment> ();
-			if (qe != null) {
-				qe.SetOwner (transform, transform.name);
-				pi.targetIntera.OnStartPickup (transform.name);
-			}
-		} else {
-			GunController gunController = ClientScene.FindLocalObject(msg.playerId).GetComponent<GunController>();
-			gunController.ClientSpawnWeapon (msg.objectId, gunController.gameObject.name);
-		}
-	}
 
 	void UpdateWeaponHolster() {
 

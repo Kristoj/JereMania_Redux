@@ -57,14 +57,35 @@ public class Entity : NetworkBehaviour {
 			rig.AddForceAtPosition (impactForce, impactPos, ForceMode.Impulse);
 		}
 	}
-
+		
 	public void SetGroupId (int i) {
 		entityGroupIndex = i;
 	}
 
+	/// <summary>
+	/// Destroys the entity from all clients and unregisters it from the gamemanager.
+	/// Must be called from the server!
+	/// </summary>
 	public virtual void DestroyEntity() {
 		OnEntityDestroy ();
 		GameManager.instance.RemoveEntity (this, entityGroupIndex);
 		NetworkServer.Destroy (this.gameObject);
+	}
+
+	/// <summary>
+	/// Destroys the entity from all clients and unregisters it from the gamemanager.
+	/// /// Must be called from a client!
+	/// </summary>
+	/// <param name="callerNetId">NetId of the player who called this function.</param>
+	[Command]
+	public virtual void CmdDestroyEntity(NetworkInstanceId callerNetId) {
+		RpcDestroyEntity (callerNetId);
+		GameManager.instance.RemoveEntity (this, entityGroupIndex);
+		NetworkServer.Destroy (this.gameObject);
+	}
+
+	[ClientRpc]
+	public virtual void RpcDestroyEntity(NetworkInstanceId callerNetId) {
+
 	}
 }

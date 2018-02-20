@@ -132,7 +132,6 @@ public class Equipment : Item {
 			RaycastHit hit;
 
 			if (Physics.Raycast (ray, out hit, meleeRange, myHitMask, QueryTriggerInteraction.Collide)) {
-
 				// Take damage
 				LivingEntity livingEntity = hit.collider.GetComponent<LivingEntity>();
 				if (livingEntity != null) {
@@ -234,8 +233,8 @@ public class Equipment : Item {
 		yield return new WaitForSeconds (.13f);
 		// Throw equipment with delay
 		if (eventTriggered) {
-			weaponController.CleanCurrentEquipmentSlot ();
-			weaponController.EquipEquipment(null, 6, true);
+			weaponController.WipeCurrentEquipmentSlot ();
+			weaponController.EquipEquipment(null, true, 6);
 		}
 		// Enable attacking
 		weaponController.isChargingSecondaryAction = false;
@@ -245,7 +244,7 @@ public class Equipment : Item {
 	IEnumerator ConsumeItem() {
 		EquipmentLibrary.instance.ConsumeItem (this.entityName, owner.name);
 		AudioManager.instance.CmdPlaySound2D ("UI_Eat1",transform.position, owner.name, 1);
-		weaponController.DestroyCurrentEquipment ();
+		weaponController.EquipEquipment (null, false, 0);
 		yield return new WaitForSeconds (1);
 	}
 
@@ -271,7 +270,7 @@ public class Equipment : Item {
 			if (pickupSound != null) {
 				AudioManager.instance.CmdPlaySound (pickupSound.name, transform.position, "", 1);
 			}
-			weaponController.EquipEquipment (this, 1, true);
+			weaponController.EquipEquipment (this, true, 1);
 		}
 	}
 
@@ -404,16 +403,14 @@ public class Equipment : Item {
 		return actionIds;
 	}
 
-	public void SetOwner (Transform newOwner, string ownerId) {
+
+	public void SetOwner (Transform newOwner, string ownerName) {
 		owner = newOwner;
 		weaponController = owner.GetComponent<GunController> ();
 		player = owner.GetComponent<Player> ();
 		playerAnimationController = owner.GetComponent<PlayerAnimationController> ();
 		playerStats = owner.GetComponent<PlayerStats> ();
-
-		// Parent gun
-		transform.parent = weaponController.gunHoldR.transform;
-		transform.position = weaponController.gunHoldR.transform.position;
+		myHitMask = weaponController.hitMask;
 
 		// Set authority
 		NetworkIdentity playerId = player.GetComponent<NetworkIdentity> ();
@@ -423,11 +420,22 @@ public class Equipment : Item {
 	public virtual void SetHitMask() {
 		myHitMask = weaponController.hitMask;
 	}
+		
+	/// <summary>
+	/// When this function is called on the server is signals the client who wants to equip an equipment that he can spawn it. After that the entity is destroyed and
+	/// unregistered from the gamemanager. Must be called from the client!
+	/// </summary>
+	public override void CmdDestroyEntity(NetworkInstanceId callerNetId) {
+		base.CmdDestroyEntity (callerNetId);
+		Debug.Log ("CMD OVERRIDE");
+	}
+		
+	public override void RpcDestroyEntity(NetworkInstanceId callerNetId) {
+		base.RpcDestroyEntity(callerNetId);
 
-	public override void DestroyEntity() {
-		if (weaponController != null) {
-			weaponController.canSpawnNewEquipment = true;
+		if (weaponController.netId == callerNetId) {
+			weaponController.canChangeEquipment = true;
 		}
-		base.DestroyEntity ();
+		Debug.Log ("RPC OVERRIDE");
 	}
 }
