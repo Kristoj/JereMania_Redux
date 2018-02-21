@@ -6,33 +6,29 @@ using UnityEditor;
 [CustomEditor(typeof(PlayerSkills))]
 public class PlayerSkillsEditor : Editor {
 
+	public static List<PlayerSkills.Skill> skillsEditor = new List<PlayerSkills.Skill> ();
+
 	public override void OnInspectorGUI() {
 		DrawDefaultInspector ();
-		PlayerSkills ps = target as PlayerSkills;
 
-		
 		// Draw areas for each skill
-		foreach (PlayerSkills.Skill s in PlayerSkills.skills) {
+		for (int i = 0; i < skillsEditor.Count; i++) {
+			if (GUILayout.Button (skillsEditor [i].skillName)) {
 
+			}
 		}
 
+		EditorGUI.DrawRect (new Rect (50, 180, 100, 100), Color.green);
 		if (GUILayout.Button ("Add Skill")) {
-			PlayerSkills.skills.Add(new PlayerSkills.Skill());
+			skillsEditor.Add(new PlayerSkills.Skill());
 		}
 
 		if (GUILayout.Button ("Remove Skill")) {
-			if (PlayerSkills.skills.Count > 0) {
-				PlayerSkills.skills.RemoveAt (PlayerSkills.skills.Count - 1);
-				Debug.Log (PlayerSkills.skills.Count);
+			if (skillsEditor.Count > 0) {
+				skillsEditor.RemoveAt (skillsEditor.Count - 1);
+				Debug.Log (skillsEditor.Count);
 			}
 		}
-	}
 
-	[System.Serializable]
-	public class SkillEditor {
-		public string skillName = "";
-		public int skillLevel = 0;
-		public int skillMaxLevel = 50;
-		public float skillExperienceIncrementMultiplier = 1.15f;
 	}
 }

@@ -1069,7 +1069,7 @@ MonoBehaviour:
   - {fileID: 1992159717194184, guid: 54b9a28e8a70b3c46a4c0259e421d054, type: 2}
   - {fileID: 1668032195330740, guid: 3ce7fcf7e4a8e62418d8fc239ecda1b0, type: 2}
   - {fileID: 1969176770183374, guid: 4389de3781236ad45ab7b548111e9226, type: 2}
-  - {fileID: 1898672491041380, guid: 445539f5653c16e4f8a96e752884adff, type: 2}
+  - {fileID: 1326571863820752, guid: efa68f3083cdcd544a04f2ff410f342d, type: 2}
   - {fileID: 1898672491041380, guid: d798c10f5aab2ee4598f07b5cf4aba2e, type: 2}
   - {fileID: 1459134518774008, guid: 2ace41c5a51ea2d4a8632251fa1f77ed, type: 2}
   - {fileID: 1848887808258974, guid: ac33476bef2ba764195430dfb22f7dfd, type: 2}
@@ -8400,7 +8400,7 @@ MonoBehaviour:
   - {fileID: 114464691599615374, guid: a263de3b903d049478a9104af34ce7fb, type: 2}
   - {fileID: 114678447998866476, guid: 3ce7fcf7e4a8e62418d8fc239ecda1b0, type: 2}
   - {fileID: 114815888928559240, guid: 4389de3781236ad45ab7b548111e9226, type: 2}
-  - {fileID: 114464691599615374, guid: 445539f5653c16e4f8a96e752884adff, type: 2}
+  - {fileID: 114085884667501890, guid: efa68f3083cdcd544a04f2ff410f342d, type: 2}
   - {fileID: 114011318486723272, guid: d798c10f5aab2ee4598f07b5cf4aba2e, type: 2}
   - {fileID: 114238567532241438, guid: 2ace41c5a51ea2d4a8632251fa1f77ed, type: 2}
   - {fileID: 114063220970265644, guid: ac33476bef2ba764195430dfb22f7dfd, type: 2}
@@ -8653,7 +8653,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13efd454f7f50ca4e8a100ff933b27c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skillList: []
+  skillList:
+  - skillName: 
+    skillLevel: 0
+    skillMaxLevel: 0
+  - skillName: 
+    skillLevel: 0
+    skillMaxLevel: 0
 --- !u!1001 &2062714528
 Prefab:
   m_ObjectHideFlags: 0

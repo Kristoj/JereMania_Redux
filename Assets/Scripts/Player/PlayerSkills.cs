@@ -5,9 +5,10 @@ using UnityEngine;
 public class PlayerSkills : MonoBehaviour {
 
 	public static List<Skill> skills = new List<Skill> ();
+	public List<Skill> skillList = new List<Skill> ();
 
 	void Awake() {
-		//skills = skillList;
+		skills = skillList;
 	}
 
 	public static void AddExperience (float amount, string _skillName) {
@@ -20,7 +21,7 @@ public class PlayerSkills : MonoBehaviour {
 
 	[System.Serializable]
 	public class Skill {
-		public string skillName = "";
+		public string skillName = "New Skill";
 		public int skillLevel = 0;
 		public int skillMaxLevel = 50;
 
