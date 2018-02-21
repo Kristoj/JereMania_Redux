@@ -77,15 +77,4 @@ public class Entity : NetworkBehaviour {
 	/// /// Must be called from a client!
 	/// </summary>
 	/// <param name="callerNetId">NetId of the player who called this function.</param>
-	[Command]
-	public virtual void CmdDestroyEntity(NetworkInstanceId callerNetId) {
-		RpcDestroyEntity (callerNetId);
-		GameManager.instance.RemoveEntity (this, entityGroupIndex);
-		NetworkServer.Destroy (this.gameObject);
-	}
-
-	[ClientRpc]
-	public virtual void RpcDestroyEntity(NetworkInstanceId callerNetId) {
-
-	}
 }

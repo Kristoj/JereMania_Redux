@@ -128,7 +128,7 @@ public class PlayerStats : MonoBehaviour {
 		fatique = Mathf.Clamp (fatique, 0, maxFatique);
 
 		if (fatique <= 0 || hunger <= 0) {
-			player.CmdKillPlayer ();
+			player.KillPlayer ();
 		}
 	}
 }

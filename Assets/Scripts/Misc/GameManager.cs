@@ -192,7 +192,6 @@ public class GameManager : NetworkBehaviour {
 
 	[System.Serializable]
 	public class EntityGroup {
-		[SyncVar]
 		public List<Entity> groupEntities = new List<Entity>();
 
 		public Entity GetEntityFromGroup(string entityName ) {

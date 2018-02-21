@@ -306,7 +306,7 @@ public class GunController : NetworkBehaviour {
 
 		if (currentEquipment != null) {
 			canSpawnNewEquipment = false;
-			currentEquipment.CmdDestroyEntity (netId);
+			currentEquipment.CmdDestroyEquipment (netId);
 		} else {
 			canSpawnNewEquipment = true;
 		}

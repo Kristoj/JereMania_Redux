@@ -425,17 +425,24 @@ public class Equipment : Item {
 	/// When this function is called on the server is signals the client who wants to equip an equipment that he can spawn it. After that the entity is destroyed and
 	/// unregistered from the gamemanager. Must be called from the client!
 	/// </summary>
-	public override void CmdDestroyEntity(NetworkInstanceId callerNetId) {
-		base.CmdDestroyEntity (callerNetId);
-		Debug.Log ("CMD OVERRIDE");
-	}
-		
-	public override void RpcDestroyEntity(NetworkInstanceId callerNetId) {
-		base.RpcDestroyEntity(callerNetId);
 
-		if (weaponController.netId == callerNetId) {
-			weaponController.canChangeEquipment = true;
+	[Command]
+	public void CmdDestroyEquipment(NetworkInstanceId callerNetId) {
+		RpcDestroyEquipment (callerNetId);
+	}
+
+	[ClientRpc]
+	void RpcDestroyEquipment(NetworkInstanceId callerNetId) {
+		if (weaponController != null) {
+			if (weaponController.netId == callerNetId) {
+				weaponController.canSpawnNewEquipment = true;
+				CmdDestroyFinalEquipment ();
+			}
 		}
-		Debug.Log ("RPC OVERRIDE");
+	}
+
+	[Command]
+	void CmdDestroyFinalEquipment() {
+		DestroyEntity ();
 	}
 }

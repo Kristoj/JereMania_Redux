@@ -95,26 +95,30 @@ public class Player : LivingEntity {
 			break;
 		}
 	}
-
-	[Command]
-	public void CmdKillPlayer() {
+		
+	public void KillPlayer() {
 		// Penalties
 		GameManager.instance.TakeMoney (75);
+		PlayerInventory playerInventory = GetComponent<PlayerInventory> ();
+		playerInventory.FlushInventory ();
 
 		// Reset player stats
-		RpcKillPlayer ();
 		PlayerStats ps = GetComponent<PlayerStats> ();
 		ps.FatiqueAdd (100);
 		ps.StaminaAdd (100);
 		ps.HungerAdd (100);
+
+		// Reset player stats
+		CmdKillPlayer ();
+	}
+
+	[Command]
+	void CmdKillPlayer() {
+		RpcKillPlayer ();
 	}
 
 	[ClientRpc]
 	void RpcKillPlayer() {
-		// Penalties
-		PlayerInventory playerInventory = GetComponent<PlayerInventory> ();
-		playerInventory.FlushInventory ();
-
 		transform.position = new Vector3 (0, .6f, 0);
 	}
 }
