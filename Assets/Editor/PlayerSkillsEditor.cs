@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class PlayerSkillsEditor : MonoBehaviour {
 
-
-
 	// Use this for initialization
 	void Start () {
 		
