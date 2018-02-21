@@ -403,7 +403,7 @@ MonoBehaviour:
   itemId: 0
   itemIcon: {fileID: 21300000, guid: ea5873cfd9158664f89459f0c9e1d853, type: 3}
   fireMode: 0
-  rpm: 70
+  rpm: 7000000
   meleeRange: 3
   hitDelay: 0.5
   audioDelay: 0.25
