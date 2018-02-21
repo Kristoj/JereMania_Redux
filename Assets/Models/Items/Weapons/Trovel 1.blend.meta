@@ -6,11 +6,21 @@ ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
     100000: //RootNode
+    100002: Ironparts
+    100004: Woodhandle
     400000: //RootNode
+    400002: Ironparts
+    400004: Woodhandle
     2100000: unnamed
     2300000: //RootNode
+    2300002: Ironparts
+    2300004: Woodhandle
     3300000: //RootNode
+    3300002: Ironparts
+    3300004: Woodhandle
     4300000: Cube
+    4300002: Woodhandle
+    4300004: Ironparts
     7400000: Default Take
     9500000: //RootNode
   externalObjects: {}
