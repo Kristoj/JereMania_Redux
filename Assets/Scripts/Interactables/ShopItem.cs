@@ -8,8 +8,8 @@ public class ShopItem : Interactable {
 	public float price = 25f;
 	public Rigidbody saleItem;
 
-	public override void OnStartInteraction(string masterId) {
-		base.OnStartInteraction (masterId);
+	public override void OnClientStartInteraction(string masterId) {
+		base.OnClientStartInteraction (masterId);
 		BuyItem ();
 	}
 

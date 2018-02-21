@@ -43,8 +43,8 @@ public class Container : Interactable {
 		}
 	}
 
-	public override void OnStartInteraction(string masterId) {
-		base.OnStartInteraction (masterId);
+	public override void OnClientStartInteraction(string masterId) {
+		base.OnClientStartInteraction (masterId);
 		playerInventory = owner.GetComponent<PlayerInventory> ();
 		ShowInventory (true);
 

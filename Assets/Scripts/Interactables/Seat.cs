@@ -9,8 +9,8 @@ public class Seat : Interactable {
 	public Vector3 exitPosition;
 	public float viewHeight = .6f;
 
-	public override void OnStartInteraction(string masterId) {
-		base.OnStartInteraction (masterId);
+	public override void OnClientStartInteraction(string masterId) {
+		base.OnClientStartInteraction (masterId);
 		CmdEnterSeat (masterId);
 		if (owner != null) {
 			owner.GetComponent<PlayerAnimationController> ().SetSitState (true);

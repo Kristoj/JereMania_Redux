@@ -248,9 +248,9 @@ public class Equipment : Item {
 		yield return new WaitForSeconds (1);
 	}
 
-	public override void OnStartInteraction(string masterId) {
+	public override void OnClientStartInteraction(string masterId) {
 
-		base.OnStartInteraction (masterId);
+		base.OnClientStartInteraction (masterId);
 		if (isAvailable) {
 			// Play sound
 			if (pickupSound != null) {

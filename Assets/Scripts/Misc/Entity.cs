@@ -12,8 +12,7 @@ public class Entity : NetworkBehaviour {
 	public enum EntitySoundMaterial {Wood, Metal, Rock}
 
 	protected Rigidbody rig;
-	public AudioClip hurtSound;
-	//[HideInInspector]
+	[HideInInspector]
 	[SyncVar]
 	public int entityGroupIndex;
 

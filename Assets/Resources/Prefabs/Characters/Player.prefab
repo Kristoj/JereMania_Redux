@@ -3874,16 +3874,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityName: Player
   entitySoundMaterial: 0
-  hurtSound: {fileID: 0}
   entityGroupIndex: 0
   startingHealth: 100
+  health: 0
   slashResistance: 25
   bluntResistance: 25
   piercingResistance: 25
   professionWeakness: 0
   weaknessAmount: 25
+  expDropTable: []
   destroyOnDeath: 0
-  health: 0
   cam: {fileID: 20605921141499132}
   myMsgId: 1000
 --- !u!114 &114356827734481730
@@ -4261,7 +4261,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityName: PlayerInv
   entitySoundMaterial: 0
-  hurtSound: {fileID: 0}
   entityGroupIndex: 0
   isAvailable: 1
   slotCountX: 4
@@ -4362,6 +4361,7 @@ MonoBehaviour:
   - {fileID: 20250541269944750}
   - {fileID: 223273059858437314}
   - {fileID: 114645103441171424}
+  - {fileID: 0}
   viewMeshesToDisable:
   - {fileID: 137671532413819584}
   - {fileID: 137288435004032866}

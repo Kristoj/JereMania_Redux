@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Bed : Seat {
 
-	public override void OnStartInteraction(string masterId) {
+	public override void OnClientStartInteraction(string masterId) {
 		if (TimeManager.instance.GetDayPercentage () > .5f) {
-			base.OnStartInteraction (masterId);
+			base.OnClientStartInteraction (masterId);
 		}
 	}
 		

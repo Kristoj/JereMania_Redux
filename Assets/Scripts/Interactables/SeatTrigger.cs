@@ -6,9 +6,9 @@ public class SeatTrigger : Interactable {
 
 	public Seat masterSeat;
 
-	public override void OnStartInteraction(string masterId) {
+	public override void OnClientStartInteraction(string masterId) {
 		if (masterSeat != null) {
-			masterSeat.OnStartInteraction (masterId);
+			masterSeat.OnClientStartInteraction (masterId);
 		}
 	}
 

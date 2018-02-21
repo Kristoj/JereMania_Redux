@@ -12,7 +12,7 @@ public class LightSwitch : Interactable {
 		//isOn = lights [0].enabled;
 	}
 
-	public override void OnStartInteraction(string masterId) {
+	public override void OnClientStartInteraction(string masterId) {
 		CmdToggleLights ();
 	}
 

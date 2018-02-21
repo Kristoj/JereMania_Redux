@@ -16,7 +16,7 @@ public class Door : Interactable {
 		closedPosition = transform.position;
 	}
 
-	public override void OnStartInteraction(string masterId) {
+	public override void OnClientStartInteraction(string masterId) {
 		if (!hasSwitch) {
 			CmdMoveDoor ();
 		}

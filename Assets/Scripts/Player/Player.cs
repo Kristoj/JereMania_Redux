@@ -78,7 +78,7 @@ public class Player : LivingEntity {
 		switch (msg.message) {
 		case "Interact":
 			if (pi.targetIntera != null) {
-				pi.targetIntera.OnStartInteraction (transform.name);
+				pi.targetIntera.OnClientStartInteraction (transform.name);
 			}
 			break;
 		case "Pickup":

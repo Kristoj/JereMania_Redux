@@ -6,7 +6,7 @@ public class DoorSwitch : Interactable {
 
 	public Door door;
 
-	public override void OnStartInteraction (string masterId) {
+	public override void OnClientStartInteraction (string masterId) {
 		if (door != null) {
 			door.CmdMoveDoor ();
 		}

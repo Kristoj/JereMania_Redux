@@ -82,8 +82,8 @@ public class VehicleController : Seat {
 		targetRot = rot;
 	}
 
-	public override void OnStartInteraction(string masterId) {
-		base.OnStartInteraction (masterId);
+	public override void OnClientStartInteraction(string masterId) {
+		base.OnClientStartInteraction (masterId);
 		StartCoroutine(OnVehicleEnable());
 
 		// Disable view model

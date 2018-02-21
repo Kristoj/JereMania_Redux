@@ -19,7 +19,7 @@ public class Item : Interactable {
 		rig = GetComponent<Rigidbody>();
 	}
 
-	public override void OnStartInteraction(string masterId) {
+	public override void OnClientStartInteraction(string masterId) {
 		if (canStoreInInventory && isAvailable) {
 			PlayerInventory targetInventory = GameManager.GetPlayerByName (masterId).GetComponent<PlayerInventory>();
 			if (!targetInventory.isFull) {
