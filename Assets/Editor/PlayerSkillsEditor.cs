@@ -12,7 +12,9 @@ public class PlayerSkillsEditor : Editor {
 
 		
 		// Draw areas for each skill
+		foreach (PlayerSkills.Skill s in PlayerSkills.skills) {
 
+		}
 
 		if (GUILayout.Button ("Add Skill")) {
 			PlayerSkills.skills.Add(new PlayerSkills.Skill());
@@ -31,5 +33,6 @@ public class PlayerSkillsEditor : Editor {
 		public string skillName = "";
 		public int skillLevel = 0;
 		public int skillMaxLevel = 50;
+		public float skillExperienceIncrementMultiplier = 1.15f;
 	}
 }
