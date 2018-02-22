@@ -76,4 +76,12 @@ public class Entity : NetworkBehaviour {
 	/// /// Must be called from a client!
 	/// </summary>
 	/// <param name="callerNetId">NetId of the player who called this function.</param>
+
+	// Set authority for the player who wants to control this entity
+	public void SetAuthority() {
+		Player targetPlayer = GameManager.GetLocalPlayer ();
+		if (targetPlayer != null) {
+			targetPlayer.SetAuthority (netId, targetPlayer.GetComponent<NetworkIdentity>());
+		}
+	}
 }

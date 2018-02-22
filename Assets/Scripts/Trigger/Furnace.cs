@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
-public class Furnace : NetworkBehaviour {
+public class Furnace : Entity {
 
 	public int maxOreCount = 5;
 	public float meltTime = 11f;
@@ -18,6 +18,7 @@ public class Furnace : NetworkBehaviour {
 	private bool isMelting = false;
 	[HideInInspector]
 	public bool canUpdateUI = true;
+	private List<ChildInteractable> childInteractables = new List<ChildInteractable> ();
 
 	void Update() {
 		if (isServer) {
@@ -85,10 +86,38 @@ public class Furnace : NetworkBehaviour {
 	}
 
 	IEnumerator UpdateUI() {
-		while (canUpdateUI) {
+		while (canUpdateUI && fuelText != null) {
 			fuelText.text = fuel.ToString("F0") + "%";
 			yield return null;
 		}
 		yield return null;
+	}
+
+	// Called when client signals that he wants to open a door
+	public void SignalDoorOpen(string childName) {
+		// Send signal to server so we can client RPC door opening
+		CmdSignalDoorOpen (childName);
+	}
+		
+	[Command]
+	public void CmdSignalDoorOpen(string childName) {
+		// Send signal to every client that player wants to open a door
+		RpcSignalDoorOpen (childName);
+	}
+
+	[ClientRpc]
+	public void RpcSignalDoorOpen(string childName) {
+		// Open the door in the door class
+		foreach (ChildInteractable ci in childInteractables) {
+			if (ci.name == childName) {
+				ci.SendMessage ("OpenDoor", SendMessageOptions.DontRequireReceiver);
+			}
+		}
+	}
+
+	public void RegisterChildInteractable(ChildInteractable ci) {
+		if (!childInteractables.Contains(ci)) {
+			childInteractables.Add (ci);
+		}
 	}
 }

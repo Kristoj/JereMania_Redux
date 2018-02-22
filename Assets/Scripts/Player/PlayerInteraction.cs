@@ -70,24 +70,29 @@ public class PlayerInteraction : NetworkBehaviour {
 						StartCoroutine (PickupDelay (buttonId));
 					}
 				} else {
-					CmdUseRay (cam.transform.position, cam.forward, GetComponent<NetworkIdentity> (), targetIntera.netId, buttonId);
+					CmdUseRay (GetComponent<NetworkIdentity> (), targetIntera.netId, buttonId);
 				}
 
 				// Animation
 				animationController.PickupItem (buttonId);
+			} else {
+				ChildInteractable childIntera = hit.collider.GetComponent<ChildInteractable>();
+				if (childIntera != null) {
+					childIntera.OnClientStartInteraction (transform.name);
+				}
 			}
 		}
 	}
 
 	IEnumerator PickupDelay(int buttonId) {
 		isPickingUpEquipment = true;
-		yield return new WaitForSeconds (.25f);
+		yield return new WaitForSeconds (.18f);
 		isPickingUpEquipment = false;
-		CmdUseRay (cam.transform.position, cam.forward, GetComponent<NetworkIdentity> (), targetIntera.netId, buttonId);
+		CmdUseRay (GetComponent<NetworkIdentity> (), targetIntera.netId, buttonId);
 	}
 	// SERVER Focus Ray
 	[Command]
-	void CmdUseRay(Vector3 pos, Vector3 dir, NetworkIdentity targetPlayer, NetworkInstanceId interaId, int buttonId) {
+	void CmdUseRay(NetworkIdentity targetPlayer, NetworkInstanceId interaId, int buttonId) {
 
 		GameObject interaObject = NetworkServer.FindLocalObject (interaId).gameObject;
 		if (interaObject != null) {
@@ -165,7 +170,7 @@ public class PlayerInteraction : NetworkBehaviour {
 	}
 
 	IEnumerator PickupItemFollow(string _name) {
-		yield return new WaitForSeconds (.17f);
+		yield return new WaitForSeconds (.14f);
 		Equipment eq = Instantiate (EquipmentLibrary.instance.GetEquipment(_name), weaponController.gunHoldL.position, weaponController.gunHoldL.rotation) as Equipment;
 		eq.transform.SetParent (weaponController.gunHoldL.transform);
 		eq.enabled = false;

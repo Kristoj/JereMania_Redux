@@ -18,7 +18,6 @@ public class PlayerSkillsEditor : Editor {
 			}
 		}
 
-		EditorGUI.DrawRect (new Rect (50, 180, 100, 100), Color.green);
 		if (GUILayout.Button ("Add Skill")) {
 			skillsEditor.Add(new PlayerSkills.Skill());
 		}

@@ -10,10 +10,6 @@ public class Enemy : LivingEntity {
 
 		health = startingHealth;
 
-		//string myID = GetComponent<NetworkIdentity> ().netId.ToString ();
-		//LivingEntity entity = GetComponent<LivingEntity> ();
-		//GameManager.RegisterEntity (myID, entity, prefix);
-
 		destroyOnDeath = true;
 	}
 }
