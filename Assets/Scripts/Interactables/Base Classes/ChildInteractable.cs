@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class ChildInteractable : MonoBehaviour {
 
-	public Entity parentEntity;
+	public ParentEntity parentEntity;
 
-	public virtual void Start() {
+	public virtual void Awake() {
 		// Get the parent entity
 		FindParentEntity ();
 		// Register this to the parent entity
@@ -30,7 +30,7 @@ public class ChildInteractable : MonoBehaviour {
 		bool pass = false;
 		while (targetObject != null && !pass) {
 			if (targetObject.parent != null) {
-				Entity e = targetObject.parent.GetComponent<Entity> ();
+				ParentEntity e = targetObject.parent.GetComponent<ParentEntity> ();
 				if (e != null) {
 					parentEntity = e;
 					pass = true;
@@ -39,7 +39,6 @@ public class ChildInteractable : MonoBehaviour {
 						targetObject = targetObject.parent;
 					}
 				}
-				Debug.Log ("loop");
 			} else {
 				pass = true;
 			}

@@ -84,4 +84,6 @@ public class Entity : NetworkBehaviour {
 			targetPlayer.SetAuthority (netId, targetPlayer.GetComponent<NetworkIdentity>());
 		}
 	}
+
+
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
-public class Furnace : Entity {
+public class Furnace : ParentEntity {
 
 	public int maxOreCount = 5;
 	public float meltTime = 11f;
@@ -18,7 +18,8 @@ public class Furnace : Entity {
 	private bool isMelting = false;
 	[HideInInspector]
 	public bool canUpdateUI = true;
-	private List<ChildInteractable> childInteractables = new List<ChildInteractable> ();
+	private ChildDoor furnaceDoor;
+	private ChildDoor crucibleHolder;
 
 	void Update() {
 		if (isServer) {
@@ -28,8 +29,20 @@ public class Furnace : Entity {
 		}
 	}
 
-	void Start() {
+	public override void Start() {
+		base.Start ();
 		StartCoroutine (UpdateUI ());
+
+		// Store references for the child interactables
+		foreach (ChildInteractable ci in childInteractables) {
+			if (ci.name == "Furnace_Door") {
+				furnaceDoor = ci as ChildDoor;
+			}
+
+			if (ci.name == "Crucible_Holder") {
+				crucibleHolder = ci as ChildDoor;
+			}
+		}
 	}
 
 	void OnTriggerEnter (Collider c) {
@@ -94,30 +107,53 @@ public class Furnace : Entity {
 	}
 
 	// Called when client signals that he wants to open a door
-	public void SignalDoorOpen(string childName) {
+	public void SignalDoorSwing(string ciName) {
 		// Send signal to server so we can client RPC door opening
-		CmdSignalDoorOpen (childName);
+		CmdSignalDoorSwing (ciName);
 	}
 		
 	[Command]
-	public void CmdSignalDoorOpen(string childName) {
-		// Send signal to every client that player wants to open a door
-		RpcSignalDoorOpen (childName);
-	}
+	public void CmdSignalDoorSwing(string ciName) {
 
-	[ClientRpc]
-	public void RpcSignalDoorOpen(string childName) {
-		// Open the door in the door class
-		foreach (ChildInteractable ci in childInteractables) {
-			if (ci.name == childName) {
-				ci.SendMessage ("OpenDoor", SendMessageOptions.DontRequireReceiver);
+		// Determine what door we want to open and if we can open it
+		int swingDir = 0;
+
+		if (furnaceDoor == null || crucibleHolder == null) {
+			return;
+		}
+
+		if (ciName == "Furnace_Door" && crucibleHolder.isClosed) {
+			furnaceDoor.isClosed = !furnaceDoor.isClosed;
+		
+			if (furnaceDoor.isClosed) {
+				swingDir = -1;
+			} else {
+				swingDir = 1;
 			}
+		} 
+		else if (ciName == "Crucible_Holder" && !furnaceDoor.isClosed) {
+			crucibleHolder.isClosed = !crucibleHolder.isClosed;
+
+			if (crucibleHolder.isClosed) {
+				swingDir = -1;
+			} else {
+				swingDir = 1;
+			}
+		}
+
+		// Open the target door if we allowed
+		if (swingDir != 0) {
+			RpcSignalDoorSwing (swingDir, ciName);
 		}
 	}
 
-	public void RegisterChildInteractable(ChildInteractable ci) {
-		if (!childInteractables.Contains(ci)) {
-			childInteractables.Add (ci);
+	[ClientRpc]
+	public void RpcSignalDoorSwing(int swingDir, string ciName) {
+		// Open the correct door
+		if (ciName == "Furnace_Door" && furnaceDoor != null) {
+			furnaceDoor.SwingDoor (swingDir);
+		} else if (ciName == "Crucible_Holder" && crucibleHolder != null) {
+			crucibleHolder.SwingDoor (swingDir);
 		}
 	}
 }

@@ -2,24 +2,27 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent (typeof(Rigidbody))]
 public class ChildDoor : ChildInteractable {
 
-	public float doorOpenTime = 1f;
-	private bool isClosed;
-	private bool isMoving = false;
+	public float doorSwingTime = 2.5f;
+	public bool isClosed = true;
+	public bool isMoving = false;
 	// Door rotations
 	public Vector3 openEuler;
+	public Vector3 openPos;
 	private Vector3 closedEuler;
+	private Vector3 closedPos;
 	private Vector3 curDoorEuler;
+	private Coroutine swingCoroutine;
 
-	// Components
-	private Rigidbody rig;
+	void Start() {
+		closedEuler = transform.localEulerAngles;
+		curDoorEuler = transform.localEulerAngles;
+		closedPos = transform.localPosition;
 
-	public override void Start() {
-		base.Start ();
-		rig = GetComponent<Rigidbody> ();
-		closedEuler = transform.rotation.eulerAngles;
+		if (openPos == Vector3.zero) {
+			openPos = transform.localPosition;
+		}
 	}
 
 	public override void OnClientStartInteraction(string masterId) {
@@ -29,41 +32,44 @@ public class ChildDoor : ChildInteractable {
 
 	void RequestDoorOpen() {
 		if (parentEntity != null) {
-			parentEntity.SendMessage ("SignalDoorOpen", transform.name, SendMessageOptions.DontRequireReceiver);
+			parentEntity.SendMessage ("SignalDoorSwing", transform.name, SendMessageOptions.DontRequireReceiver);
 		}
 	}
 
-	public void OpenDoor() {
+	public void SwingDoor(int swingDir) {
 		if (isMoving) {
 			return;
 		}
-		StartCoroutine (DoorSwing ());
+
+		if (swingCoroutine != null) {
+			StopCoroutine (swingCoroutine);
+		}
+		swingCoroutine = StartCoroutine (DoorSwing (swingDir));
 	}
 
-	IEnumerator DoorSwing() {
-		isMoving = true;
+	IEnumerator DoorSwing(int swingDir) {
 		Vector3 targetEuler;
-		if (isClosed) {
+		Vector3 targetPos;
+
+		if (swingDir == 1) {
 			targetEuler = openEuler;
+			targetPos = openPos;
 		} else {
 			targetEuler = closedEuler;
+			targetPos = closedPos;
 		}
-		Debug.Log ("Swing");
-		float t = doorOpenTime;
+		float t = 0;
 		while (t < 1) {
-			t += Time.deltaTime / doorOpenTime;
-			curDoorEuler = Vector3.Lerp (curDoorEuler, targetEuler, t);
+			// Increment time overtime
+			t += Time.deltaTime / doorSwingTime;
+			// Position lerp
+			transform.localPosition = Vector3.Lerp (transform.localPosition, targetPos, t);
+			// Rotation lerp
+			curDoorEuler.x = Mathf.LerpAngle (curDoorEuler.x, targetEuler.x, t);
+			curDoorEuler.y = Mathf.LerpAngle (curDoorEuler.y, targetEuler.y, t);
+			curDoorEuler.z = Mathf.LerpAngle (curDoorEuler.z, targetEuler.z, t);
+			transform.localEulerAngles = curDoorEuler;
 			yield return null;
 		}
-		isMoving = false;
-
-		if (!isClosed) {
-			isClosed = true;
-		} else {
-			isClosed = false;
-		}
-
-		Quaternion newRot = Quaternion.Euler (curDoorEuler);
-		rig.rotation = newRot;
 	}
 }
