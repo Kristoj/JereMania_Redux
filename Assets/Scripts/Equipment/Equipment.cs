@@ -21,7 +21,7 @@ public class Equipment : Item {
 
 	[Header ("Equipment Type")]
 	public HoldStyle holdStyle;
-	public enum HoldStyle {Hammer, Trovel, Unarmed};
+	public enum HoldStyle {Hammer, Trovel, Unarmed, Spear};
 	public ActionType primaryAction = ActionType.Attack;
 	public ActionType secondaryAction = ActionType.Throw;
 	public enum ActionType{Attack, Throw, Block, Consume, Custom};
@@ -330,15 +330,16 @@ public class Equipment : Item {
 	}
 
 	public int[] GetAnimationIds() {
-		int[] actionIds = new int[5];
-		/////////
-		/// 
-		/// 
-		// ActionID - 0 - = Hold Animation
-		// ActionID - 1 - = Primary Action
-		// ActionID - 2 - = Secondary Action
-		// ActionID - 3 - = Attack animation Start Index
-		// ActionID - 4 - = Attack animation count
+		int[] actionIds = new int[20];
+
+		// // // // UPDATE ANIMATION IDs FOR THE ANIMATOR \\ \\ \\ \\
+		// ActionID 0 = Hold Animation
+		// 	   0 = Hammer | 2 = Spear | 69 = Unarmed
+		// ActionID 1 = Primary Action
+		// ActionID 2 = Secondary Action
+		// ActionID 3 = Attack animation Start Index
+		//	   0 = Hammer_Attack_01 | 1 = Hammer_Attack_02 | 2 = Trovel_Attack_01 | 3 = Spear_Attack_01
+		// ActionID 4 = Attack animation count
 
 
 		// Hold id
@@ -358,6 +359,15 @@ public class Equipment : Item {
 		if (holdStyle == HoldStyle.Unarmed) {
 			actionIds [0] = 69;
 			actionIds[3] = 2;
+			actionIds [4] = 1;
+		}
+
+		if (holdStyle == HoldStyle.Spear) {
+			// Hold id
+			actionIds [0] = 2;
+			// Attack animation start index
+			actionIds[3] = 3;
+			// Attack animation length
 			actionIds [4] = 1;
 		}
 

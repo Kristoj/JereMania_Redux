@@ -106,12 +106,16 @@ public class Furnace : ParentEntity {
 		yield return null;
 	}
 
-	// Called when client signals that he wants to open a door
+	// SIGNALS\\ // SIGNALS \\
+	// Child entities communicate with their parents using signals...
+	#region CHILD SIGNALS
+
+	// DOOR SWING
+	#region DOOR SWING
 	public void SignalDoorSwing(string ciName) {
-		// Send signal to server so we can client RPC door opening
 		CmdSignalDoorSwing (ciName);
 	}
-		
+
 	[Command]
 	public void CmdSignalDoorSwing(string ciName) {
 
@@ -156,4 +160,24 @@ public class Furnace : ParentEntity {
 			crucibleHolder.SwingDoor (swingDir);
 		}
 	}
+
+	#endregion
+
+	// Crucible Add
+	#region Curcible Add
+	public void SignalCrucibleAdd() {
+		CmdSignalCrucibleAdd ();
+	}
+
+	[Command]
+	void CmdSignalCrucibleAdd() {
+
+	}
+
+	[ClientRpc]
+	void RpcSignalCrucibleAdd() {
+
+	}
+	#endregion
+	#endregion
 }

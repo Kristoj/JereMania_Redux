@@ -177,7 +177,12 @@ public class GunController : NetworkBehaviour {
 		}
 	}
 
-
+	/// <summary>
+	/// Equips wanted equipment.
+	/// </summary>
+	/// <param name="equipmentToEquip">Equipment to equip. If NULL is passed as a parameter the gun controller class will check if player has a equipment that he can equip.</param>
+	/// <param name="dropEquipment">If set to <c>true</c> drop the current equipment. Else it will be destroyed.</param>
+	/// <param name="dropForce">Drop force.</param>
 	public void EquipEquipment(Equipment equipmentToEquip, bool dropEquipment, float dropForce) {
 		if (!canChangeEquipment) {
 			return;
