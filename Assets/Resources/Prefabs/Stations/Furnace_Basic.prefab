@@ -25,7 +25,7 @@ GameObject:
   - component: {fileID: 54168217140468002}
   - component: {fileID: 65970892131832278}
   m_Layer: 0
-  m_Name: FurnaceDoor
+  m_Name: Furnace_Door
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -528,7 +528,7 @@ BoxCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1188853943722096}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.6162903, y: 0.060508545, z: 0.8829475}
@@ -544,7 +544,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1b87b8214b9bc740a191946dab0bbed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  doorOpenTime: 1
+  parentEntity: {fileID: 0}
+  doorSwingTime: 2.5
+  isClosed: 1
+  isMoving: 0
   openEuler: {x: -90, y: 0, z: 150}
 --- !u!114 &114723919850098292
 MonoBehaviour:
@@ -589,6 +592,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67715d953143b274481cb3d9231d2d2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  entityName: Entity
+  entitySoundMaterial: 0
+  entityGroupIndex: 0
+  childInteractables: []
   maxOreCount: 5
   meltTime: 11
   meltSuccesChance: 18
