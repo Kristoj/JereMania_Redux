@@ -9,11 +9,11 @@ public class CaveSpawnerEditor : Editor {
 		Cavespawner myScript = target as Cavespawner;
 
 		if (GUILayout.Button ("Generate Cave")) {
-			//myScript.caveSpawn ();
+			myScript.StartGenerate ();
 		}
 
 		if (GUILayout.Button ("Clear Cave")) {
-			//myScript.ClearCave ();
+			myScript.ClearCave ();
 		}
 	}
 }

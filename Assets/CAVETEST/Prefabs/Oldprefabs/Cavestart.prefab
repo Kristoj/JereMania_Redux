@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 33009559345019018}
   - component: {fileID: 65314638904111156}
   - component: {fileID: 23297647294356238}
+  - component: {fileID: 114433205259062726}
   - component: {fileID: 114172725487525516}
   m_Layer: 0
   m_Name: Cavestart
@@ -112,13 +113,25 @@ MonoBehaviour:
   caveStraight:
   - {fileID: 114115216493537320, guid: 8f44e94deb1a1b444a00de8b66c6324c, type: 2}
   caveLLeft:
-  - {fileID: 114229138907419798, guid: da66758b3662fa04689323c207d3a2c5, type: 2}
+  - {fileID: 114806565228677512, guid: c0326217012fe84449b43f6a3bed7947, type: 2}
   caveLRight:
-  - {fileID: 114166205558851616, guid: 17945b4f6636dac4f96c0df6c24f7251, type: 2}
+  - {fileID: 114010755599568622, guid: bbbf884ab901bc24b820f39f49543385, type: 2}
   caveT:
   - {fileID: 114363706917638462, guid: 37e548cce17571946a3d28dfb001a2f4, type: 2}
   caveX:
   - {fileID: 114781944906559342, guid: 425d49d599b42964bab6fbf3b1027ab8, type: 2}
   caveEnd:
-  - {fileID: 114189450235013500, guid: 3be91694028a9c44580fe86aa54e6da5, type: 2}
-  caveChunklist: []
+  - {fileID: 0}
+  caveChunkList: []
+--- !u!114 &114433205259062726
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1632186171220560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78de58c8b36f59b4a95e6a5246ff5681, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  caveShape: 6
