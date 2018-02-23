@@ -22,9 +22,9 @@ GameObject:
   - component: {fileID: 33009559345019018}
   - component: {fileID: 65314638904111156}
   - component: {fileID: 23297647294356238}
-  - component: {fileID: 114172725487525516}
+  - component: {fileID: 114969138648228314}
   m_Layer: 0
-  m_Name: Cavestart
+  m_Name: CaveStrahjhjight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -37,8 +37,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1632186171220560}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.81, y: 11.39, z: 0}
-  m_LocalScale: {x: 9, y: 9, z: 9}
+  m_LocalPosition: {x: 90.07451, y: 4.9, z: 314.67642}
+  m_LocalScale: {x: 1, y: 1, z: 2}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -57,7 +57,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 34cfb21348a518a4daeec96801774c1f, type: 2}
+  - {fileID: 2100000, guid: 57918c4c20768de4492c665e500ab006, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -96,7 +96,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &114172725487525516
+--- !u!114 &114969138648228314
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -104,21 +104,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1632186171220560}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9e96d3d5d9d38074d80ef2ea32fe0710, type: 3}
+  m_Script: {fileID: 11500000, guid: 78de58c8b36f59b4a95e6a5246ff5681, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxCaves: 30
-  minCaves: 10
-  caveStraight:
-  - {fileID: 114115216493537320, guid: 8f44e94deb1a1b444a00de8b66c6324c, type: 2}
-  caveLLeft:
-  - {fileID: 114229138907419798, guid: da66758b3662fa04689323c207d3a2c5, type: 2}
-  caveLRight:
-  - {fileID: 114166205558851616, guid: 17945b4f6636dac4f96c0df6c24f7251, type: 2}
-  caveT:
-  - {fileID: 114363706917638462, guid: 37e548cce17571946a3d28dfb001a2f4, type: 2}
-  caveX:
-  - {fileID: 114781944906559342, guid: 425d49d599b42964bab6fbf3b1027ab8, type: 2}
-  caveEnd:
-  - {fileID: 114189450235013500, guid: 3be91694028a9c44580fe86aa54e6da5, type: 2}
-  caveChunklist: []
+  caveShape: 0
