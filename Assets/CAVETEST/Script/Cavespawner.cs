@@ -53,7 +53,9 @@ public class Cavespawner : NetworkBehaviour {
 	}
 
 	IEnumerator Spawning () {
-		yield return WaitForSeconds (10);
+		
+		yield return new WaitForSeconds (10);
+
 	for (int i = 0; i < caveAmount; i++) {
 
 			ChunkCheck ();
