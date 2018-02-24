@@ -21,6 +21,8 @@ GameObject:
   - component: {fileID: 4427777855003844}
   - component: {fileID: 95311029510035332}
   - component: {fileID: 114115216493537320}
+  - component: {fileID: 65081696411265490}
+  - component: {fileID: 114845768415336656}
   m_Layer: 0
   m_Name: CaveStraight_PROT
   m_TagString: Untagged
@@ -61,7 +63,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4327976914547488
 Transform:
   m_ObjectHideFlags: 1
@@ -82,7 +84,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1002123878248788}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.0401, y: 0.67173254, z: 5.9304514}
+  m_LocalPosition: {x: 1.504109, y: -0.2074154, z: 0.11608087}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4327976914547488}
@@ -185,6 +187,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1376863131351500}
   m_Mesh: {fileID: 4300000, guid: 7eb23ae9e8c8b3f4688d0ac22341a032, type: 3}
+--- !u!65 &65081696411265490
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1002123878248788}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.0319533, y: 0.8376663, z: 2.0876768}
+  m_Center: {x: -0.017964125, y: -0.7681533, z: -0.055514455}
 --- !u!95 &95311029510035332
 Animator:
   serializedVersion: 3
@@ -214,3 +228,35 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   caveShape: 0
+--- !u!114 &114845768415336656
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1002123878248788}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 143
+    i1: 68
+    i2: 233
+    i3: 77
+    i4: 235
+    i5: 26
+    i6: 27
+    i7: 68
+    i8: 74
+    i9: 0
+    i10: 222
+    i11: 139
+    i12: 102
+    i13: 198
+    i14: 50
+    i15: 76
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0

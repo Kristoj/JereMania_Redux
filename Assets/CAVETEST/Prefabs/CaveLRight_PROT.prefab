@@ -21,6 +21,8 @@ GameObject:
   - component: {fileID: 4904923366057486}
   - component: {fileID: 114010755599568622}
   - component: {fileID: 95330365639359672}
+  - component: {fileID: 65266098347338738}
+  - component: {fileID: 114784386621732352}
   m_Layer: 0
   m_Name: CaveLRight_PROT
   m_TagString: Untagged
@@ -61,33 +63,33 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4313127905801854
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1794521425072344}
-  m_LocalRotation: {x: -0.0000010058284, y: 0.7071068, z: -0.7071068, w: -0.0000009760261}
+  m_LocalRotation: {x: -0.49999997, y: 0.5000001, z: -0.50000006, w: -0.49999997}
   m_LocalPosition: {x: 0, y: 0, z: -0.00000071525574}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4904923366057486}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 90, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 180, z: -90}
 --- !u!4 &4474392847234778
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1787859042079506}
-  m_LocalRotation: {x: -0.0000010058284, y: 0.7071068, z: -0.7071068, w: -0.0000009760261}
+  m_LocalRotation: {x: -0.49999997, y: 0.5000001, z: -0.50000006, w: -0.49999997}
   m_LocalPosition: {x: 0, y: 0, z: -0.00000071525574}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4904923366057486}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 90, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 180, z: -90}
 --- !u!4 &4904923366057486
 Transform:
   m_ObjectHideFlags: 1
@@ -185,6 +187,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1794521425072344}
   m_Mesh: {fileID: 4300002, guid: cb465d40ceb3ec942b3f913e0909f579, type: 3}
+--- !u!65 &65266098347338738
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1403750716264782}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.0319533, y: 0.8376663, z: 2.0876768}
+  m_Center: {x: -0.017964125, y: -0.7681533, z: -0.055514455}
 --- !u!95 &95330365639359672
 Animator:
   serializedVersion: 3
@@ -214,3 +228,35 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   caveShape: 2
+--- !u!114 &114784386621732352
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1403750716264782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 187
+    i1: 191
+    i2: 136
+    i3: 74
+    i4: 185
+    i5: 1
+    i6: 188
+    i7: 36
+    i8: 184
+    i9: 32
+    i10: 243
+    i11: 159
+    i12: 73
+    i13: 84
+    i14: 51
+    i15: 133
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0

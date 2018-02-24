@@ -27,7 +27,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1705549895135036
 GameObject:
   m_ObjectHideFlags: 0
@@ -38,6 +38,8 @@ GameObject:
   - component: {fileID: 4438497421963578}
   - component: {fileID: 114806565228677512}
   - component: {fileID: 95018358414353812}
+  - component: {fileID: 65083997617611268}
+  - component: {fileID: 114277561772789496}
   m_Layer: 0
   m_Name: CaveLLeft_PROT
   m_TagString: Untagged
@@ -185,6 +187,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1481506014151120}
   m_Mesh: {fileID: 4300002, guid: c7a65d73090d82440b971ff377aab849, type: 3}
+--- !u!65 &65083997617611268
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1705549895135036}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.0319533, y: 0.8376663, z: 2.0876768}
+  m_Center: {x: -0.017964125, y: -0.7681533, z: -0.055514455}
 --- !u!95 &95018358414353812
 Animator:
   serializedVersion: 3
@@ -202,6 +216,38 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114277561772789496
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1705549895135036}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 192
+    i1: 50
+    i2: 98
+    i3: 23
+    i4: 1
+    i5: 47
+    i6: 232
+    i7: 68
+    i8: 73
+    i9: 180
+    i10: 63
+    i11: 106
+    i12: 59
+    i13: 237
+    i14: 121
+    i15: 71
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!114 &114806565228677512
 MonoBehaviour:
   m_ObjectHideFlags: 1

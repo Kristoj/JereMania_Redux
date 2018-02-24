@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class Cavespawner : MonoBehaviour {
+public class Cavespawner : NetworkBehaviour {
 
 	public int maxCaves;
 	public int minCaves;
@@ -29,146 +29,154 @@ public class Cavespawner : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		
+		if (isServer) {
+			StartGenerate ();
+		}
 
-		StartGenerate ();
-	
 	}
+		
+	
+	
+
 
 	public void StartGenerate () {
 		
 		caveChunkList.Add (GetComponent<CaveChunk> ());
 		caveAmount = Random.Range (minCaves, maxCaves);
-		Debug.Log ("Cave amount:" + caveAmount);
 
 		CaveSpawn1 ();
 		currCaves++;
 		Debug.Log ("currCaves:" + currCaves);	
+		StartCoroutine (Spawning ());
 
-		for (int i = 0; i < caveAmount; i++) {
+	}
+
+	IEnumerator Spawning () {
+	for (int i = 0; i < caveAmount; i++) {
+
+			ChunkCheck ();
+			yield return null;
+		}
+
+	}
+	void ChunkCheck () {
+		//STRAIGHT
+		if (caveChunkList [currCaves].caveShape == CaveChunk.CaveShape.Straight) {
+
+			//Check for previous cave chunk orientation
+
+			//Cave chunk rotation 0
+			if (caveChunkList [currCaves].transform.eulerAngles.y == transform.eulerAngles.y) {
+
+				offsetZ = 18;
+				offsetX = 0;
+				offsetY = 0;
+				offsetRot = 0;
 
 
-			//Check for previous cave chunk type
-
-			//STRAIGHT
-			if (caveChunkList [currCaves].caveShape == CaveChunk.CaveShape.Straight) {
-
-				//Check for previous cave chunk orientation
-
-				//Cave chunk points forward
-				if (caveChunkList [currCaves].transform.eulerAngles.y == transform.eulerAngles.y) {
-
-					offsetZ = 18;
-					offsetX = 0;
-					offsetY = 0;
-					offsetRot = 0;
 				}
 
-				//Cave chunk points left
-				if (caveChunkList [currCaves].transform.eulerAngles.y == transform.eulerAngles.y + 270) {
+			//Cave chunk rotation 90
+			else if (caveChunkList [currCaves].transform.eulerAngles.y == transform.eulerAngles.y + 90) {
 
-					offsetZ = 0;
-					offsetX = -18;
-					offsetY = 0;
-					offsetRot = 270;
+				offsetZ = 0;
+				offsetX = 18;
+				offsetY = 0;
+				offsetRot = 90;
+
+
 				}
 
-				//Cave chunk points right
-				if (caveChunkList [currCaves].transform.eulerAngles.y == transform.eulerAngles.y + 90) {
+			//Cave chunk rotation 180
+			else if (caveChunkList [currCaves].transform.eulerAngles.y == transform.eulerAngles.y + 180) {
 
-					offsetZ = 0;
-					offsetX = 18;
-					offsetY = 0;
-					offsetRot = 90;
+				offsetZ = -18;
+				offsetX = 0;
+				offsetY = 0;
+				offsetRot = 180;
+
 				}
 
-				//Cave chunk points backwards
-				if (caveChunkList [currCaves].transform.eulerAngles.y == transform.eulerAngles.y + 180) {
+				//Cave chunk rotation 270
+				else if (caveChunkList [currCaves].transform.eulerAngles.y == transform.eulerAngles.y + 270) {
 
-					offsetZ = -18;
-					offsetX = 0;
-					offsetY = 0;
-					offsetRot = 0;
+				offsetZ = 0;
+				offsetX = -18;
+				offsetY = 0;
+				offsetRot = 270;
+
+
 				}
 					
 				CaveSpawn1 ();
-				currCaves++;
-				Debug.Log ("currCaves:" + currCaves);		
-			}
+				currCaves++;	
+
 				
+			}
+		//LEFT
+		else if (caveChunkList [currCaves].caveShape == CaveChunk.CaveShape.Left) {
 
-			//LEFT
-			if (caveChunkList [currCaves].caveShape == CaveChunk.CaveShape.Left) {
+			//Check for previous cave chunk orientation
 
-				//Check for previous cave chunk orientation
+			//Cave chunk rotation 0 (points left)
+			if (caveChunkList [currCaves].transform.eulerAngles.y == transform.eulerAngles.y) {
 
-				//Cave chunk points forward
-				if (caveChunkList [currCaves].transform.eulerAngles.y == transform.eulerAngles.y) {
+				offsetZ = 0;
+				offsetX = -18;
+				offsetY = 0;
+				offsetRot = 270;
+
+
+				}
+
+				//Cave chunk rotation 90 (points forward)
+				else if (caveChunkList [currCaves].transform.eulerAngles.y == transform.eulerAngles.y + 90) {
 
 					offsetZ = 18;
 					offsetX = 0;
 					offsetY = 0;
 					offsetRot = 0;
-				}
 
-				//Cave chunk points left
-				if (caveChunkList [currCaves].transform.eulerAngles.y == transform.eulerAngles.y + 270) {
 
-					offsetZ = 0;
-					offsetX = -18;
-					offsetY = 0;
-					offsetRot = 270;
-				}
+					}
 
-				//Cave chunk points right
-				if (caveChunkList [currCaves].transform.eulerAngles.y == transform.eulerAngles.y + 90) {
+				//Cave chunk rotation 180 (points right)
+				else if (caveChunkList [currCaves].transform.eulerAngles.y == transform.eulerAngles.y + 180) {
 
 					offsetZ = 0;
 					offsetX = 18;
 					offsetY = 0;
 					offsetRot = 90;
-				}
 
-				//Cave chunk points backwards
-				if (caveChunkList [currCaves].transform.eulerAngles.y == transform.eulerAngles.y + 180) {
+
+					}
+					
+
+				//Cave chunk rotation 270 (points backwards)
+				else if (caveChunkList [currCaves].transform.eulerAngles.y == transform.eulerAngles.y + 270) {
 
 					offsetZ = -18;
 					offsetX = 0;
 					offsetY = 0;
-					offsetRot = 0;
+					offsetRot = 180;
+
+
 				}
-
-				CaveSpawn2 ();
+					
+					
+				CaveSpawn1 ();
 				currCaves++;
-				Debug.Log ("currCaves:" + currCaves);
-
 			}
 
 
 			//RIGHT
-			if (caveChunkList [currCaves].caveShape == CaveChunk.CaveShape.Right) {
+			else if (caveChunkList [currCaves].caveShape == CaveChunk.CaveShape.Right) {
 
 				//Check for previous cave chunk orientation
 
-				//Cave chunk points forward
+				//Cave chunk rotation 0 (points right)
 				if (caveChunkList [currCaves].transform.eulerAngles.y == transform.eulerAngles.y) {
-
-					offsetZ = 18;
-					offsetX = 0;
-					offsetY = 0;
-					offsetRot = 0;
-				}
-
-				//Cave chunk points left
-				if (caveChunkList [currCaves].transform.eulerAngles.y == transform.eulerAngles.y + 270) {
-
-					offsetZ = 0;
-					offsetX = -18;
-					offsetY = 0;
-					offsetRot = 270;
-				}
-
-				//Cave chunk points right
-				if (caveChunkList [currCaves].transform.eulerAngles.y == transform.eulerAngles.y + 90) {
 
 					offsetZ = 0;
 					offsetX = 18;
@@ -176,31 +184,83 @@ public class Cavespawner : MonoBehaviour {
 					offsetRot = 90;
 				}
 
-				//Cave chunk points backwards
-				if (caveChunkList [currCaves].transform.eulerAngles.y == transform.eulerAngles.y + 180) {
+
+				//Cave chunk rotation 90 (points backwards)
+				else if (caveChunkList [currCaves].transform.eulerAngles.y == transform.eulerAngles.y + 90) {
 
 					offsetZ = -18;
 					offsetX = 0;
 					offsetY = 0;
+					offsetRot = 180;
+				}
+
+				//Cave chunk rotation 180 (points left)
+				else if (caveChunkList [currCaves].transform.eulerAngles.y == transform.eulerAngles.y + 180) {
+
+					offsetZ = 0;
+					offsetX = -18;
+					offsetY = 0;
+					offsetRot = 270;
+				}
+
+
+				//Cave chunk rotation 270 (points forward)
+				else if (caveChunkList [currCaves].transform.eulerAngles.y == transform.eulerAngles.y + 270) {
+
+					offsetZ = 18;
+					offsetX = 0;
+					offsetY = 0;
 					offsetRot = 0;
 				}
-					
-				CaveSpawn3 ();
+
+				CaveSpawn1 ();
 				currCaves++;
 				Debug.Log ("currCaves:" + currCaves);
 
-			}
 	
 		}
-	}
+		}
 			
 			
 
-	//spawning these if previous cave piece is left
 	void CaveSpawn1 () {
 
-		int caveType = Random.Range (1, 3);
+		int caveType = Random.Range (1, 4);
 		Debug.Log ("caveType:" + caveType);
+
+		if (caveType == 1) {
+
+			CaveChunk clone = Instantiate (caveStraight[0], caveChunkList[currCaves].transform.position + transform.forward * offsetZ + transform.right * offsetX + transform.up * offsetY, Quaternion.Euler(transform.eulerAngles + new Vector3(0, offsetRot, 0)), transform);
+			caveChunkList.Add (clone);
+			NetworkServer.Spawn (clone.gameObject);
+
+		}
+
+
+		else if (caveType == 2) {
+
+			CaveChunk clone = Instantiate (caveLLeft[0], caveChunkList[currCaves].transform.position + transform.forward * offsetZ + transform.right * offsetX + transform.up * offsetY, Quaternion.Euler(transform.eulerAngles + new Vector3(0, offsetRot, 0)), transform);
+			caveChunkList.Add (clone);
+			NetworkServer.Spawn (clone.gameObject);
+		}
+
+
+		else if (caveType == 3) {
+
+			CaveChunk clone = Instantiate (caveLRight[0], caveChunkList[currCaves].transform.position + transform.forward * offsetZ + transform.right * offsetX + transform.up * offsetY, Quaternion.Euler(transform.eulerAngles + new Vector3(0, offsetRot, 0)), transform);
+			caveChunkList.Add (clone);
+			NetworkServer.Spawn (clone.gameObject);
+		}
+
+
+
+	}
+
+
+
+	//spawning these if previous cave piece is left
+	void CaveSpawn2 () {
+		int caveType = Random.Range (1, 3);
 
 		if (caveType == 1) {
 
@@ -221,38 +281,6 @@ public class Cavespawner : MonoBehaviour {
 		else if (caveType == 3) {
 
 			CaveChunk clone = Instantiate (caveLRight[0], caveChunkList[currCaves].transform.position + transform.forward * offsetZ + transform.right * offsetX + transform.up * offsetY, Quaternion.Euler(caveChunkList[currCaves].transform.eulerAngles + new Vector3(0, offsetRot, 0)), transform);
-			caveChunkList.Add (clone);
-		}
-
-
-
-	}
-
-
-
-	//spawning these if previous cave piece is left
-	void CaveSpawn2 () {
-		int caveType = Random.Range (1, 3);
-
-		if (caveType == 1) {
-
-			CaveChunk clone = Instantiate (caveStraight[0], caveChunkList[currCaves].transform.position + transform.forward * offsetZ + transform.right * offsetX + transform.up * offsetY, Quaternion.Euler(caveChunkList[currCaves].transform.eulerAngles + new Vector3(0, 90 + offsetRot, 0)), transform);
-			caveChunkList.Add (clone);
-
-		}
-
-
-		else if (caveType == 2) {
-
-			CaveChunk clone = Instantiate (caveLLeft[0], caveChunkList[currCaves].transform.position + transform.forward * offsetZ + transform.right * offsetX + transform.up * offsetY, Quaternion.Euler(caveChunkList[currCaves].transform.eulerAngles + new Vector3(0, 270 + offsetRot, 0)), transform);
-			caveChunkList.Add (clone);
-
-		}
-
-
-		else if (caveType == 3) {
-
-			CaveChunk clone = Instantiate (caveLRight[0], caveChunkList[currCaves].transform.position + transform.forward * offsetZ + transform.right * offsetX + transform.up * offsetY, Quaternion.Euler(caveChunkList[currCaves].transform.eulerAngles + new Vector3(0, 90 + offsetRot, 0)), transform);
 			caveChunkList.Add (clone);
 		}
 

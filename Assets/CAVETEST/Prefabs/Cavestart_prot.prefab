@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 114359017609960580}
   - component: {fileID: 114669466958812034}
   - component: {fileID: 95024994420663428}
+  - component: {fileID: 114292246257751922}
   m_Layer: 0
   m_Name: Cavestart_prot
   m_TagString: Untagged
@@ -203,6 +204,38 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114292246257751922
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1114729787739102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 56
+    i1: 130
+    i2: 54
+    i3: 176
+    i4: 220
+    i5: 81
+    i6: 106
+    i7: 244
+    i8: 90
+    i9: 97
+    i10: 167
+    i11: 154
+    i12: 99
+    i13: 107
+    i14: 209
+    i15: 143
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!114 &114359017609960580
 MonoBehaviour:
   m_ObjectHideFlags: 1
