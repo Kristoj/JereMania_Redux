@@ -37,7 +37,7 @@ public class Cavespawner : NetworkBehaviour {
 	}
 		
 	
-	
+
 
 
 	public void StartGenerate () {
@@ -223,7 +223,8 @@ public class Cavespawner : NetworkBehaviour {
 				Debug.Log ("currCaves:" + currCaves);
 
 	
-		}
+
+			}
 		}
 			
 			
