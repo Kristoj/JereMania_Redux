@@ -45,16 +45,18 @@ public class Cavespawner : NetworkBehaviour {
 		caveChunkList.Add (GetComponent<CaveChunk> ());
 		caveAmount = Random.Range (minCaves, maxCaves);
 
-		CaveSpawn1 ();
-		currCaves++;
+
 		Debug.Log ("currCaves:" + currCaves);	
 		StartCoroutine (Spawning ());
 
 	}
 
 	IEnumerator Spawning () {
-		
 		yield return new WaitForSeconds (10);
+
+		CaveSpawn1 ();
+		currCaves++;
+
 
 	for (int i = 0; i < caveAmount; i++) {
 

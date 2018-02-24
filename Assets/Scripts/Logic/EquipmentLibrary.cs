@@ -9,7 +9,7 @@ public class EquipmentLibrary : MonoBehaviour {
 	public static EquipmentLibrary instance;
 
 	void Awake() {
-		GetComponent<AutomaticObjectAssignerScript> ().AssignObjects ();
+		//GetComponent<AutomaticObjectAssignerScript> ().AssignObjects ();
 	}
 
 	void Start() {
