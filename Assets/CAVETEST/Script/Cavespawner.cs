@@ -53,6 +53,7 @@ public class Cavespawner : NetworkBehaviour {
 	}
 
 	IEnumerator Spawning () {
+		yield return WaitForSeconds (10);
 	for (int i = 0; i < caveAmount; i++) {
 
 			ChunkCheck ();
@@ -164,9 +165,9 @@ public class Cavespawner : NetworkBehaviour {
 
 				}
 					
-					
 				CaveSpawn1 ();
 				currCaves++;
+
 			}
 
 
@@ -233,7 +234,6 @@ public class Cavespawner : NetworkBehaviour {
 			CaveChunk clone = Instantiate (caveStraight[0], caveChunkList[currCaves].transform.position + transform.forward * offsetZ + transform.right * offsetX + transform.up * offsetY, Quaternion.Euler(transform.eulerAngles + new Vector3(0, offsetRot, 0)), transform);
 			caveChunkList.Add (clone);
 			NetworkServer.Spawn (clone.gameObject);
-
 		}
 
 
