@@ -155,7 +155,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1324178005722414}
   m_LocalRotation: {x: -0, y: -0.9336604, z: -0, w: 0.35815975}
-  m_LocalPosition: {x: 2.3792725, y: -0.6219635, z: 1.4111938}
+  m_LocalPosition: {x: -0.51, y: -0.6219635, z: 6.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4397251799051224}
@@ -549,6 +549,7 @@ MonoBehaviour:
   isClosed: 1
   isMoving: 0
   openEuler: {x: -90, y: 0, z: 150}
+  openPos: {x: 0, y: 0, z: 0}
 --- !u!114 &114723919850098292
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -595,7 +596,7 @@ MonoBehaviour:
   entityName: Entity
   entitySoundMaterial: 0
   entityGroupIndex: 0
-  childInteractables: []
+  childEntities: []
   maxOreCount: 5
   meltTime: 11
   meltSuccesChance: 18
