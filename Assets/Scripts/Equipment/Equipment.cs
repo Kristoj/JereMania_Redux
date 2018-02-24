@@ -145,11 +145,17 @@ public class Equipment : Item {
 					CmdAddImpactForce (meleeForce, hit.point, livingEntity.name, livingEntity.entityGroupIndex);
 				}
 
-				// Add impact force
+				// Get Entity
 				Entity entity = hit.collider.GetComponent<Entity>();
 				if (entity != null && livingEntity == null) {
 					Vector3 meleeForce = equipmentVelocity * impactForce;
 					CmdAddImpactForce (meleeForce, hit.point, entity.name, entity.entityGroupIndex);
+				}
+
+				// Get Local Entity
+				ChildLivingEntity childLivingEntity = hit.collider.GetComponent<ChildLivingEntity>();
+				if (childLivingEntity != null) {
+					childLivingEntity.OnTakeDamage ();
 				}
 
 				// Animation

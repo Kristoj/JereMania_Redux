@@ -71,12 +71,10 @@ public class Entity : NetworkBehaviour {
 		NetworkServer.Destroy (this.gameObject);
 	}
 
-	/// <summary>
-	/// Destroys the entity from all clients and unregisters it from the gamemanager.
-	/// /// Must be called from a client!
-	/// </summary>
-	/// <param name="callerNetId">NetId of the player who called this function.</param>
 
+	/// <summary>
+	/// Sets the authority for the entity. Must be called from server
+	/// </summary>
 	// Set authority for the player who wants to control this entity
 	public void SetAuthority() {
 		Player targetPlayer = GameManager.GetLocalPlayer ();
@@ -85,5 +83,7 @@ public class Entity : NetworkBehaviour {
 		}
 	}
 
-
+	public void SetEntityParent(Transform t) {
+		transform.parent = t;
+	}
 }

@@ -40,6 +40,7 @@ GameObject:
   - component: {fileID: 4048682284148108}
   - component: {fileID: 33404054757109218}
   - component: {fileID: 23398655362259958}
+  - component: {fileID: 64573612664963156}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -143,6 +144,7 @@ GameObject:
   - component: {fileID: 23225061224140738}
   - component: {fileID: 65784991431921666}
   - component: {fileID: 114779425702641020}
+  - component: {fileID: 114594900640894350}
   m_Layer: 0
   m_Name: Crucible_Holder
   m_TagString: Untagged
@@ -405,7 +407,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: c311993095a1bd048bd95f4e764f5a28, type: 3}
+  - {fileID: 2100000, guid: a3d87be836c883049868958bdf3d8bf6, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -439,7 +441,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: c311993095a1bd048bd95f4e764f5a28, type: 3}
+  - {fileID: 1194185921, guid: 95b425ad7d77d0443b65df8cab4ba37a, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -473,7 +475,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: c311993095a1bd048bd95f4e764f5a28, type: 3}
+  - {fileID: 2100000, guid: 5367f19fc38651d48ab7c92e717567db, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -507,7 +509,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: c311993095a1bd048bd95f4e764f5a28, type: 3}
+  - {fileID: 2100000, guid: b82dbf05ec2540d4e90fd571c9cb0a67, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -541,8 +543,8 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: c311993095a1bd048bd95f4e764f5a28, type: 3}
-  - {fileID: 2100002, guid: c311993095a1bd048bd95f4e764f5a28, type: 3}
+  - {fileID: 2100000, guid: b82dbf05ec2540d4e90fd571c9cb0a67, type: 2}
+  - {fileID: 2100000, guid: e4d6847a136d5614f81486ee053c76d2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -576,7 +578,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: c311993095a1bd048bd95f4e764f5a28, type: 3}
+  - {fileID: 2100000, guid: b82dbf05ec2540d4e90fd571c9cb0a67, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -652,6 +654,20 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1858654971646074}
   m_Mesh: {fileID: 4300004, guid: c311993095a1bd048bd95f4e764f5a28, type: 3}
+--- !u!64 &64573612664963156
+MeshCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1060376576938502}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_SkinWidth: 0.01
+  m_Mesh: {fileID: 4300014, guid: c311993095a1bd048bd95f4e764f5a28, type: 3}
 --- !u!65 &65691147712504392
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -707,7 +723,7 @@ MonoBehaviour:
   entityName: Furnace_Crucible
   entitySoundMaterial: 0
   entityGroupIndex: 0
-  childInteractables: []
+  childEntities: []
   maxOreCount: 5
   meltTime: 11
   meltSuccesChance: 18
@@ -732,6 +748,23 @@ MonoBehaviour:
   isMoving: 0
   openEuler: {x: -90, y: 0, z: 170}
   openPos: {x: 0, y: 0, z: 0}
+--- !u!114 &114594900640894350
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1724740549614320}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1b87b8214b9bc740a191946dab0bbed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parentEntity: {fileID: 0}
+  doorSwingTime: 8
+  isClosed: 1
+  isMoving: 0
+  openEuler: {x: -90, y: 0, z: 0}
+  openPos: {x: 0.036, y: 0.944, z: 0.816}
 --- !u!114 &114779425702641020
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -744,11 +777,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parentEntity: {fileID: 0}
-  doorSwingTime: 8
-  isClosed: 1
-  isMoving: 0
-  openEuler: {x: -90, y: 0, z: 0}
-  openPos: {x: 0.036, y: 0.944, z: 0.83}
+  crucibleSlots: 4
+  crucibleCount: 0
 --- !u!114 &114896281147463378
 MonoBehaviour:
   m_ObjectHideFlags: 1

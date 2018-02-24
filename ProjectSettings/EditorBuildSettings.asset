@@ -4,4 +4,10 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Krifi_Scene.unity
+    guid: e6840251bb1a71d458e3586076d744f2
+  - enabled: 1
+    path: Assets/Scenes/Vili_Scene.unity
+    guid: 5b9b3133a8fe1ee45a4a286cd5cba67f

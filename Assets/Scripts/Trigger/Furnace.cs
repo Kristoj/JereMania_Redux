@@ -19,7 +19,8 @@ public class Furnace : ParentEntity {
 	[HideInInspector]
 	public bool canUpdateUI = true;
 	private ChildDoor furnaceDoor;
-	private ChildDoor crucibleHolder;
+	private ChildDoor crucibleDoor;
+	private FurnaceCrucibleHolder crucibleHolder;
 
 	void Update() {
 		if (isServer) {
@@ -34,13 +35,17 @@ public class Furnace : ParentEntity {
 		StartCoroutine (UpdateUI ());
 
 		// Store references for the child interactables
-		foreach (ChildInteractable ci in childInteractables) {
-			if (ci.name == "Furnace_Door") {
-				furnaceDoor = ci as ChildDoor;
+		foreach (ChildEntity ce in childEntities) {
+			if (ce.name== "Furnace_Door") {
+				furnaceDoor = ce as ChildDoor;
 			}
 
-			if (ci.name == "Crucible_Holder") {
-				crucibleHolder = ci as ChildDoor;
+			if (ce.GetType().Name == "ChildDoor" && ce.name == "Crucible_Holder") {
+				crucibleDoor = ce as ChildDoor;
+			}
+
+			if (ce.GetType().Name == "FurnaceCrucibleHolder") {
+				crucibleHolder = ce as FurnaceCrucibleHolder;
 			}
 		}
 	}
@@ -113,6 +118,7 @@ public class Furnace : ParentEntity {
 	// DOOR SWING
 	#region DOOR SWING
 	public void SignalDoorSwing(string ciName) {
+		GameManager.GetLocalPlayer().SetAuthority (netId, GameManager.GetLocalPlayer().GetComponent<NetworkIdentity>());
 		CmdSignalDoorSwing (ciName);
 	}
 
@@ -122,11 +128,11 @@ public class Furnace : ParentEntity {
 		// Determine what door we want to open and if we can open it
 		int swingDir = 0;
 
-		if (furnaceDoor == null || crucibleHolder == null) {
+		if (furnaceDoor == null || crucibleDoor == null) {
 			return;
 		}
 
-		if (ciName == "Furnace_Door" && crucibleHolder.isClosed) {
+		if (ciName == "Furnace_Door" && crucibleDoor.isClosed) {
 			furnaceDoor.isClosed = !furnaceDoor.isClosed;
 		
 			if (furnaceDoor.isClosed) {
@@ -136,9 +142,9 @@ public class Furnace : ParentEntity {
 			}
 		} 
 		else if (ciName == "Crucible_Holder" && !furnaceDoor.isClosed) {
-			crucibleHolder.isClosed = !crucibleHolder.isClosed;
+			crucibleDoor.isClosed = !crucibleDoor.isClosed;
 
-			if (crucibleHolder.isClosed) {
+			if (crucibleDoor.isClosed) {
 				swingDir = -1;
 			} else {
 				swingDir = 1;
@@ -156,8 +162,8 @@ public class Furnace : ParentEntity {
 		// Open the correct door
 		if (ciName == "Furnace_Door" && furnaceDoor != null) {
 			furnaceDoor.SwingDoor (swingDir);
-		} else if (ciName == "Crucible_Holder" && crucibleHolder != null) {
-			crucibleHolder.SwingDoor (swingDir);
+		} else if (ciName == "Crucible_Holder" && crucibleDoor != null) {
+			crucibleDoor.SwingDoor (swingDir);
 		}
 	}
 
@@ -165,18 +171,34 @@ public class Furnace : ParentEntity {
 
 	// Crucible Add
 	#region Curcible Add
-	public void SignalCrucibleAdd() {
-		CmdSignalCrucibleAdd ();
+	public void SignalCrucibleAdd(string playerName) {
+		// Assign authority
+		GameManager.GetLocalPlayer().SetAuthority (netId, GameManager.GetLocalPlayer().GetComponent<NetworkIdentity>());
+		if (crucibleHolder != null) {
+			CmdSignalCrucibleAdd (playerName);
+		}
 	}
 
 	[Command]
-	void CmdSignalCrucibleAdd() {
+	void CmdSignalCrucibleAdd(string playerName) {
+		if (crucibleHolder.crucibleCount < crucibleHolder.crucibleSlots) {
+			// Spawn new crucible
+			Crucible clone = Instantiate (EquipmentLibrary.instance.GetEquipment ("Crucible"), crucibleHolder.transform.position, Quaternion.identity) as Crucible;
+			NetworkServer.Spawn (clone.gameObject);
+			clone.RpcSetFurnaceMode ();
 
+			// Signal that new crucible is spawned on the clients
+			RpcSignalCrucibleAdd (playerName, clone.name, clone.entityGroupIndex);
+		}
 	}
 
 	[ClientRpc]
-	void RpcSignalCrucibleAdd() {
-
+	void RpcSignalCrucibleAdd(string playerName, string crucibleName, int entityGroup) {
+		// Remove crucible from the player who added the crucible to the furnace
+		if (GameManager.GetLocalPlayer ().name == playerName) {
+			GameManager.GetLocalPlayer ().GetComponent<GunController> ().EquipEquipment (null, false, 0);
+		}
+		crucibleHolder.AddCrucible (crucibleName, entityGroup);
 	}
 	#endregion
 	#endregion
