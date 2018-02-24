@@ -15,7 +15,11 @@ public class DebugManager : NetworkBehaviour {
 	void Update () {
 		if (isServer) {
 			if (Input.GetKeyDown (KeyCode.Keypad0)) {
-				netManager.ServerChangeScene ("Test_Scene");
+				netManager.ServerChangeScene ("Krifi_Scene");
+			}
+
+			if (Input.GetKeyDown (KeyCode.Keypad1)) {
+				netManager.ServerChangeScene ("Vili_Scene");
 			}
 		}
 	}

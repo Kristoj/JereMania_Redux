@@ -37,7 +37,7 @@ public class ChildEntity : MonoBehaviour {
 
 	void RegisterToParent() {
 		if (parentEntity != null) {
-			parentEntity.SendMessage ("RegisterChildInteractable",this as ChildInteractable, SendMessageOptions.DontRequireReceiver);
+			parentEntity.SendMessage ("RegisterChildInteractable", this, SendMessageOptions.DontRequireReceiver);
 		}
 	}
 }

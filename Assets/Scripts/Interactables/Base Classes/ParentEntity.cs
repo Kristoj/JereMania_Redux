@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class ParentEntity : Entity {
 
-	public List<ChildInteractable> childInteractables = new List<ChildInteractable> ();
+	public List<ChildEntity> childEntities = new List<ChildEntity> ();
 
-	public void RegisterChildInteractable(ChildInteractable ci) {
-		if (!childInteractables.Contains(ci)) {
-			childInteractables.Add (ci);
+	public void RegisterChildInteractable(ChildEntity ci) {
+		if (!childEntities.Contains(ci)) {
+			childEntities.Add (ci);
 		}
 	}
 }

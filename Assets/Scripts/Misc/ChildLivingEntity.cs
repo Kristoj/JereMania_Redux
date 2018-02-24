@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LocalLivingEntity : MonoBehaviour {
+public class ChildLivingEntity : ChildEntity {
 
 	public virtual void OnTakeDamage() {
 		
