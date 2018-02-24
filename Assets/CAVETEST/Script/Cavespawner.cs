@@ -235,7 +235,7 @@ public class Cavespawner : NetworkBehaviour {
 
 		if (caveType == 1) {
 
-			CaveChunk clone = Instantiate (caveStraight[0], caveChunkList[currCaves].transform.position + transform.forward * offsetZ + transform.right * offsetX + transform.up * offsetY, Quaternion.Euler(transform.eulerAngles + new Vector3(0, offsetRot, 0)), transform);
+			CaveChunk clone = Instantiate (caveStraight[0], caveChunkList[currCaves].transform.position + transform.forward * offsetZ + transform.right * offsetX + transform.up * offsetY, Quaternion.Euler(transform.eulerAngles + new Vector3(0, offsetRot, 0)), null);
 			caveChunkList.Add (clone);
 			NetworkServer.Spawn (clone.gameObject);
 		}
@@ -243,7 +243,7 @@ public class Cavespawner : NetworkBehaviour {
 
 		else if (caveType == 2) {
 
-			CaveChunk clone = Instantiate (caveLLeft[0], caveChunkList[currCaves].transform.position + transform.forward * offsetZ + transform.right * offsetX + transform.up * offsetY, Quaternion.Euler(transform.eulerAngles + new Vector3(0, offsetRot, 0)), transform);
+			CaveChunk clone = Instantiate (caveLLeft[0], caveChunkList[currCaves].transform.position + transform.forward * offsetZ + transform.right * offsetX + transform.up * offsetY, Quaternion.Euler(transform.eulerAngles + new Vector3(0, offsetRot, 0)), null);
 			caveChunkList.Add (clone);
 			NetworkServer.Spawn (clone.gameObject);
 		}
@@ -251,7 +251,7 @@ public class Cavespawner : NetworkBehaviour {
 
 		else if (caveType == 3) {
 
-			CaveChunk clone = Instantiate (caveLRight[0], caveChunkList[currCaves].transform.position + transform.forward * offsetZ + transform.right * offsetX + transform.up * offsetY, Quaternion.Euler(transform.eulerAngles + new Vector3(0, offsetRot, 0)), transform);
+			CaveChunk clone = Instantiate (caveLRight[0], caveChunkList[currCaves].transform.position + transform.forward * offsetZ + transform.right * offsetX + transform.up * offsetY, Quaternion.Euler(transform.eulerAngles + new Vector3(0, offsetRot, 0)), null);
 			caveChunkList.Add (clone);
 			NetworkServer.Spawn (clone.gameObject);
 		}
