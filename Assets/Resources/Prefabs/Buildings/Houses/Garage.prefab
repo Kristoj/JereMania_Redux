@@ -1020,8 +1020,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce5b634341a8c0544a9dc8f1d7423029, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectName: 
-  impactSound: {fileID: 0}
+  entityName: Entity
+  entitySoundMaterial: 0
+  entityGroupIndex: 0
   isAvailable: 1
   moveSpeed: 1
   hasSwitch: 1

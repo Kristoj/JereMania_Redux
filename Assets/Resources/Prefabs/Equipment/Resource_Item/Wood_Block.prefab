@@ -431,13 +431,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityName: Wood_Block
   entitySoundMaterial: 0
-  hurtSound: {fileID: 8300000, guid: 5fb50044d3560bb4b966ae1a8d68adff, type: 3}
   entityGroupIndex: 0
   isAvailable: 1
   price: 10
   canStoreInInventory: 0
   itemId: 0
   itemIcon: {fileID: 0}
+  fireMode: 0
+  rpm: 50
+  meleeRange: 3
+  hitDelay: 0.35
+  audioDelay: 0.15
+  impactForce: 8
   holdStyle: 0
   primaryAction: 0
   secondaryAction: 1
@@ -446,25 +451,12 @@ MonoBehaviour:
   speedMultiplier: 0.85
   canRunWith: 0
   pickupSound: {fileID: 0}
+  attackSound: {fileID: 8300000, guid: 8594a808b506aa149864ce7d6fe6e580, type: 3}
+  impactFX: {fileID: 0}
   myHitMask:
     serializedVersion: 2
     m_Bits: 0
   player: {fileID: 0}
-  fireMode: 0
-  rpm: 50
-  slashDamage: 6
-  bluntDamage: 6
-  piercingDamage: 6
-  woodcuttingBonus: 0
-  miningBonus: 0
-  harvestingBonus: 0
-  impactFX: {fileID: 0}
-  attackSound: {fileID: 8300000, guid: 8594a808b506aa149864ce7d6fe6e580, type: 3}
-  meleeRange: 3
-  hitDelay: 0.35
-  audioDelay: 0.15
-  impactForce: 8
-  impactAudio: {fileID: 8300000, guid: 5fb50044d3560bb4b966ae1a8d68adff, type: 3}
   chunkPrefab: {fileID: 4325535355188340, guid: 2ace41c5a51ea2d4a8632251fa1f77ed,
     type: 2}
   chunkMeshes:

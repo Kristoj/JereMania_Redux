@@ -636,7 +636,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityName: Sword
   entitySoundMaterial: 0
-  hurtSound: {fileID: 0}
   entityGroupIndex: 0
   isAvailable: 1
   price: 10

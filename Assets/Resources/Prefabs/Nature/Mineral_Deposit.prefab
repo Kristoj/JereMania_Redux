@@ -953,13 +953,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityName: Mineral_Deposit
   entitySoundMaterial: 2
-  hurtSound: {fileID: 8300000, guid: 7db4a6d7e11ab374bb4715d62ab2601c, type: 3}
   entityGroupIndex: 0
   isAvailable: 1
   price: 10
   canStoreInInventory: 0
   itemId: 0
   itemIcon: {fileID: 0}
+  fireMode: 0
+  rpm: 50
+  meleeRange: 2
+  hitDelay: 0.15
+  audioDelay: 0.15
+  impactForce: 8
   holdStyle: 0
   primaryAction: 0
   secondaryAction: 1
@@ -968,25 +973,12 @@ MonoBehaviour:
   speedMultiplier: 1
   canRunWith: 0
   pickupSound: {fileID: 0}
+  attackSound: {fileID: 0}
+  impactFX: {fileID: 0}
   myHitMask:
     serializedVersion: 2
     m_Bits: 0
   player: {fileID: 0}
-  fireMode: 0
-  rpm: 50
-  slashDamage: 6
-  bluntDamage: 6
-  piercingDamage: 6
-  woodcuttingBonus: 0
-  miningBonus: 0
-  harvestingBonus: 0
-  impactFX: {fileID: 0}
-  attackSound: {fileID: 0}
-  meleeRange: 2
-  hitDelay: 0.15
-  audioDelay: 0.15
-  impactForce: 8
-  impactAudio: {fileID: 0}
   chunkPrefab: {fileID: 4304350315674750, guid: 0afacd0d46851e9409c2e3e48bf3e300,
     type: 2}
   chunkMeshes:

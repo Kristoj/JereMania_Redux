@@ -154,7 +154,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityName: Bed
   entitySoundMaterial: 0
-  hurtSound: {fileID: 0}
   entityGroupIndex: 0
   isAvailable: 1
   sitPosition: {x: 0, y: 0, z: 0}

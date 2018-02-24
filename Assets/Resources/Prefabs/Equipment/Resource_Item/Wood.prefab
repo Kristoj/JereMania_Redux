@@ -129,7 +129,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityName: Wood
   entitySoundMaterial: 0
-  hurtSound: {fileID: 8300000, guid: dc4b45db27bc57b4abd321b32e735ff7, type: 3}
   entityGroupIndex: 0
   isAvailable: 1
   price: 10
@@ -156,12 +155,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   player: {fileID: 0}
-  slashDamage: 6
-  bluntDamage: 6
-  piercingDamage: 6
-  woodcuttingBonus: 0
-  miningBonus: 0
-  harvestingBonus: 0
 --- !u!114 &114609506244547668
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -175,16 +168,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityName: Wood
   entitySoundMaterial: 0
-  hurtSound: {fileID: 8300000, guid: 5fb50044d3560bb4b966ae1a8d68adff, type: 3}
   entityGroupIndex: 0
   startingHealth: 25
+  health: 0
   slashResistance: 50
   bluntResistance: 95
   piercingResistance: 85
   professionWeakness: 0
   weaknessAmount: 200
+  expDropTable: []
   destroyOnDeath: 0
-  health: 0
   originalPrefab: {fileID: 114063220970265644, guid: ac33476bef2ba764195430dfb22f7dfd,
     type: 2}
 --- !u!114 &114700781435291450

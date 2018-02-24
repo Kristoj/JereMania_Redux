@@ -129,13 +129,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityName: Ore
   entitySoundMaterial: 2
-  hurtSound: {fileID: 8300000, guid: 7db4a6d7e11ab374bb4715d62ab2601c, type: 3}
   entityGroupIndex: 0
   isAvailable: 1
   price: 10
   canStoreInInventory: 1
   itemId: 0
   itemIcon: {fileID: 21300000, guid: 04248a5adfc60fb4cbc4182122ab0659, type: 3}
+  fireMode: 0
+  rpm: 50
+  meleeRange: 2
+  hitDelay: 0.35
+  audioDelay: 0.15
+  impactForce: 3
   holdStyle: 0
   primaryAction: 0
   secondaryAction: 1
@@ -144,25 +149,12 @@ MonoBehaviour:
   speedMultiplier: 1
   canRunWith: 1
   pickupSound: {fileID: 0}
+  attackSound: {fileID: 0}
+  impactFX: {fileID: 114339121599838044, guid: 5df671e9e9489574bb08ad6bb0775d0d, type: 2}
   myHitMask:
     serializedVersion: 2
     m_Bits: 0
   player: {fileID: 0}
-  fireMode: 0
-  rpm: 50
-  slashDamage: 6
-  bluntDamage: 6
-  piercingDamage: 6
-  woodcuttingBonus: 0
-  miningBonus: 0
-  harvestingBonus: 0
-  impactFX: {fileID: 114339121599838044, guid: 5df671e9e9489574bb08ad6bb0775d0d, type: 2}
-  attackSound: {fileID: 0}
-  meleeRange: 2
-  hitDelay: 0.35
-  audioDelay: 0.15
-  impactForce: 3
-  impactAudio: {fileID: 8300000, guid: 9e782b835ec9967428ff46b92497cb0e, type: 3}
 --- !u!114 &114343130268302658
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -176,16 +168,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityName: Ore
   entitySoundMaterial: 2
-  hurtSound: {fileID: 0}
   entityGroupIndex: 0
   startingHealth: 180
+  health: 0
   slashResistance: 90
   bluntResistance: 0
   piercingResistance: 0
   professionWeakness: 1
   weaknessAmount: 100
+  expDropTable: []
   destroyOnDeath: 0
-  health: 0
   originalPrefab: {fileID: 114988886934263314, guid: 9c8420015c65f394183af93c3bdda027,
     type: 2}
 --- !u!114 &114684903910946546

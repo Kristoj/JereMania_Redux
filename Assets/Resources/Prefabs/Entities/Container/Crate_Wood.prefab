@@ -206,7 +206,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityName: Crate_Wood
   entitySoundMaterial: 0
-  hurtSound: {fileID: 0}
   entityGroupIndex: 0
   isAvailable: 1
   slotCountX: 4
@@ -214,6 +213,7 @@ MonoBehaviour:
   slotSize: 80
   slots: []
   slotGap: 0
+  isFull: 0
   containerWindow: {fileID: 224746050013522398}
   slotHolder: {fileID: 224491482651601132}
   slot: {fileID: 224863789805658012, guid: 47f5f6c2a76706b44ad2729163a99060, type: 2}
