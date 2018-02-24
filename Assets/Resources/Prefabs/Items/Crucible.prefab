@@ -19,38 +19,67 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4304350315674750}
-  - component: {fileID: 23966664186269606}
-  - component: {fileID: 33424530133053470}
   - component: {fileID: 114149672150764366}
-  - component: {fileID: 64651439744210306}
   - component: {fileID: 114684903910946546}
   - component: {fileID: 54599768529129636}
+  - component: {fileID: 65125261637884858}
   m_Layer: 0
-  m_Name: Iron_Ore
+  m_Name: Crucible
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1734323434687910
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4091366049799910}
+  - component: {fileID: 33756222455288190}
+  - component: {fileID: 23992524236939950}
+  m_Layer: 0
+  m_Name: Crucible_Mesh
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4091366049799910
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1734323434687910}
+  m_LocalRotation: {x: -0.49999994, y: -0.49999866, z: -0.5000001, w: 0.50000143}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4304350315674750}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4304350315674750
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1056361635174502}
-  m_LocalRotation: {x: -0.000001032599, y: 0.7071059, z: 0.0000010325965, w: 0.7071077}
-  m_LocalPosition: {x: 23.371, y: 0.553, z: 17.490479}
-  m_LocalScale: {x: 0.8, y: 0.65, z: 0.8}
-  m_Children: []
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 3.751, y: 0.116, z: -1.6558838}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4091366049799910}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 90.00001, z: 0}
---- !u!23 &23966664186269606
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!23 &23992524236939950
 MeshRenderer:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1056361635174502}
+  m_GameObject: {fileID: 1734323434687910}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -59,7 +88,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: c1f49ec881d38b741b6161cc95167ea5, type: 2}
+  - {fileID: 2100000, guid: 9d1150266bd148242a0dfc102c1ed14f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -79,13 +108,13 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!33 &33424530133053470
+--- !u!33 &33756222455288190
 MeshFilter:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1056361635174502}
-  m_Mesh: {fileID: 4300022, guid: 81278e68a6749e241ae1e29732c1afaf, type: 3}
+  m_GameObject: {fileID: 1734323434687910}
+  m_Mesh: {fileID: 4300000, guid: 7133e6ed5e9d865489c10636ee5d9683, type: 3}
 --- !u!54 &54599768529129636
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -101,8 +130,8 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!64 &64651439744210306
-MeshCollider:
+--- !u!65 &65125261637884858
+BoxCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -110,11 +139,9 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 1
-  m_CookingOptions: 14
-  m_SkinWidth: 0.01
-  m_Mesh: {fileID: 4300022, guid: 81278e68a6749e241ae1e29732c1afaf, type: 3}
+  serializedVersion: 2
+  m_Size: {x: 0.4, y: 0.5086715, z: 0.4}
+  m_Center: {x: 0, y: 0.2523768, z: 0}
 --- !u!114 &114149672150764366
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -126,7 +153,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a28858bd824b7df4e936b1c9b92280e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  entityName: Iron_Ore
+  entityName: Crucible
   entitySoundMaterial: 0
   entityGroupIndex: 0
   isAvailable: 1
@@ -168,21 +195,21 @@ MonoBehaviour:
   m_SceneId:
     m_Value: 0
   m_AssetId:
-    i0: 16
-    i1: 127
-    i2: 20
-    i3: 235
-    i4: 41
-    i5: 245
-    i6: 177
-    i7: 148
-    i8: 73
-    i9: 142
-    i10: 137
-    i11: 71
-    i12: 25
-    i13: 245
-    i14: 120
-    i15: 46
+    i0: 98
+    i1: 139
+    i2: 83
+    i3: 14
+    i4: 234
+    i5: 252
+    i6: 221
+    i7: 84
+    i8: 57
+    i9: 70
+    i10: 64
+    i11: 183
+    i12: 254
+    i13: 236
+    i14: 141
+    i15: 107
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 1

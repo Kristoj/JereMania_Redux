@@ -4307,7 +4307,7 @@ MonoBehaviour:
   weaponHolsterL: {fileID: 4861300206207640}
   serverGunHold: {fileID: 4513423461518882}
   armHolder: {fileID: 4706709381149580}
-  weapon01: {fileID: 114464691599615374, guid: a263de3b903d049478a9104af34ce7fb, type: 2}
+  weapon01: {fileID: 114082808763457868, guid: e07decd44b664374d8b976e6ff518255, type: 2}
   weapon02: {fileID: 114464691599615374, guid: 2c202b57b07725143bbab709f55df19e, type: 2}
   hitMask:
     serializedVersion: 2
@@ -4319,9 +4319,9 @@ MonoBehaviour:
   swayScaleX: 0.5
   swaySpeedX: 3
   swayReturnSpeedX: 10
-  swayScaleY: 0.2
-  swaySpeedY: 3
-  swayReturnSpeedY: 5
+  swayScaleY: 0.12
+  swaySpeedY: 5
+  swayReturnSpeedY: 20
   swayScaleZ: 0.2
   swaySpeedZ: 3
   swayReturnSpeedZ: 10
