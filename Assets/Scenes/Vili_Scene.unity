@@ -1111,6 +1111,7 @@ MonoBehaviour:
   - {fileID: 1348065061956054, guid: bb0d078ecc83fee48804771d54346e08, type: 2}
   - {fileID: 1281667382303850, guid: e8d310f905eaf7441b3d539f0b529d89, type: 2}
   - {fileID: 1369044152298702, guid: 6723897918689fa42aca92ebbf072b5e, type: 2}
+  - {fileID: 1056361635174502, guid: 628b530eeafcdd54394640b7feec8d6b, type: 2}
   - {fileID: 1294873948045524, guid: b6d61a17a008c5747bf25bad432a5e04, type: 2}
   - {fileID: 1639606625916710, guid: f9ea6c5ace146b94cbb4ae30b97e2c94, type: 2}
   - {fileID: 1866623620492360, guid: a138047e3022f7341a56d32c320fc1c2, type: 2}
@@ -1128,6 +1129,7 @@ MonoBehaviour:
   - {fileID: 1270315216869956, guid: 5a3bb871639ab324d9572ce01f762f65, type: 2}
   - {fileID: 1583491492014306, guid: b48e94b71ff742949b97e1c1a034cb74, type: 2}
   - {fileID: 1186337892987664, guid: 88b428e0154116441bbc71fadd961f96, type: 2}
+  - {fileID: 1108625973152218, guid: e07decd44b664374d8b976e6ff518255, type: 2}
   - {fileID: 1166465871646796, guid: 06cd7041bd8671647901765868541188, type: 2}
   - {fileID: 1401849855619714, guid: 597591872cb625245adc1bfaf84f89ad, type: 2}
   - {fileID: 1898672491041380, guid: 2c202b57b07725143bbab709f55df19e, type: 2}
@@ -1145,11 +1147,9 @@ MonoBehaviour:
   - {fileID: 1146075420136630, guid: 89c5b318141bf0f4e9fefce079dc24b9, type: 2}
   - {fileID: 1324178005722414, guid: c0e5c566bf08c584f8e195a652257884, type: 2}
   - {fileID: 1996165644214584, guid: f5d7b439b52ce1045a99e06b14b991e8, type: 2}
-  - {fileID: 1114729787739102, guid: 388236b0dc516af45a61a79a636bd18f, type: 2}
-  - {fileID: 1002123878248788, guid: 8f44e94deb1a1b444a00de8b66c6324c, type: 2}
   - {fileID: 1705549895135036, guid: c0326217012fe84449b43f6a3bed7947, type: 2}
   - {fileID: 1403750716264782, guid: bbbf884ab901bc24b820f39f49543385, type: 2}
-  - {fileID: 1108625973152218, guid: e07decd44b664374d8b976e6ff518255, type: 2}
+  - {fileID: 1002123878248788, guid: 8f44e94deb1a1b444a00de8b66c6324c, type: 2}
   m_CustomConfig: 1
   m_MaxConnections: 4
   m_ConnectionConfig:
@@ -1372,7 +1372,7 @@ Transform:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 346877950}
-  m_LocalRotation: {x: -0.70569104, y: -0.705691, z: 0.04472351, w: -0.04472335}
+  m_LocalRotation: {x: -0.7056911, y: -0.70569104, z: 0.044723514, w: -0.044723354}
   m_LocalPosition: {x: -0, y: 0.0282, z: -0.0036}
   m_LocalScale: {x: 0.6866445, y: 0.6866445, z: 0.6866445}
   m_Children: []
@@ -2571,7 +2571,7 @@ Transform:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 645002816}
-  m_LocalRotation: {x: -0.7056911, y: -0.70569104, z: 0.044723514, w: -0.044723354}
+  m_LocalRotation: {x: -0.70569104, y: -0.705691, z: 0.04472351, w: -0.04472335}
   m_LocalPosition: {x: -0, y: 0.0282, z: -0.0036}
   m_LocalScale: {x: 0.6866445, y: 0.6866445, z: 0.6866445}
   m_Children: []
@@ -3075,7 +3075,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 764184533}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 11.7, y: 55.18, z: 736.0899}
+  m_LocalPosition: {x: 11.7, y: 50.6, z: 736.0899}
   m_LocalScale: {x: 2.81818, y: 2.8181727, z: 2.8181727}
   m_Children: []
   m_Father: {fileID: 0}
@@ -8825,6 +8825,7 @@ MonoBehaviour:
     dropResource: {fileID: 114573100184651362, guid: b6d61a17a008c5747bf25bad432a5e04,
       type: 2}
   equipmentList:
+  - {fileID: 114433680325569388, guid: 628b530eeafcdd54394640b7feec8d6b, type: 2}
   - {fileID: 114573100184651362, guid: b6d61a17a008c5747bf25bad432a5e04, type: 2}
   - {fileID: 114568905106957004, guid: f9ea6c5ace146b94cbb4ae30b97e2c94, type: 2}
   - {fileID: 114471897330974050, guid: a138047e3022f7341a56d32c320fc1c2, type: 2}
@@ -8839,6 +8840,7 @@ MonoBehaviour:
   - {fileID: 114149672150764366, guid: 0afacd0d46851e9409c2e3e48bf3e300, type: 2}
   - {fileID: 114506979588213426, guid: 08864587f972a4e47957c82f0a782421, type: 2}
   - {fileID: 114463679717495102, guid: 88b428e0154116441bbc71fadd961f96, type: 2}
+  - {fileID: 114082808763457868, guid: e07decd44b664374d8b976e6ff518255, type: 2}
   - {fileID: 114784069398615848, guid: 06cd7041bd8671647901765868541188, type: 2}
   - {fileID: 114844248172485674, guid: 597591872cb625245adc1bfaf84f89ad, type: 2}
   - {fileID: 114464691599615374, guid: 2c202b57b07725143bbab709f55df19e, type: 2}
