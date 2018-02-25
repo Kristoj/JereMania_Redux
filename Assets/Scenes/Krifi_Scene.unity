@@ -2004,11 +2004,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 5
       objectReference: {fileID: 0}
-    - target: {fileID: 23823346136996806, guid: f5d7b439b52ce1045a99e06b14b991e8,
-        type: 2}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 75e98a124371695408544672d115a2a4, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f5d7b439b52ce1045a99e06b14b991e8, type: 2}
   m_IsPrefabParent: 0
@@ -3867,11 +3862,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 7
       objectReference: {fileID: 0}
-    - target: {fileID: 1281667382303850, guid: e8d310f905eaf7441b3d539f0b529d89, type: 2}
-      propertyPath: m_Icon
-      value: 
-      objectReference: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000,
-        type: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e8d310f905eaf7441b3d539f0b529d89, type: 2}
   m_IsPrefabParent: 0
@@ -9191,11 +9181,14 @@ MonoBehaviour:
   entitySoundMaterial: 0
   entityGroupIndex: 0
   childEntities: []
+  maxTemperature: 800
   temperature: 0
   temperatureClimbRate: 5
   temperatureClimbEfficiency: 0
+  temperatureClimbEfficiencyRate: 10
   temperatureDescendRate: 1.5
   temperatureDescendEfficiency: 0
+  temperatureDescendEfficiencyRate: 5
   temperatureEfficiency: 1
   maxFuel: 100
   fuelConsumptionRate: 0.5

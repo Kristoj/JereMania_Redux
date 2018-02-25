@@ -30,6 +30,7 @@ public class Container : Interactable {
 			isPlayer = true;
 		}
 		if (containerWindow != null) {
+			containerWindow.gameObject.SetActive (true);
 			SetupInventory ();
 			ShowInventory (false);
 		}

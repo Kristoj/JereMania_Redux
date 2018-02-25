@@ -11,7 +11,7 @@ public class PlayerInventory : Container {
 	public Slot targetSlot;
 
 	public override void OnStartClient() {
-		
+
 	}
 
 	public override void Start() {

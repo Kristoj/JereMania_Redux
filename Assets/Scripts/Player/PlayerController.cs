@@ -546,12 +546,17 @@ public class PlayerController : NetworkBehaviour {
 	}
 
 	public bool IsHardGrounded() {
+		// Raycast if player hits the ground
 		Ray ray = new Ray (transform.position, -Vector3.up);
 		RaycastHit hit;
 		if (Physics.Raycast (ray, out hit, controller.bounds.size.y / 2 + .25f, hardGroundLayer, QueryTriggerInteraction.Ignore)) {
+			// Ray hits the ground so return true
 			hardGroundPoint.y = hit.point.y;
 			return true;
-		} else {
+		} 
+
+		// Player doesn't hit the ground so return false
+		else {
 			return false;
 		}
 	}

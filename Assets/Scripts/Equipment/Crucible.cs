@@ -43,12 +43,21 @@ public class Crucible : Equipment {
 	}
 
 	// Called when crucible is in a crucible slot in a furnace
-	public void StartMelting() {
-		StartCoroutine (MeltOre ());
+	public void StartMelting(Furnace fur) {
+		if (meltCoroutine == null) {
+			meltCoroutine = StartCoroutine (UpdateCrucibleTemperature (fur));
+		}
 	}
 
-	IEnumerator MeltOre() {
-		yield return null;
+	IEnumerator UpdateCrucibleTemperature (Furnace fur) {
+		furnace = fur;
+
+		// While 
+		while (furnace.isBurning || matterTemperature > 0) {
+			
+			yield return null;
+		}
+
 	}
 
 	public override void OnEntityHit(string playerName) {
@@ -64,13 +73,5 @@ public class Crucible : Equipment {
 		}
 
 		oreMesh.gameObject.SetActive (true);
-	}
-
-	public void UpdateFurnaceTemperature (float fTemp, float fEfficiency) {
-		matterTemperature = 0;
-
-		if (meltCoroutine == null) {
-			meltCoroutine = StartCoroutine (MeltOre ());
-		}
 	}
 }

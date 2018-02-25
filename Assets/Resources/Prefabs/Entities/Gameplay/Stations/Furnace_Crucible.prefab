@@ -536,7 +536,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 5367f19fc38651d48ab7c92e717567db, type: 2}
+  - {fileID: 2100000, guid: 75e98a124371695408544672d115a2a4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -821,10 +821,19 @@ MonoBehaviour:
   entitySoundMaterial: 0
   entityGroupIndex: 0
   childEntities: []
+  maxTemperature: 800
+  temperature: 0
+  temperatureClimbRate: 4
+  temperatureClimbEfficiency: 0
+  temperatureClimbEfficiencyRate: 3
+  temperatureDescendRate: 1.5
+  temperatureDescendEfficiency: 0
+  temperatureDescendEfficiencyRate: 1
+  temperatureEfficiency: 1
   maxFuel: 100
-  fuelConsumptionRate: 0.5
+  fuelConsumptionRate: 0.2
+  fuel: 100
   isBurning: 0
-  fuel: 0
 --- !u!114 &114555053039246862
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -874,12 +883,16 @@ MonoBehaviour:
   crucibleSlots:
   - hasCrucible: 0
     slotOffset: {x: 0.18, y: 0, z: -0.119}
+    crucible: {fileID: 0}
   - hasCrucible: 0
     slotOffset: {x: -0.18, y: 0, z: -0.119}
+    crucible: {fileID: 0}
   - hasCrucible: 0
     slotOffset: {x: 0.18, y: 0, z: 0.28}
+    crucible: {fileID: 0}
   - hasCrucible: 0
     slotOffset: {x: -0.18, y: 0, z: 0.28}
+    crucible: {fileID: 0}
 --- !u!114 &114896281147463378
 MonoBehaviour:
   m_ObjectHideFlags: 1

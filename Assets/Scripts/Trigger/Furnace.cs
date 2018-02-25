@@ -30,6 +30,16 @@ public class Furnace : Fireplace {
 		}
 	}
 
+
+	public override void Ignite() {
+		base.Ignite ();
+
+		for (int i = 0; i < crucibleHolder.crucibleSlots.Length; i++) {
+			if (crucibleHolder.crucibleSlots [i].crucible != null) {
+				crucibleHolder.crucibleSlots [i].crucible.StartMelting (this);
+			}
+		}
+	}
 	// Child entities communicate with their parent entities using signals \\
 	#region CHILD SIGNALS
 
@@ -64,11 +74,6 @@ public class Furnace : Fireplace {
 			// Close
 			if (crucibleDoor.isClosed) {
 				swingDir = -1;
-				// Start coroutine that updates furnace temperature to all crucibles inside
-				if (temperatureUpdateCoroutine != null) {
-					StopCoroutine (temperatureUpdateCoroutine);
-				}
-				//temperatureUpdateCoroutine = StartCoroutine (TemperatureUpdate());
 			} 
 			// Open
 			else {
