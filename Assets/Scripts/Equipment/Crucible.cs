@@ -10,6 +10,8 @@ public class Crucible : Equipment {
 	private Transform oreMesh;
 	private Transform moltenMatterObject;
 	private Vector3 moltenMatterObjectOriginalScale;
+	[HideInInspector]
+	public Furnace furnace;
 
 	private Coroutine meltCoroutine;
 
@@ -65,7 +67,7 @@ public class Crucible : Equipment {
 	}
 
 	public void UpdateFurnaceTemperature (float fTemp, float fEfficiency) {
-		furnaceTemperature = fTemp;
+		matterTemperature = 0;
 
 		if (meltCoroutine == null) {
 			meltCoroutine = StartCoroutine (MeltOre ());

@@ -115,13 +115,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1545048281665630}
-  m_LocalRotation: {x: -0.47869647, y: 0.11197149, z: 0.29912257, w: 0.8178251}
-  m_LocalPosition: {x: 0.037000038, y: 0.235, z: -0.019999951}
-  m_LocalScale: {x: 2.797635, y: 2.2000012, z: 3.502397}
+  m_LocalRotation: {x: -0.07392253, y: 0.083252594, z: -0.14363748, w: 0.9833477}
+  m_LocalPosition: {x: -0.004, y: 0.346, z: -0.015}
+  m_LocalScale: {x: 1, y: 0.9, z: 1}
   m_Children: []
   m_Father: {fileID: 4304350315674750}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: -58.208004, y: -11.3, z: 46.485}
+  m_LocalEulerAnglesHint: {x: -6.977, y: 10.740001, z: -17.277}
 --- !u!4 &4304350315674750
 Transform:
   m_ObjectHideFlags: 1
@@ -129,7 +129,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1056361635174502}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.751, y: 0.116, z: -1.6558838}
+  m_LocalPosition: {x: 1.224, y: 0.116, z: -1.6558838}
   m_LocalScale: {x: 0.85, y: 0.85, z: 0.85}
   m_Children:
   - {fileID: 4091366049799910}
@@ -355,6 +355,10 @@ MonoBehaviour:
     m_Bits: 0
   player: {fileID: 0}
   matterTemperature: 0
+  furnaceTemperature: 0
+  furnace: {fileID: 0}
+  oreMeltingTemperature: 1000
+  oreMeltingProgress: 0
 --- !u!114 &114684903910946546
 MonoBehaviour:
   m_ObjectHideFlags: 1

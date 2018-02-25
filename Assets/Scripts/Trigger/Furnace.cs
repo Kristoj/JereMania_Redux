@@ -68,7 +68,7 @@ public class Furnace : Fireplace {
 				if (temperatureUpdateCoroutine != null) {
 					StopCoroutine (temperatureUpdateCoroutine);
 				}
-				temperatureUpdateCoroutine = StartCoroutine (TemperatureUpdate());
+				//temperatureUpdateCoroutine = StartCoroutine (TemperatureUpdate());
 			} 
 			// Open
 			else {
@@ -121,17 +121,6 @@ public class Furnace : Fireplace {
 
 			// Signal that new crucible is spawned on the clients
 			RpcSignalCrucibleAdd (playerName, clone.name, clone.entityGroupIndex);
-		}
-	}
-
-	IEnumerator TemperatureUpdate() {
-		while (temperature > 0) {
-			for (int i = 0; i < crucibleHolder.crucibleSlots.Length; i++) {
-				if (crucibleHolder.crucibleSlots [i].crucible != null) {
-					crucibleHolder.crucibleSlots [i].crucible.UpdateFurnaceTemperature (0, 0);
-				}
-			}
-			yield return null;
 		}
 	}
 

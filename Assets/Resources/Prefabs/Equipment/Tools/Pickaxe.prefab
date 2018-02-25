@@ -117,7 +117,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1668032195330740}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 45.43, y: 0.084, z: 11.48}
+  m_LocalPosition: {x: 1.3718872, y: 0.037, z: -3.7270508}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4660022351882918}
@@ -338,7 +338,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityName: Pickaxe
   entitySoundMaterial: 0
-  hurtSound: {fileID: 0}
   entityGroupIndex: 0
   isAvailable: 1
   price: 10
@@ -360,7 +359,7 @@ MonoBehaviour:
   canRunWith: 1
   pickupSound: {fileID: 0}
   attackSound: {fileID: 8300000, guid: 7209df69f9c268a4d92332c97bb435c0, type: 3}
-  impactFX: {fileID: 114339121599838044, guid: 5df671e9e9489574bb08ad6bb0775d0d, type: 2}
+  impactFX: {fileID: 114318422277278758, guid: 4f9aaaed752195d429ea07765e641ed3, type: 2}
   myHitMask:
     serializedVersion: 2
     m_Bits: 0

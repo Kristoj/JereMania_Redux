@@ -650,7 +650,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4304350315674750, guid: 628b530eeafcdd54394640b7feec8d6b, type: 2}
       propertyPath: m_RootOrder
-      value: 11
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 1056361635174502, guid: 628b530eeafcdd54394640b7feec8d6b, type: 2}
       propertyPath: m_Name
@@ -1112,7 +1112,7 @@ Transform:
   - {fileID: 510937578}
   - {fileID: 1221369040}
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &241230203
 MonoBehaviour:
@@ -2002,8 +2002,13 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4245204764237094, guid: f5d7b439b52ce1045a99e06b14b991e8, type: 2}
       propertyPath: m_RootOrder
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 23823346136996806, guid: f5d7b439b52ce1045a99e06b14b991e8,
+        type: 2}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 75e98a124371695408544672d115a2a4, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f5d7b439b52ce1045a99e06b14b991e8, type: 2}
   m_IsPrefabParent: 0
@@ -3860,7 +3865,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4569514612361114, guid: e8d310f905eaf7441b3d539f0b529d89, type: 2}
       propertyPath: m_RootOrder
-      value: 8
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 1281667382303850, guid: e8d310f905eaf7441b3d539f0b529d89, type: 2}
       propertyPath: m_Icon
@@ -3947,7 +3952,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4413035739677932, guid: ac33476bef2ba764195430dfb22f7dfd, type: 2}
       propertyPath: m_RootOrder
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 1848887808258974, guid: ac33476bef2ba764195430dfb22f7dfd, type: 2}
       propertyPath: m_IsActive
@@ -4804,7 +4809,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4304350315674750, guid: 628b530eeafcdd54394640b7feec8d6b, type: 2}
       propertyPath: m_RootOrder
-      value: 9
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 1056361635174502, guid: 628b530eeafcdd54394640b7feec8d6b, type: 2}
       propertyPath: m_Name
@@ -8677,7 +8682,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4304350315674750, guid: 628b530eeafcdd54394640b7feec8d6b, type: 2}
       propertyPath: m_RootOrder
-      value: 12
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 1056361635174502, guid: 628b530eeafcdd54394640b7feec8d6b, type: 2}
       propertyPath: m_Name
@@ -8782,7 +8787,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2052376543
 MonoBehaviour:
@@ -9186,10 +9191,16 @@ MonoBehaviour:
   entitySoundMaterial: 0
   entityGroupIndex: 0
   childEntities: []
+  temperature: 0
+  temperatureClimbRate: 5
+  temperatureClimbEfficiency: 0
+  temperatureDescendRate: 1.5
+  temperatureDescendEfficiency: 0
+  temperatureEfficiency: 1
   maxFuel: 100
   fuelConsumptionRate: 0.5
-  isBurning: 0
   fuel: 100
+  isBurning: 0
 --- !u!65 &2070612277
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -9653,7 +9664,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4304350315674750, guid: 628b530eeafcdd54394640b7feec8d6b, type: 2}
       propertyPath: m_RootOrder
-      value: 13
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 1056361635174502, guid: 628b530eeafcdd54394640b7feec8d6b, type: 2}
       propertyPath: m_Name
