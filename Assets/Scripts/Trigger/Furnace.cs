@@ -4,35 +4,15 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
-public class Furnace : ParentEntity {
+public class Furnace : Fireplace {
 
-	public int maxOreCount = 5;
-	public float meltTime = 11f;
-	public float meltSuccesChance = 18;
-	public float fuelConsumption = .75f;
-	public Rigidbody dropResource;
-	public Text fuelText;
-	private int oreCount = 0;
-	[SyncVar]
-	private float fuel = 100f;
-	private bool isMelting = false;
-	[HideInInspector]
-	public bool canUpdateUI = true;
 	private ChildDoor furnaceDoor;
 	private ChildDoor crucibleDoor;
 	private FurnaceCrucibleHolder crucibleHolder;
-
-	void Update() {
-		if (isServer) {
-			if (oreCount > 0 && !isMelting) {
-				StartCoroutine (MeltOre ());
-			}
-		}
-	}
+	private Coroutine temperatureUpdateCoroutine;
 
 	public override void Start() {
 		base.Start ();
-		StartCoroutine (UpdateUI ());
 
 		// Store references for the child interactables
 		foreach (ChildEntity ce in childEntities) {
@@ -50,75 +30,12 @@ public class Furnace : ParentEntity {
 		}
 	}
 
-	void OnTriggerEnter (Collider c) {
-
-		if (isServer) {
-			Resource dynamicEntity = c.GetComponent<Resource> ();
-
-			if (dynamicEntity != null && dynamicEntity.isAvailable) {
-				if (dynamicEntity.entityName == "Ore" && oreCount < maxOreCount) {
-					oreCount++;
-					NetworkServer.Destroy (c.gameObject);
-				}
-
-				if (dynamicEntity.entityName == "Wood") {
-					fuel += 20;
-					fuel = Mathf.Clamp (fuel, 0, 100);
-					NetworkServer.Destroy (c.gameObject);
-				}
-			}
-		}
-	}
-
-	IEnumerator MeltOre() {
-		float t = 0;
-		isMelting = true;
-		while (t < meltTime) {
-			if (fuel > 0) {
-				t += Time.deltaTime;
-				fuel -= Time.deltaTime * fuelConsumption;
-			}
-			yield return null;
-		}
-
-		// Spawn mineral
-		int rng = Random.Range (0, 100);
-
-		if (rng < meltSuccesChance) {
-			Rigidbody clone = Instantiate (dropResource, transform.position + transform.up, transform.rotation);
-			NetworkServer.Spawn (clone.gameObject);
-			RpcSpawnMineral (clone.GetComponent<NetworkIdentity>().netId);
-		}
-		oreCount--;
-		isMelting = false;
-	}
-
-	[ClientRpc]
-	void RpcSpawnMineral(NetworkInstanceId cloneId) {
-		GameObject cloneObject = ClientScene.FindLocalObject (cloneId);
-		if (cloneObject != null) {
-			Rigidbody rg = cloneObject.GetComponent<Rigidbody> ();
-			rg.AddForce (Vector3.up * 5 * rg.mass, ForceMode.Impulse);
-			rg.AddTorque (Random.insideUnitSphere * 5 * rg.mass, ForceMode.Impulse);
-		}
-	}
-
-	IEnumerator UpdateUI() {
-		while (canUpdateUI && fuelText != null) {
-			fuelText.text = fuel.ToString("F0") + "%";
-			yield return null;
-		}
-		yield return null;
-	}
-
-	// SIGNALS\\ // SIGNALS \\
-	// Child entities communicate with their parents using signals...
+	// Child entities communicate with their parent entities using signals \\
 	#region CHILD SIGNALS
 
 	// DOOR SWING
 	#region DOOR SWING
 	public void SignalDoorSwing(string ciName) {
-		GameManager.GetLocalPlayer().SetAuthority (netId, GameManager.GetLocalPlayer().GetComponent<NetworkIdentity>());
 		CmdSignalDoorSwing (ciName);
 	}
 
@@ -144,9 +61,17 @@ public class Furnace : ParentEntity {
 		else if (ciName == "Crucible_Holder" && !furnaceDoor.isClosed) {
 			crucibleDoor.isClosed = !crucibleDoor.isClosed;
 
+			// Close
 			if (crucibleDoor.isClosed) {
 				swingDir = -1;
-			} else {
+				// Start coroutine that updates furnace temperature to all crucibles inside
+				if (temperatureUpdateCoroutine != null) {
+					StopCoroutine (temperatureUpdateCoroutine);
+				}
+				temperatureUpdateCoroutine = StartCoroutine (TemperatureUpdate());
+			} 
+			// Open
+			else {
 				swingDir = 1;
 			}
 		}
@@ -172,8 +97,6 @@ public class Furnace : ParentEntity {
 	// Crucible Add
 	#region Curcible Add
 	public void SignalCrucibleAdd(string playerName) {
-		// Assign authority
-		GameManager.GetLocalPlayer().SetAuthority (netId, GameManager.GetLocalPlayer().GetComponent<NetworkIdentity>());
 		if (crucibleHolder != null) {
 			CmdSignalCrucibleAdd (playerName);
 		}
@@ -181,14 +104,34 @@ public class Furnace : ParentEntity {
 
 	[Command]
 	void CmdSignalCrucibleAdd(string playerName) {
-		if (crucibleHolder.crucibleCount < crucibleHolder.crucibleSlots) {
+		if (crucibleHolder.GetEmptySlot() != null) {
+
+			// Get empty crucible slot and get its spawn position
+			FurnaceCrucibleHolder.CrucibleSlot emptySlot = crucibleHolder.GetEmptySlot();
+			Vector3 spawnPos = crucibleHolder.GetSlotPos (emptySlot);
+			emptySlot.hasCrucible = true;
+
 			// Spawn new crucible
-			Crucible clone = Instantiate (EquipmentLibrary.instance.GetEquipment ("Crucible"), crucibleHolder.transform.position, Quaternion.identity) as Crucible;
+			Crucible clone = Instantiate (EquipmentLibrary.instance.GetEquipment ("Crucible"), spawnPos, Quaternion.identity) as Crucible;
 			NetworkServer.Spawn (clone.gameObject);
 			clone.RpcSetFurnaceMode ();
 
+			// Subscribe to crucibles death event so CrucibleSlot will update its properties when crucible is removed
+			clone.deathEvent += emptySlot.OnCrucibleRemove;
+
 			// Signal that new crucible is spawned on the clients
 			RpcSignalCrucibleAdd (playerName, clone.name, clone.entityGroupIndex);
+		}
+	}
+
+	IEnumerator TemperatureUpdate() {
+		while (temperature > 0) {
+			for (int i = 0; i < crucibleHolder.crucibleSlots.Length; i++) {
+				if (crucibleHolder.crucibleSlots [i].crucible != null) {
+					crucibleHolder.crucibleSlots [i].crucible.UpdateFurnaceTemperature (0);
+				}
+			}
+			yield return null;
 		}
 	}
 

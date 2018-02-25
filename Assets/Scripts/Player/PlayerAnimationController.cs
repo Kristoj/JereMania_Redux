@@ -72,6 +72,7 @@ public class PlayerAnimationController : NetworkBehaviour {
 			// Get animation id
 			viewAnimator.SetFloat ("attackId", (float)attackAnimationStartIndex + curAttackCycleCount-1);
 			viewAnimator.SetTrigger ("Attack");
+			networkAnimator.SetTrigger ("Attack");
 			if (curAttackCycleCount >= attackAnimationCount) {
 				curAttackCycleCount = 0;	
 			}

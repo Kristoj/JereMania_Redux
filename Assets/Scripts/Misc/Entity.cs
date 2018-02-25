@@ -35,6 +35,11 @@ public class Entity : NetworkBehaviour {
 		}
 	}
 
+
+	public virtual void OnEntityHit(string playerName) {
+
+	}
+
 	public void OnEntityDestroy() {
 		if (deathEvent != null) {
 			deathEvent ();
@@ -76,8 +81,21 @@ public class Entity : NetworkBehaviour {
 	/// Sets the authority for the entity. Must be called from server
 	/// </summary>
 	// Set authority for the player who wants to control this entity
-	public void SetAuthority() {
+	public void SetAuthorityFromServer(string playerName) {
 		Player targetPlayer = GameManager.GetLocalPlayer ();
+		if (targetPlayer != null) {
+			targetPlayer.SetAuthority (netId, targetPlayer.GetComponent<NetworkIdentity>());
+		}
+	}
+
+	public void SetAuthorityFromClient() {
+		string targetPlayer = GameManager.GetLocalPlayer ().name;
+		CmdSetAuthority (targetPlayer);
+	}
+
+	[Command]
+	private void CmdSetAuthority(string playerName) {
+		Player targetPlayer = GameManager.GetPlayerByName (playerName);
 		if (targetPlayer != null) {
 			targetPlayer.SetAuthority (netId, targetPlayer.GetComponent<NetworkIdentity>());
 		}

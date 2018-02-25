@@ -5,7 +5,7 @@ using UnityEngine.Networking;
 
 public class GameManager : NetworkBehaviour {
 
-	private static Dictionary <string, LivingEntity> players = new Dictionary<string, LivingEntity>();
+	private static Dictionary <string, Player> players = new Dictionary<string, Player>();
 	private static Dictionary <string, LivingEntity> characters = new Dictionary<string, LivingEntity>();
 	private static Dictionary <string, Entity> entities = new Dictionary<string, Entity>();
 	private static Dictionary <string, LivingEntity> livingEntities = new Dictionary<string, LivingEntity>();
@@ -24,14 +24,14 @@ public class GameManager : NetworkBehaviour {
 		livingEntityGroups.Add (new LivingEntityGroup ());
 	}
 
-	public static void RegisterPlayer(string netId, LivingEntity entity, string prefix) {
+	public static void RegisterPlayer(string netId, Player entity, string prefix) {
 		if (!players.ContainsKey (prefix + netId)) {
 			players.Add (prefix + netId, entity);
 			entity.transform.name = prefix + netId;
 		}
 	}
 
-	public static LivingEntity GetPlayerByName (string playerName) {
+	public static Player GetPlayerByName (string playerName) {
 		if (players.ContainsKey (playerName)) {
 			return players [playerName];
 		} else {

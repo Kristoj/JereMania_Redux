@@ -143,6 +143,7 @@ public class Equipment : Item {
 					// Add force
 					Vector3 meleeForce = equipmentVelocity * impactForce;
 					CmdAddImpactForce (meleeForce, hit.point, livingEntity.name, livingEntity.entityGroupIndex);
+					CmdOnEntityHit (owner.name, entityName, entityGroupIndex);
 				}
 
 				// Get Entity
@@ -150,6 +151,7 @@ public class Equipment : Item {
 				if (entity != null && livingEntity == null) {
 					Vector3 meleeForce = equipmentVelocity * impactForce;
 					CmdAddImpactForce (meleeForce, hit.point, entity.name, entity.entityGroupIndex);
+					CmdOnEntityHit (owner.name, entityName, entityGroupIndex);
 				}
 
 				// Get Local Entity
@@ -176,7 +178,7 @@ public class Equipment : Item {
 					}
 				}
 
-				// Tell server to spawn tracer for all clients
+				// Tell server to spawn ImpactFX for all clients
 				CmdOnActionHit (hit.point, transform.name, Quaternion.Euler (tracerRot), impactRot);
 			}
 		}
@@ -267,6 +269,7 @@ public class Equipment : Item {
 		}
 	}
 
+	// 
 	public override void OnStartPickup(string masterId) {
 		if (isAvailable) {
 			base.OnStartPickup (masterId);
@@ -280,12 +283,13 @@ public class Equipment : Item {
 		}
 	}
 
-
+	// Firerate
 	IEnumerator AttackCycle() {
 		yield return new WaitForSeconds (60 / rpm);
 		weaponController.isAttacking = false;
 	}
 
+	// Tracks equipments velocity while player is attacking with his equipment, and when he hits a entity add impact force to it...
 	IEnumerator TrackEquipmentVelocity() {
 		Vector3 equipmentA = transform.position;
 		Vector3 playerA = owner.transform.position;
@@ -298,12 +302,22 @@ public class Equipment : Item {
 	}
 
 
-
+	// Called when player hits a object that has LivingEntity class attached to it... This function is meant to be overridden from other classes who inherit from this..
 	public virtual void TakeDamage(string victimId, int targetGroup, string playerId) {
 		
 	}
 
+	// Called when player hits a entity
 	[Command]
+	void CmdOnEntityHit (string playerName, string entityName, int entityGroup) {
+		Entity targetEntity = GameManager.instance.GetEntity (entityName, entityGroup);
+		if (targetEntity != null) {
+			targetEntity.OnEntityHit (playerName);
+		}
+	}
+
+	[Command]
+	// Adds impact force when player hits a entity
 	void CmdAddImpactForce(Vector3 meleeForce, Vector3 forcePoint, string targetName, int targetGroup) {
 
 		LivingEntity targetLivingEntity = GameManager.instance.GetLivingEntity (targetName, targetGroup);
@@ -318,6 +332,7 @@ public class Equipment : Item {
 	}
 
 	[Command]
+	// Called when player hits something with PrimaryAction (Left click ability with equipment)
 	protected void CmdOnActionHit(Vector3 hitPoint, string id, Quaternion tracerRot, Quaternion impactRot) {
 		RpcOnActionHit (hitPoint, id, tracerRot, impactRot);
 	}
@@ -335,8 +350,9 @@ public class Equipment : Item {
 		AudioManager.instance.CmdPlaySound2D (attackSound.name, transform.position, owner.name, 1);
 	}
 
+	// Stores all equipment action animation ids
 	public int[] GetAnimationIds() {
-		int[] actionIds = new int[20];
+		int[] actionIds = new int[10];
 
 		// // // // UPDATE ANIMATION IDs FOR THE ANIMATOR \\ \\ \\ \\
 		// ActionID 0 = Hold Animation
@@ -419,7 +435,7 @@ public class Equipment : Item {
 		return actionIds;
 	}
 
-
+	// Set the owner of this equipment
 	public void SetOwner (Transform newOwner, string ownerName) {
 		owner = newOwner;
 		weaponController = owner.GetComponent<GunController> ();
@@ -458,6 +474,7 @@ public class Equipment : Item {
 	}
 
 	[Command]
+	// Finally destroy this entity from every client
 	void CmdDestroyFinalEquipment() {
 		DestroyEntity ();
 	}

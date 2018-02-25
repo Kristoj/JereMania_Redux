@@ -5,6 +5,8 @@ using UnityEngine;
 public class ChildLivingEntity : ChildEntity {
 
 	public virtual void OnTakeDamage() {
-		
+		if (parentEntity != null) {
+			parentEntity.SetAuthorityFromClient ();
+		}
 	}
 }

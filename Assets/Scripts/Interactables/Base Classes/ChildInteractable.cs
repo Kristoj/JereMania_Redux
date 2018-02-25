@@ -6,7 +6,7 @@ public class ChildInteractable : ChildEntity {
 
 	public virtual void OnClientStartInteraction(string masterId) {
 		if (parentEntity != null) {
-			parentEntity.SetAuthority ();
+			parentEntity.SetAuthorityFromClient ();
 		}
 	}
 }

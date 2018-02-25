@@ -11,7 +11,7 @@ public class Player : LivingEntity {
 
 	public override void OnStartClient() {
 		string myID = GetComponent<NetworkIdentity> ().netId.ToString ();
-		LivingEntity entity = GetComponent<LivingEntity> ();
+		Player entity = GetComponent<Player> ();
 		GameManager.RegisterPlayer (myID, entity, entityName);
 	}
 
