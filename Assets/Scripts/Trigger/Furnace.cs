@@ -128,7 +128,7 @@ public class Furnace : Fireplace {
 		while (temperature > 0) {
 			for (int i = 0; i < crucibleHolder.crucibleSlots.Length; i++) {
 				if (crucibleHolder.crucibleSlots [i].crucible != null) {
-					crucibleHolder.crucibleSlots [i].crucible.UpdateFurnaceTemperature (0);
+					crucibleHolder.crucibleSlots [i].crucible.UpdateFurnaceTemperature (0, 0);
 				}
 			}
 			yield return null;
