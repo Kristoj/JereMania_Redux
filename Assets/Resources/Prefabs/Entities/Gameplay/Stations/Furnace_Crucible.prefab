@@ -98,6 +98,24 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1539933539817158
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4337401309129696}
+  - component: {fileID: 114044793675703856}
+  - component: {fileID: 114071671082438262}
+  - component: {fileID: 65155137783270658}
+  m_Layer: 0
+  m_Name: FuelAddTrigger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1614467158938978
 GameObject:
   m_ObjectHideFlags: 1
@@ -147,6 +165,21 @@ GameObject:
   - component: {fileID: 114594900640894350}
   m_Layer: 0
   m_Name: Crucible_Holder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1761176336548562
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4839943346814430}
+  m_Layer: 0
+  m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -217,6 +250,7 @@ Transform:
   - {fileID: 4216209878878564}
   - {fileID: 4836125930906468}
   - {fileID: 4495747872543020}
+  - {fileID: 4337401309129696}
   m_Father: {fileID: 4245204764237094}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -259,6 +293,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4116213794992852}
   m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4337401309129696
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1539933539817158}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.294, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4116213794992852}
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4351657707399238
 Transform:
@@ -308,7 +355,8 @@ Transform:
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0.036, y: 0.944, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 4839943346814430}
   m_Father: {fileID: 4116213794992852}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
@@ -324,6 +372,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4116213794992852}
   m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4839943346814430
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1761176336548562}
+  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0.119, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4506346917578212}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &23035631419457404
 MeshRenderer:
@@ -475,7 +536,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 5367f19fc38651d48ab7c92e717567db, type: 2}
+  - {fileID: 2100000, guid: 75e98a124371695408544672d115a2a4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -668,6 +729,18 @@ MeshCollider:
   m_CookingOptions: 14
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300014, guid: c311993095a1bd048bd95f4e764f5a28, type: 3}
+--- !u!65 &65155137783270658
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1539933539817158}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.9, y: 0.775, z: 0.77}
+  m_Center: {x: 0, y: 0.1, z: 0}
 --- !u!65 &65691147712504392
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -690,8 +763,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.7308094, y: 0.9, z: 0.06}
-  m_Center: {x: -0.00000011920929, y: -0.059482407, z: -3.3811675e-15}
+  m_Size: {x: 0.7308094, y: 0.9846742, z: 0.1635955}
+  m_Center: {x: -0.000000118187884, y: -0.10181958, z: 0.05179775}
 --- !u!95 &95959674832813292
 Animator:
   serializedVersion: 3
@@ -709,6 +782,30 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114044793675703856
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1539933539817158}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9780b6a43e98d814e8227bd73830a93c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parentEntity: {fileID: 0}
+--- !u!114 &114071671082438262
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1539933539817158}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d55bf9ace8da5be4289703f244ccb6e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parentEntity: {fileID: 0}
 --- !u!114 &114208457754893402
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -724,13 +821,19 @@ MonoBehaviour:
   entitySoundMaterial: 0
   entityGroupIndex: 0
   childEntities: []
-  maxOreCount: 5
-  meltTime: 11
-  meltSuccesChance: 18
-  fuelConsumption: 0.75
-  dropResource: {fileID: 0}
-  fuelText: {fileID: 0}
-  canUpdateUI: 1
+  maxTemperature: 800
+  temperature: 0
+  temperatureClimbRate: 4
+  temperatureClimbEfficiency: 0
+  temperatureClimbEfficiencyRate: 3
+  temperatureDescendRate: 1.5
+  temperatureDescendEfficiency: 0
+  temperatureDescendEfficiencyRate: 1
+  temperatureEfficiency: 1
+  maxFuel: 100
+  fuelConsumptionRate: 0.2
+  fuel: 100
+  isBurning: 0
 --- !u!114 &114555053039246862
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -777,8 +880,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parentEntity: {fileID: 0}
-  crucibleSlots: 4
-  crucibleCount: 0
+  crucibleSlots:
+  - hasCrucible: 0
+    slotOffset: {x: 0.18, y: 0, z: -0.119}
+    crucible: {fileID: 0}
+  - hasCrucible: 0
+    slotOffset: {x: -0.18, y: 0, z: -0.119}
+    crucible: {fileID: 0}
+  - hasCrucible: 0
+    slotOffset: {x: 0.18, y: 0, z: 0.28}
+    crucible: {fileID: 0}
+  - hasCrucible: 0
+    slotOffset: {x: -0.18, y: 0, z: 0.28}
+    crucible: {fileID: 0}
 --- !u!114 &114896281147463378
 MonoBehaviour:
   m_ObjectHideFlags: 1
