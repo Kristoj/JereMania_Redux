@@ -2,14 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Mineral : LivingEntity {
+public class Mineral : Equipment {
 
-	public Transform deathParticle;
-
-	public override void Die() {
-		if (deathParticle != null) {
-			Instantiate (deathParticle, transform.position, transform.rotation);
-		}
-		base.Die ();
-	}
+	public float meltingPoint = 200f;
 }

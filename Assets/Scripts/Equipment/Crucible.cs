@@ -49,12 +49,15 @@ public class Crucible : Equipment {
 		}
 	}
 
-	IEnumerator UpdateCrucibleTemperature (Furnace fur) {
-		furnace = fur;
+	IEnumerator UpdateCrucibleTemperature (Furnace _furnace) {
+		furnace = _furnace;
 
 		// While 
 		while (furnace.isBurning || matterTemperature > 0) {
-			
+			// Increment matter temperature
+			matterTemperature = Mathf.MoveTowards (matterTemperature, furnace.temperature, furnace.temperature / (furnace.temperatureEfficiency * .01f));
+			// Clamp matter temperature
+			matterTemperature = Mathf.Clamp (matterTemperature, 0, 1000);
 			yield return null;
 		}
 

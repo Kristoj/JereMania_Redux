@@ -18,7 +18,7 @@ public class FuelAddTrigger : ChildLivingEntity {
 		if (fireplace != null && fireplace.fuel < fireplace.maxFuel) {
 			Equipment e = GameManager.GetLocalPlayer ().GetComponent<GunController> ().currentEquipment;
 			if (e != null) {
-				fireplace.AddFuel (GameManager.GetLocalPlayer().name,e.entityName);
+				fireplace.AddFuel (GameManager.GetLocalPlayer().name, e.entityName);
 			}
 		}
 	}
