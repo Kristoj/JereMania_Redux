@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4304350315674750}
   - component: {fileID: 23966664186269606}
   - component: {fileID: 33424530133053470}
-  - component: {fileID: 114149672150764366}
+  - component: {fileID: 114746825113350134}
   - component: {fileID: 114343130268302658}
   - component: {fileID: 64651439744210306}
   - component: {fileID: 114684903910946546}
@@ -116,45 +116,6 @@ MeshCollider:
   m_CookingOptions: 14
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300002, guid: ef82cc8762d3c0b4a881bc5c0c979307, type: 3}
---- !u!114 &114149672150764366
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1056361635174502}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a28858bd824b7df4e936b1c9b92280e1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  entityName: Ore
-  entitySoundMaterial: 2
-  entityGroupIndex: 0
-  isAvailable: 1
-  price: 10
-  canStoreInInventory: 1
-  itemId: 0
-  itemIcon: {fileID: 21300000, guid: 04248a5adfc60fb4cbc4182122ab0659, type: 3}
-  fireMode: 0
-  rpm: 50
-  meleeRange: 2
-  hitDelay: 0.35
-  audioDelay: 0.15
-  impactForce: 3
-  holdStyle: 0
-  primaryAction: 0
-  secondaryAction: 1
-  weaponImpactSoundMaterial: 0
-  positionOffset: {x: 0, y: 0, z: 0}
-  speedMultiplier: 1
-  canRunWith: 1
-  pickupSound: {fileID: 0}
-  attackSound: {fileID: 0}
-  impactFX: {fileID: 114339121599838044, guid: 5df671e9e9489574bb08ad6bb0775d0d, type: 2}
-  myHitMask:
-    serializedVersion: 2
-    m_Bits: 0
-  player: {fileID: 0}
 --- !u!114 &114343130268302658
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -212,3 +173,43 @@ MonoBehaviour:
     i15: 0
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 1
+--- !u!114 &114746825113350134
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1056361635174502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 496776420b1bb6049bddcda846bd8db9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  entityName: Ore
+  entitySoundMaterial: 0
+  entityGroupIndex: 0
+  isAvailable: 1
+  price: 10
+  canStoreInInventory: 1
+  itemId: 0
+  itemIcon: {fileID: 21300000, guid: 04248a5adfc60fb4cbc4182122ab0659, type: 3}
+  fireMode: 0
+  rpm: 100
+  meleeRange: 3
+  hitDelay: 0.35
+  audioDelay: 0.15
+  impactForce: 5
+  holdStyle: 0
+  primaryAction: 0
+  secondaryAction: 1
+  weaponImpactSoundMaterial: 1
+  positionOffset: {x: 0, y: -0.1, z: -0.05}
+  speedMultiplier: 1
+  canRunWith: 1
+  pickupSound: {fileID: 0}
+  attackSound: {fileID: 0}
+  impactFX: {fileID: 0}
+  myHitMask:
+    serializedVersion: 2
+    m_Bits: 0
+  player: {fileID: 0}
+  meltingPoint: 300

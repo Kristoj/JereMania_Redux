@@ -47,8 +47,8 @@ public class AutomaticObjectAssignerScript : MonoBehaviour {
 
 	void AssignNetworkPrefabs() {
 		// Create Lists and arrays
-		object[] networkPrefab = Resources.LoadAll ("", typeof(NetworkIdentity));
-		object[] gameObjectPrefab = Resources.LoadAll ("", typeof(GameObject));
+		object[] networkPrefab = Resources.LoadAll ("Prefabs", typeof(NetworkIdentity));
+		object[] gameObjectPrefab = Resources.LoadAll ("Prefabs", typeof(GameObject));
 		List <GameObject> gmList = new List<GameObject>();
 		List <string> netList = new List<string>();
 

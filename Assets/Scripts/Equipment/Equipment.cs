@@ -310,9 +310,10 @@ public class Equipment : Item {
 	// Called when player hits a entity
 	[Command]
 	void CmdOnEntityHit (string playerName, string entityName, int entityGroup) {
+		Debug.Log ("Kek2");
 		Entity targetEntity = GameManager.instance.GetEntity (entityName, entityGroup);
 		if (targetEntity != null) {
-			targetEntity.OnEntityHit (playerName);
+			targetEntity.OnEntityHit (playerName, entityName);
 		}
 	}
 

@@ -34,10 +34,9 @@ public class Entity : NetworkBehaviour {
 			GameManager.instance.RegisterLivingEntity (myID, entity, entityName);
 		}
 	}
-
-
-	public virtual void OnEntityHit(string playerName) {
-
+		
+	public virtual void OnEntityHit(string playerName, string sourceEquipmentName) {
+		
 	}
 
 	public void OnEntityDestroy() {

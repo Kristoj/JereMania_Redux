@@ -19,7 +19,8 @@ public class Crucible : Equipment {
 	public float oreMeltingTemperature = 1000;
 	public float oreMeltingProgress = 0;
 
-
+	// Mineral inside the crucible
+	public Mineral mineral;
 
 	public override void Start() {
 		base.Start ();
@@ -44,27 +45,24 @@ public class Crucible : Equipment {
 
 	// Called when crucible is in a crucible slot in a furnace
 	public void StartMelting(Furnace fur) {
-		if (meltCoroutine == null) {
-			meltCoroutine = StartCoroutine (UpdateCrucibleTemperature (fur));
+		furnace = fur;
+		if (meltCoroutine == null && mineral != null) {
+			meltCoroutine = StartCoroutine (UpdateCrucibleTemperature ());
 		}
 	}
 
-	IEnumerator UpdateCrucibleTemperature (Furnace _furnace) {
-		furnace = _furnace;
-
-		// While 
+	IEnumerator UpdateCrucibleTemperature () {
 		while (furnace.isBurning || matterTemperature > 0) {
 			// Increment matter temperature
 			matterTemperature = Mathf.MoveTowards (matterTemperature, furnace.temperature, furnace.temperature / (furnace.temperatureEfficiency * .01f));
 			// Clamp matter temperature
-			matterTemperature = Mathf.Clamp (matterTemperature, 0, 1000);
+			matterTemperature = Mathf.Clamp (matterTemperature, 0, mineral.meltingPoint);
 			yield return null;
 		}
-
 	}
 
-	public override void OnEntityHit(string playerName) {
-		if (GameManager.GetLocalPlayer ().GetComponent<GunController> ().currentEquipment.entityName == "Ore") {
+	public override void OnEntityHit(string playerName, string sourceEquipmentName) {
+		if (EquipmentLibrary.instance.GetEquipment(sourceEquipmentName).GetComponent<Mineral>() != null) {
 			RpcAddOre (playerName);
 		}
 	}
