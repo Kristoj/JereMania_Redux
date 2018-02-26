@@ -39,12 +39,12 @@ GameObject:
   m_Component:
   - component: {fileID: 4663545297003656}
   m_Layer: 0
-  m_Name: Molten_Matter_Object
+  m_Name: Molten_Matter_Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1545048281665630
 GameObject:
   m_ObjectHideFlags: 0
@@ -61,7 +61,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1734323434687910
 GameObject:
   m_ObjectHideFlags: 0
@@ -295,7 +295,7 @@ Rigidbody:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1056361635174502}
   serializedVersion: 2
-  m_Mass: 0.5
+  m_Mass: 5
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -356,9 +356,11 @@ MonoBehaviour:
   player: {fileID: 0}
   matterTemperature: 0
   furnaceTemperature: 0
+  meltProgress: 0
   furnace: {fileID: 0}
   oreMeltingTemperature: 1000
   oreMeltingProgress: 0
+  mineral: {fileID: 0}
 --- !u!114 &114684903910946546
 MonoBehaviour:
   m_ObjectHideFlags: 1

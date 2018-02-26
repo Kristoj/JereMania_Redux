@@ -114,11 +114,14 @@ public class Furnace : Fireplace {
 			// Get empty crucible slot and get its spawn position
 			FurnaceCrucibleHolder.CrucibleSlot emptySlot = crucibleHolder.GetEmptySlot();
 			Vector3 spawnPos = crucibleHolder.GetSlotPos (emptySlot);
-			emptySlot.hasCrucible = true;
 
 			// Spawn new crucible
 			Crucible clone = Instantiate (EquipmentLibrary.instance.GetEquipment ("Crucible"), spawnPos, Quaternion.identity) as Crucible;
 			NetworkServer.Spawn (clone.gameObject);
+
+			// Update vars of the empty slot and it's crucible
+			emptySlot.crucible = clone;
+			emptySlot.OnCrucibleAdd (this);
 			clone.RpcSetFurnaceMode ();
 
 			// Subscribe to crucibles death event so CrucibleSlot will update its properties when crucible is removed

@@ -39,7 +39,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1048201564521188}
   m_LocalRotation: {x: 0.000000047287553, y: -0.60876125, z: -0.000000036284998, w: 0.7933535}
-  m_LocalPosition: {x: -58.3396, y: -1.9041672, z: -67.161865}
+  m_LocalPosition: {x: 15.851524, y: 0, z: -9.076797}
   m_LocalScale: {x: 1.4000007, y: 1.4, z: 1.4000007}
   m_Children: []
   m_Father: {fileID: 0}
@@ -147,14 +147,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityName: Acacia
   entitySoundMaterial: 0
-  hurtSound: {fileID: 8300000, guid: 4bc77c37a6d80e24997f4932e6288345, type: 3}
   entityGroupIndex: 0
   startingHealth: 750
+  health: 0
   slashResistance: 25
   bluntResistance: 75
   piercingResistance: 60
   professionWeakness: 0
   weaknessAmount: 100
+  expDropTable: []
   destroyOnDeath: 1
   dropCount: 3
   dropOffset: {x: 0, y: 4, z: 0}

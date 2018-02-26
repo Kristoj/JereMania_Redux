@@ -823,17 +823,18 @@ MonoBehaviour:
   childEntities: []
   maxTemperature: 800
   temperature: 0
-  temperatureClimbRate: 4
+  temperatureClimbRate: 20
   temperatureClimbEfficiency: 0
   temperatureClimbEfficiencyRate: 3
   temperatureDescendRate: 1.5
   temperatureDescendEfficiency: 0
   temperatureDescendEfficiencyRate: 1
-  temperatureEfficiency: 1
+  temperatureEfficiency: 5
   maxFuel: 100
   fuelConsumptionRate: 0.2
   fuel: 100
   isBurning: 0
+  fireParticle: {fileID: 0}
 --- !u!114 &114555053039246862
 MonoBehaviour:
   m_ObjectHideFlags: 1

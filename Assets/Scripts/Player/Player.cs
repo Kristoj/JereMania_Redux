@@ -21,17 +21,25 @@ public class Player : LivingEntity {
 			if (isLocalPlayer) {
 				NetworkManager.singleton.client.RegisterHandler (myMsgId, OnMessageReceive);
 				GameManager.instance.SetLocalPlayer(this);
-				CmdSetAuthority (GameManager.instance.netId, GetComponent<NetworkIdentity> ());
+				SetAuthority (GameManager.instance.netId, GetComponent<NetworkIdentity> ());
 			}
 		}
 	}
 
 	public void SetAuthority(NetworkInstanceId objectId, NetworkIdentity targetPlayer) {
-		CmdSetAuthority (objectId, targetPlayer);
+		if (isServer) {
+			AcceptAuthority (objectId, targetPlayer);
+		} else {
+			CmdSetAuthority (objectId, targetPlayer);
+		}
 	}
 
 	[Command]
 	void CmdSetAuthority(NetworkInstanceId objectId, NetworkIdentity targetPlayer) {
+		AcceptAuthority (objectId, targetPlayer);
+	}
+
+	void AcceptAuthority(NetworkInstanceId objectId, NetworkIdentity targetPlayer) {
 		GameObject targetObject = NetworkServer.FindLocalObject (objectId);
 		if (targetObject != null) {
 			NetworkIdentity targetIdentity = targetObject.GetComponent<NetworkIdentity> ();

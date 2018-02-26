@@ -49,6 +49,12 @@ public class FurnaceCrucibleHolder : ChildLivingEntity {
 
 		public void OnCrucibleRemove() {
 			hasCrucible = false;
+			crucible = null;
+		}
+
+		public void OnCrucibleAdd (Furnace fur) {
+			crucible.furnace = fur;
+			hasCrucible = true;
 		}
 	}
 }

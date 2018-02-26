@@ -22,7 +22,7 @@ public class AutomaticObjectAssignerScript : MonoBehaviour {
 	}
 
 	void AssignEquipment() {
-		object[] equipments = Resources.LoadAll ("", typeof(Equipment));
+		object[] equipments = Resources.LoadAll ("Prefabs/Equipment", typeof(Equipment));
 
 		// Clear equipment list first
 		equipmentLibrary.equipmentList.Clear();
@@ -34,7 +34,7 @@ public class AutomaticObjectAssignerScript : MonoBehaviour {
 	}
 
 	void AssignAudioFiles () {
-		object[] audioFiles = Resources.LoadAll ("", typeof(AudioClip));
+		object[] audioFiles = Resources.LoadAll ("Audio", typeof(AudioClip));
 
 		// Clear equipment list first
 		soundLibrary.sounds.Clear();

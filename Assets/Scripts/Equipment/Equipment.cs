@@ -143,7 +143,7 @@ public class Equipment : Item {
 					// Add force
 					Vector3 meleeForce = equipmentVelocity * impactForce;
 					CmdAddImpactForce (meleeForce, hit.point, livingEntity.name, livingEntity.entityGroupIndex);
-					CmdOnEntityHit (owner.name, entityName, entityGroupIndex);
+					CmdOnEntityHit (owner.name, livingEntity.name, entityGroupIndex);
 				}
 
 				// Get Entity
@@ -151,7 +151,7 @@ public class Equipment : Item {
 				if (entity != null && livingEntity == null) {
 					Vector3 meleeForce = equipmentVelocity * impactForce;
 					CmdAddImpactForce (meleeForce, hit.point, entity.name, entity.entityGroupIndex);
-					CmdOnEntityHit (owner.name, entityName, entityGroupIndex);
+					CmdOnEntityHit (owner.name, entity.name, entityGroupIndex);
 				}
 
 				// Get Local Entity
@@ -310,10 +310,12 @@ public class Equipment : Item {
 	// Called when player hits a entity
 	[Command]
 	void CmdOnEntityHit (string playerName, string entityName, int entityGroup) {
-		Debug.Log ("Kek2");
 		Entity targetEntity = GameManager.instance.GetEntity (entityName, entityGroup);
+		if (targetEntity == null) {
+			targetEntity = GameManager.instance.GetLivingEntity (entityName, entityGroup)as Entity;
+		}
 		if (targetEntity != null) {
-			targetEntity.OnEntityHit (playerName, entityName);
+			targetEntity.OnEntityHit (playerName, this.entityName);
 		}
 	}
 

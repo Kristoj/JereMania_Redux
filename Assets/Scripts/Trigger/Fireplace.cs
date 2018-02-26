@@ -12,13 +12,13 @@ public class Fireplace : ParentEntity {
 	public float temperatureClimbRate = 5f;
 	[Tooltip("How efficiently the temperature will rise in a second. 0-100%")]
 	public float temperatureClimbEfficiency = 0f;
-	[Tooltip("How much temperature climb efficiency rate will increase in a second")]
+	[Tooltip("How much temperature climb efficiency will increase in a second")]
 	public float temperatureClimbEfficiencyRate = 10;
 	[Tooltip("How quickly the temperature will descend in a second")]
 	public float temperatureDescendRate = 1.5f;
 	[Tooltip("How efficiently the temperature will descend in a second. 0-100%")]
 	public float temperatureDescendEfficiency = 0f;
-	[Tooltip("How efficiently the temperature will rise in a second. 0-100%")]
+	[Tooltip("How efficiently the descend efficiency will descend in a second. 0-100%")]
 	public float temperatureDescendEfficiencyRate = 5f;
 	[Tooltip("How efficiently temperature is added to objects inside the fireplace per second. 0-100%")]
 	public float temperatureEfficiency = 1;
@@ -29,6 +29,9 @@ public class Fireplace : ParentEntity {
 	public float fuelConsumptionRate = .5f;
 	public float fuel = 0;
 	public bool isBurning = false;
+
+	[Header ("Effects")]
+	public ParticleSystem fireParticle;
 
 	private Coroutine burnCoroutine;
 	private Coroutine coolingCoroutine;
