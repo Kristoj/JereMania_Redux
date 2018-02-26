@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class ChildLivingEntity : ChildEntity {
 
-	public virtual void OnTakeDamage() {
-		if (parentEntity != null) {
-			parentEntity.GiveAuthorityToPlayer ();
-		}
+	public virtual void OnClientTakeDamage(string playerName) {
+		
+	}
+
+	public virtual void OnServerTakeDamage(string playerName) {
+
 	}
 }

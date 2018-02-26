@@ -5,8 +5,10 @@ using UnityEngine;
 public class ChildInteractable : ChildEntity {
 
 	public virtual void OnClientStartInteraction(string masterId) {
-		if (parentEntity != null) {
-			parentEntity.GiveAuthorityToPlayer ();
-		}
+
+	}
+
+	public virtual void OnServerStartInteraction (string masterdId) {
+		
 	}
 }

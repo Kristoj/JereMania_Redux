@@ -7,13 +7,12 @@ public class FurnaceCrucibleHolder : ChildLivingEntity {
 	public CrucibleSlot[] crucibleSlots = new CrucibleSlot[4];
 
 	// Called when player attacks this object with a equipment
-	public override void OnTakeDamage() {
-		base.OnTakeDamage ();
-		Player localPlayer = GameManager.GetLocalPlayer ();
-		if (localPlayer != null) {
-			GunController gunController = localPlayer.GetComponent<GunController> ();
+	public override void OnServerTakeDamage(string playerName) {
+		Player sourcePlayer = GameManager.GetPlayerByName (playerName);
+		if (sourcePlayer != null) {
+			GunController gunController = sourcePlayer.GetComponent<GunController> ();
 			if (gunController.currentEquipment.entityName == "Crucible") {
-				parentEntity.SendMessage ("SignalCrucibleAdd", localPlayer.transform.name);
+				parentEntity.SendMessage ("SignalCrucibleAdd", sourcePlayer.transform.name);
 			}
 		}
 	}

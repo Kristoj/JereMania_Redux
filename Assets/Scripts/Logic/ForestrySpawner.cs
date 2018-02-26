@@ -5,7 +5,7 @@ using UnityEngine.Networking;
 
 public class ForestrySpawner : NetworkBehaviour {
 
-	public Rigidbody[] forestryList;
+	public Entity[] forestryList;
 	public int maxForestryCount = 50;
 	public int curForestryCount = 0;
 	public float spawnInterval = 60;
@@ -30,7 +30,9 @@ public class ForestrySpawner : NetworkBehaviour {
 			yield return new WaitForSeconds (spawnInterval);
 
 			if (curForestryCount < maxForestryCount) {
-				SpawnForestry ();
+				if (forestryList.Length > 0) {
+					SpawnForestry ();
+				}
 			}
 		}
 	}
@@ -42,17 +44,27 @@ public class ForestrySpawner : NetworkBehaviour {
 
 		if (Physics.Raycast (ray, out hit, 500, whatToHit)) {
 			Vector3 spawnPos = hit.point;
-			Rigidbody clone = Instantiate (forestryList [Random.Range(0, forestryList.Length)], spawnPos, Quaternion.identity, transform) as Rigidbody;
-			clone.isKinematic = true;
+			Entity clone = Instantiate (forestryList [Random.Range(0, forestryList.Length)], spawnPos, Quaternion.identity, transform) as Entity;
 			NetworkServer.Spawn (clone.gameObject);
-			Entity cloneEntity = clone.GetComponent<Entity> ();
-			cloneEntity.deathEvent += RemoveForestry;
+			clone.deathEvent += RemoveForestry;
 			curForestryCount++;
-			StartCoroutine (DelaySpawn (cloneEntity.name, cloneEntity.entityGroupIndex, spawnPos));
+			StartCoroutine (DelaySetup (clone.name, clone.entityGroupIndex, spawnPos));
+			RpcSetForestryStatic (clone.name, clone.entityGroupIndex);
 		}
 	}
 
-	IEnumerator DelaySpawn(string cloneName, int cloneGroup , Vector3 spawnPos) {
+	[ClientRpc]
+	void RpcSetForestryStatic(string entityName, int entityGroup) {
+		Entity e = GameManager.instance.GetEntity (entityName, entityGroup);
+		if (e == null) {
+			e = GameManager.instance.GetLivingEntity (entityName, entityGroup);
+		}
+		if (e != null) {
+			e.GetComponent<Rigidbody>().isKinematic = true;
+		}
+	}
+
+	IEnumerator DelaySetup(string cloneName, int cloneGroup , Vector3 spawnPos) {
 		yield return new WaitForSeconds (.05f);
 		Entity e = GameManager.instance.GetEntity (cloneName, cloneGroup);
 		if (e != null) {

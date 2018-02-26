@@ -32,12 +32,22 @@ public class Fireplace : ParentEntity {
 
 	[Header ("Effects")]
 	public ParticleSystem fireParticle;
+	protected ParticleSystem emberParticle;
 
 	private Coroutine burnCoroutine;
 	private Coroutine coolingCoroutine;
 
 	void start() {
 		fuel = maxFuel;
+
+		// Get particle references
+		if (fireParticle != null) {
+			for (int i = 0; i < fireParticle.transform.childCount; i++) {
+				if (fireParticle.transform.GetChild (i).name == "FireEmbers") {
+					emberParticle = fireParticle.transform.GetChild (i).GetComponent<ParticleSystem> ();
+				}
+			}
+		}
 	}
 
 	IEnumerator Burn() {
@@ -75,11 +85,14 @@ public class Fireplace : ParentEntity {
 		}
 	}
 
-	public void AddFuel (string playerName, string entityName) {
+	public virtual void AddFuel (string playerName, string entityName) {
 		if (entityName == "Wood") {
 			fuel += 20;
 			RpcAddFuel (playerName);
 		}
+
+		// Audio
+		AudioManager.instance.RpcPlayCustomSound ("Place_Item", transform.position, "", 1, true);
 	}
 
 	[ClientRpc]
@@ -89,7 +102,12 @@ public class Fireplace : ParentEntity {
 		}
 	}
 
-	public virtual void Ignite() {
+	#region Ignite
+	void Ignite() {
+		OnServerIgnite ();
+	}
+
+	public virtual void OnServerIgnite() {
 		// Start burning
 		if (burnCoroutine != null) {
 			StopCoroutine (burnCoroutine);
@@ -100,8 +118,45 @@ public class Fireplace : ParentEntity {
 			StopCoroutine (coolingCoroutine);
 		}
 		coolingCoroutine = StartCoroutine (Cooling());
+		// Update fire effects for all clients
+		RpcIgnite ();
 	}
 
+	[ClientRpc]
+	public virtual void RpcIgnite() {
+		// FX
+		// Set new vars for the particles
+		ParticleSystem.EmissionModule fireEm = fireParticle.emission;
+		ParticleSystem.EmissionModule emberEm = fireParticle.emission;
+		fireEm.rateOverTime = 5;
+		emberEm.rateOverTime = 5;
+		// Play particles
+		fireParticle.Play();
+	}
+	#endregion
+
+	public virtual void Extinguish() {
+		isBurning = false;
+		if (burnCoroutine != null) {
+			StopCoroutine (burnCoroutine);
+		}
+		// Update fire effects for all clients
+		RpcExtinguish ();
+	}
+
+	[ClientRpc]
+	protected void RpcExtinguish() {
+		// FX
+		// Set new vars for the particles
+		ParticleSystem.EmissionModule fireEm = fireParticle.emission;
+		ParticleSystem.EmissionModule emberEm = fireParticle.emission;
+		fireEm.rateOverTime = 0;
+		emberEm.rateOverTime = 0;
+		// Stop particles
+		fireParticle.Stop();
+	}
+
+	// Called when player presses 'Use' key down when aiming at the trigger... This method is called on the server
 	public void ToggleFire() {
 		if (isBurning) {
 			Extinguish ();
@@ -109,13 +164,6 @@ public class Fireplace : ParentEntity {
 			if (fuel > 0) {
 				Ignite ();
 			}
-		}
-	}
-
-	public void Extinguish() {
-		isBurning = false;
-		if (burnCoroutine != null) {
-			StopCoroutine (burnCoroutine);
 		}
 	}
 }

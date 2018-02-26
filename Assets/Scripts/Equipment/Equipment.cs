@@ -157,7 +157,7 @@ public class Equipment : Item {
 				// Get Local Entity
 				ChildLivingEntity childLivingEntity = hit.collider.GetComponent<ChildLivingEntity>();
 				if (childLivingEntity != null) {
-					childLivingEntity.OnTakeDamage ();
+					CmdOnChildEntityHit (owner.name, childLivingEntity.parentEntity.name, childLivingEntity.GetType().ToString(), childLivingEntity.name, childLivingEntity.parentEntity.entityGroupIndex);
 				}
 
 				// Animation
@@ -320,6 +320,28 @@ public class Equipment : Item {
 	}
 
 	[Command]
+	void CmdOnChildEntityHit(string playerName, string parentName, string childType, string childName, int entityGroup) {
+		// Get the target living entity that we hit
+		ParentEntity parentEntity = GameManager.instance.GetEntity(parentName, entityGroup) as ParentEntity;
+		if (parentEntity == null) {
+			return;
+		}
+		// Interact with the object if we got valid reference to it
+		if (parentEntity != null) {
+			ChildLivingEntity childLivingEntity = parentEntity.GetChildEntity (childType, childName) as ChildLivingEntity;
+			if (childLivingEntity != null) {
+				// Set authority for the object that we hit
+				if (player == null) {
+					player = GetComponent<Player> ();
+					player.SetAuthority (parentEntity.netId, GameManager.GetPlayerByName(playerName).GetComponent<NetworkIdentity>());
+				}
+				// Rpc the interaction
+				childLivingEntity.OnServerTakeDamage(playerName);
+			}
+		}
+	}
+
+	[Command]
 	// Adds impact force when player hits a entity
 	void CmdAddImpactForce(Vector3 meleeForce, Vector3 forcePoint, string targetName, int targetGroup) {
 
@@ -462,14 +484,14 @@ public class Equipment : Item {
 	/// </summary>
 
 	[Command]
-	public void CmdDestroyEquipment(NetworkInstanceId callerNetId) {
-		RpcDestroyEquipment (callerNetId);
+	public void CmdDestroyEquipment(string callerName) {
+		RpcDestroyEquipment (callerName);
 	}
 
 	[ClientRpc]
-	void RpcDestroyEquipment(NetworkInstanceId callerNetId) {
+	void RpcDestroyEquipment(string callerName) {
 		if (weaponController != null) {
-			if (weaponController.netId == callerNetId) {
+			if (GameManager.GetLocalPlayer().name == callerName) {
 				weaponController.canSpawnNewEquipment = true;
 				CmdDestroyFinalEquipment ();
 			}

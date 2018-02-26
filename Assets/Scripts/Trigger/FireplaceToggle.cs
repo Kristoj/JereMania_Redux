@@ -12,9 +12,7 @@ public class FireplaceToggle : ChildInteractable {
 		}
 	}
 
-	public override void OnClientStartInteraction(string masterId) {
-		base.OnClientStartInteraction (masterId);
-
+	public override void OnServerStartInteraction(string masterId) {
 		if (fireplace != null) {
 			fireplace.ToggleFire ();
 		}

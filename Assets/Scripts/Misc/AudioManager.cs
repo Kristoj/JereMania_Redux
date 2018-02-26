@@ -90,6 +90,10 @@ public class AudioManager : NetworkBehaviour {
 			clipToPlay = soundLibrary.GetClip (clip);
 		}
 
+		if (clipToPlay == null) {
+			return;
+		}
+
 		if (sourcePlayer != null) {
 			// Setup sound game object
 			GameObject newSFXSource = new GameObject ("SFX2D source");
@@ -120,6 +124,10 @@ public class AudioManager : NetworkBehaviour {
 			clipToPlay = soundLibrary.GetGroupClip (clip);
 		} else {
 			clipToPlay = soundLibrary.GetClip (clip);
+		}
+			
+		if (clipToPlay == null) {
+			return;
 		}
 
 		if (GameManager.GetLocalPlayer().name == masterId) {

@@ -152,7 +152,10 @@ public class GameManager : NetworkBehaviour {
 	}
 
 	public LivingEntity GetLivingEntity(string entityName, int entityGroupIndex) {
-		LivingEntity l = livingEntityGroups[entityGroupIndex].GetLivingEntityFromGroup (entityName);
+		LivingEntity l = null;
+		if (livingEntityGroups.Count - 1 >= entityGroupIndex) {
+			l = livingEntityGroups [entityGroupIndex].GetLivingEntityFromGroup (entityName);
+		}
 		if (l == null) {
 			if (livingEntities.ContainsKey (entityName)) {
 				l = livingEntities [entityName];

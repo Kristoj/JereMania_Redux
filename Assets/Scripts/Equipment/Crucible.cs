@@ -104,10 +104,12 @@ public class Crucible : Equipment {
 	}
 
 	IEnumerator ClientUpdateMoltenVisuals() {
+		moltenMatterObject.gameObject.SetActive (true);
 		while (moltenMatterObject.transform.localScale != moltenMatterObjectTargetScale) {
 			moltenMatterObject.transform.localScale = Vector3.Lerp (moltenMatterObject.transform.localScale, moltenMatterObjectTargetScale, .3f * Time.deltaTime);
 			yield return null;
 		}
+		Debug.Log ("Client End");
 	}
 	// Called when server finishes melting the ore
 	void FinishMelting() {

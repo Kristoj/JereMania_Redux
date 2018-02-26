@@ -31,8 +31,8 @@ public class Furnace : Fireplace {
 	}
 
 
-	public override void Ignite() {
-		base.Ignite ();
+	public override void OnServerIgnite() {
+		base.OnServerIgnite ();
 
 		for (int i = 0; i < crucibleHolder.crucibleSlots.Length; i++) {
 			if (crucibleHolder.crucibleSlots [i].crucible != null) {
@@ -46,11 +46,6 @@ public class Furnace : Fireplace {
 	// DOOR SWING
 	#region DOOR SWING
 	public void SignalDoorSwing(string ciName) {
-		CmdSignalDoorSwing (ciName);
-	}
-
-	[Command]
-	public void CmdSignalDoorSwing(string ciName) {
 
 		// Determine what door we want to open and if we can open it
 		int swingDir = 0;

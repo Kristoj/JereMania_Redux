@@ -86,14 +86,14 @@ public class Player : LivingEntity {
 		switch (msg.message) {
 		case "Interact":
 			if (pi.targetIntera != null) {
-				pi.targetIntera.OnClientStartInteraction (transform.name);
+				//pi.targetIntera.OnClientStartInteraction (transform.name);
 			}
 			break;
 		case "Pickup":
 			Equipment equ = pi.targetIntera.GetComponent<Equipment> ();
 			if (equ != null) {
-				equ.SetOwner (transform, transform.name);
-				pi.targetIntera.OnStartPickup (transform.name);
+				//equ.SetOwner (transform, transform.name);
+				//pi.targetIntera.OnStartPickup (transform.name);
 			}
 			break;
 		case "Spawn_Equipment":

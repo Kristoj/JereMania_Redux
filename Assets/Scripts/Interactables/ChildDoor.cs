@@ -25,12 +25,7 @@ public class ChildDoor : ChildInteractable {
 		}
 	}
 
-	public override void OnClientStartInteraction(string masterId) {
-		base.OnClientStartInteraction (masterId);
-		RequestDoorOpen ();
-	}
-
-	void RequestDoorOpen() {
+	public override void OnServerStartInteraction(string masterId) {
 		if (parentEntity != null) {
 			parentEntity.SendMessage ("SignalDoorSwing", transform.name, SendMessageOptions.DontRequireReceiver);
 		}

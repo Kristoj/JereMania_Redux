@@ -5,7 +5,6 @@ using UnityEngine.Networking;
 public class PlayerInteraction : NetworkBehaviour {
 
 	[Header("Focus")]
-	private Transform cam;
 	public float focusRange = 3f;
 	[HideInInspector]
 	public float curCarryDistance;
@@ -20,6 +19,7 @@ public class PlayerInteraction : NetworkBehaviour {
 	public Interactable focusIntera;
 	//[HideInInspector]
 	public Interactable targetIntera;
+	private ChildInteractable childIntera;
 	private Player player;
 	private GunController weaponController;
 	private PlayerAnimationController animationController;
@@ -30,19 +30,11 @@ public class PlayerInteraction : NetworkBehaviour {
 		player = GetComponent<Player> ();
 		weaponController = GetComponent<GunController> ();
 		animationController = GetComponent<PlayerAnimationController> ();
-		cam = player.cam.transform;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (isLocalPlayer) {
-			CheckPlayerInput ();
-		}
-	}
-
-	[Command]
-	void CmdInteractEnd (string targetID) {
-		
+		CheckPlayerInput ();
 	}
 
 	[Command]
@@ -55,11 +47,12 @@ public class PlayerInteraction : NetworkBehaviour {
 
 	// CLIENT Focus Ray
 	void ClientUseRay(int buttonId) {
-		Ray ray = new Ray (cam.position, cam.forward);
+		Ray ray = new Ray (player.cam.transform.position, player.cam.transform.forward);
 		RaycastHit hit;
 
 		if (Physics.Raycast (ray, out hit, focusRange, focusMask, QueryTriggerInteraction.Collide)) {
 
+			// Check if we hit a interactable object
 			focusIntera = hit.collider.GetComponent<Interactable> ();
 			if (focusIntera != null) {
 				targetIntera = focusIntera;
@@ -70,80 +63,86 @@ public class PlayerInteraction : NetworkBehaviour {
 						StartCoroutine (PickupDelay (buttonId));
 					}
 				} else {
-					CmdUseRay (GetComponent<NetworkIdentity> (), targetIntera.netId, buttonId);
+					CmdInteractionConfirm (GetComponent<NetworkIdentity> (), targetIntera.name, targetIntera.entityGroupIndex, buttonId);
 				}
 
 				// Animation
 				animationController.PickupItem (buttonId);
-			} else {
+			} 
+			// Check if we hit a child interactable object
+			else {
 				ChildInteractable childIntera = hit.collider.GetComponent<ChildInteractable>();
 				if (childIntera != null) {
 					childIntera.OnClientStartInteraction (transform.name);
+					CmdChildInteractionConfirm (GetComponent<NetworkIdentity> (), childIntera.parentEntity.name, childIntera.GetType().ToString(), childIntera.name,childIntera.parentEntity.entityGroupIndex, buttonId);
 				}
 			}
 		}
 	}
 
-	IEnumerator PickupDelay(int buttonId) {
-		isPickingUpEquipment = true;
-		yield return new WaitForSeconds (.18f);
-		isPickingUpEquipment = false;
-		CmdUseRay (GetComponent<NetworkIdentity> (), targetIntera.netId, buttonId);
-	}
 	// SERVER Focus Ray
 	[Command]
-	void CmdUseRay(NetworkIdentity targetPlayer, NetworkInstanceId interaId, int buttonId) {
-
-		GameObject interaObject = NetworkServer.FindLocalObject (interaId).gameObject;
+	void CmdInteractionConfirm(NetworkIdentity targetPlayer, string targetEntityGameObjectName, int entityGroup, int buttonId) {
+		// Get the target entity tha we interacted with
+		Entity interaObject = GameManager.instance.GetEntity(targetEntityGameObjectName, entityGroup);
+		if (interaObject == null) {
+			interaObject = GameManager.instance.GetLivingEntity (targetEntityGameObjectName,  entityGroup) as Entity;
+		}
+		// Interact with the object if we got valid reference to it
 		if (interaObject != null) {
 			targetIntera = interaObject.GetComponent<Interactable> ();
 			if (targetIntera != null && targetIntera.isAvailable) {
-				SetAuthority (targetPlayer, interaId, buttonId);
+				// Set authority for the object that we interacted
+				if (player == null) {
+					player = GetComponent<Player> ();
+				}
+				player.SetAuthority (targetIntera.netId, targetPlayer);
+				// Rpc the interaction
+				RpcInteractionConfirm (targetPlayer, buttonId);
 			}
 		}
-		/**
-
-		Ray ray = new Ray (pos, dir);
-		RaycastHit hit;
-
-		if (Physics.Raycast (ray, out hit, focusRange, focusMask, QueryTriggerInteraction.Collide)) {
-			focusIntera = hit.collider.GetComponent<Interactable> ();
-
-			if (focusIntera != null && focusIntera.isAvailable) {
-				targetIntera = focusIntera;
-				// Set authority
-				SetAuthority (targetPlayer, interaId, buttonId);
-			} else {
-				Debug.Log ("Server Ray is NULL");
-			}
-		}
-		**/
 	}
 
-	void SetAuthority(NetworkIdentity targetPlayer, NetworkInstanceId interaId, int buttonId) {
-		NetworkIdentity targetIdentity = targetIntera.GetComponent<NetworkIdentity>();
-		var currentOwner = targetIdentity.clientAuthorityOwner;
-		if (currentOwner == targetPlayer.connectionToClient) {
-			
-		} else {
-			if (currentOwner != null) {
-				targetIdentity.RemoveClientAuthority (currentOwner);
+	[ClientRpc]
+	void RpcInteractionConfirm(NetworkIdentity targetPlayer, int buttonId) {
+		// Check if we're the client who started this interaction
+		if (GameManager.GetLocalPlayer().netId == targetPlayer.netId && targetIntera != null) {
+			if (buttonId == 0) {
+				targetIntera.OnClientStartInteraction (transform.name);
+			} else if (buttonId == 1) {
+				if (targetIntera as Equipment != null) {
+					(targetIntera as Equipment).SetOwner (transform, transform.name);
+					targetIntera.OnStartPickup (transform.name);
+				}
 			}
-			targetIdentity.AssignClientAuthority (targetPlayer.connectionToClient);
 		}
-		// Send message to the client so he can interact with target object
-		player = GetComponent<Player> ();
-		var msg = new MyMessage();
-		msg.playerId = netId;
-
-		if (buttonId == 0) {
-			msg.message = "Interact";
-		} else {
-			msg.message = "Pickup";
-		}
-		base.connectionToClient.Send(player.myMsgId, msg);
 	}
 
+	[Command]
+	void CmdChildInteractionConfirm(NetworkIdentity targetPlayer, string parentEntityGameObjectName, string childEntityType,string childEntityName, int entityGroup, int buttonId) {
+		// Get the parent entity tha we interacted with
+		ParentEntity parentEntity = GameManager.instance.GetEntity(parentEntityGameObjectName, entityGroup) as ParentEntity;
+		if (parentEntity == null) {
+			return;
+		}
+
+		// Get the child entity tha we interacted with
+		childIntera = parentEntity.GetChildEntity (childEntityType, childEntityName) as ChildInteractable;
+		// Interact with the object if we got valid reference to it
+		if (childIntera != null) {
+			if (childIntera != null) {
+				// Set authority for the object that we interacted
+				if (player == null) {
+					player = GetComponent<Player> ();
+					player.SetAuthority (targetIntera.netId, targetPlayer);
+				}
+				// Rpc the interaction
+				childIntera.OnServerStartInteraction (targetPlayer.transform.name);
+			}
+		}
+	}
+
+	// Input
 	void CheckPlayerInput() {
 		// Interaction
 		if (Input.GetKeyDown (KeyCode.E) && !weaponController.isAttacking) {
@@ -184,5 +183,12 @@ public class PlayerInteraction : NetworkBehaviour {
 		}
 		yield return new WaitForSeconds (.4f);
 		Destroy (eq.gameObject);
+	}
+
+	IEnumerator PickupDelay(int buttonId) {
+		isPickingUpEquipment = true;
+		yield return new WaitForSeconds (.18f);
+		isPickingUpEquipment = false;
+		CmdInteractionConfirm (GetComponent<NetworkIdentity> (), targetIntera.name, targetIntera.entityGroupIndex, buttonId);
 	}
 }

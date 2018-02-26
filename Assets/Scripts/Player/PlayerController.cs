@@ -499,7 +499,7 @@ public class PlayerController : NetworkBehaviour {
 
 		if (Input.GetKeyDown (KeyCode.Escape)) {
 			AchievementProgressTracker.instance.SavePlayerProgress ();
-			Application.Quit ();
+			//Application.Quit ();
 		}
 
 		if (playerStats.stamina <= 0) {

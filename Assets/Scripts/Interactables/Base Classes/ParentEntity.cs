@@ -11,4 +11,13 @@ public class ParentEntity : Entity {
 			childEntities.Add (ci);
 		}
 	}
+
+	public ChildEntity GetChildEntity(string entityType, string childName) {
+		foreach (ChildEntity c in childEntities) {
+			if (c.GetType().ToString() == entityType.ToString() && c.name == childName) {
+				return c;
+			}
+		}
+		return null;
+	}
 }
