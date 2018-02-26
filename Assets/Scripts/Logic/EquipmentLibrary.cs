@@ -36,6 +36,8 @@ public class EquipmentLibrary : MonoBehaviour {
 		public Resource dropResource;
 	}
 
+
+
 	public void ConsumeItem(string itemName, string consumer) {
 		// Mushroom
 		PlayerStats consumerStats = GameManager.GetPlayerByName (consumer).GetComponent<PlayerStats>();
