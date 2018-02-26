@@ -4,9 +4,11 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 public class Cavespawner : NetworkBehaviour {
-
+	[Range (100, 400)]
 	public int maxCaves;
+	[Range (20, 100)]
 	public int minCaves;
+
 	public CaveChunk[] caveStraight;
 	public CaveChunk[] caveLLeft;
 	public CaveChunk[] caveLRight;
