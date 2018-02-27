@@ -3985,7 +3985,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff26db721962cdf4a8edcdfa9a767d2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  profile: {fileID: 0}
+  profile: {fileID: 11400000, guid: 8deaf48ded11e134180fff484c1aec28, type: 2}
 --- !u!114 &114427115199243346
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4422,9 +4422,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemSlotSize: 30
   itemSlotGap: 0.25
-  itemSlot: {fileID: 224863789805658012, guid: 2c4fa494bac2d78409ab6c96ae059eea, type: 2}
-  menuBackground: {fileID: 224799503991740806}
-  spawnMenuScreen: {fileID: 224243423101813720}
+  itemSlot: {fileID: 0}
+  menuBackground: {fileID: 0}
+  spawnMenuScreen: {fileID: 0}
   slotList: []
   equipmentList: []
 --- !u!114 &114990373382291192
