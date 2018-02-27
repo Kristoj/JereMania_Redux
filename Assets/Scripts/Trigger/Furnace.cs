@@ -6,10 +6,20 @@ using UnityEngine.UI;
 
 public class Furnace : Fireplace {
 
+	// Temperature gauge
+	public float test;
+	public Transform temperatureGaugePointer;
+	public float temperatureGaugeMaxEuler = 240f;
+	private Vector3 temperatureGaugeOriginalEuler;
+	private Vector3 gaugeTargetEuler;
+
+	// 
 	private ChildDoor furnaceDoor;
 	private ChildDoor crucibleDoor;
 	private FurnaceCrucibleHolder crucibleHolder;
 	private Coroutine temperatureUpdateCoroutine;
+	private Coroutine clientGaugeCoroutine;
+	private Coroutine serverGaugeCoroutine;
 
 	public override void Start() {
 		base.Start ();
@@ -28,6 +38,10 @@ public class Furnace : Fireplace {
 				crucibleHolder = ce as FurnaceCrucibleHolder;
 			}
 		}
+
+		if (temperatureGaugePointer != null) {
+			temperatureGaugeOriginalEuler = temperatureGaugePointer.transform.localEulerAngles;
+		}
 	}
 
 
@@ -39,6 +53,45 @@ public class Furnace : Fireplace {
 				crucibleHolder.crucibleSlots [i].crucible.StartMelting (this);
 			}
 		}
+		if (serverGaugeCoroutine == null) {
+			serverGaugeCoroutine = StartCoroutine (ServerGaugeUpdate ());
+		}
+	}
+
+	IEnumerator ServerGaugeUpdate() {
+		while (temperature > 0 || isBurning) {
+			yield return new WaitForSeconds (4f);
+			RpcUpdateTemperatureGauge (temperatureGaugeOriginalEuler.z + (temperatureGaugeMaxEuler * (temperature / maxTemperature)));
+		}
+	}
+
+	[ClientRpc]
+	void RpcUpdateTemperatureGauge(float newEuler) {
+		if (clientGaugeCoroutine == null) {
+			clientGaugeCoroutine = StartCoroutine (ClientUpdateTemperatureGauge());
+		}
+		gaugeTargetEuler = new Vector3 (temperatureGaugeOriginalEuler.x, temperatureGaugeOriginalEuler.y, newEuler);
+	}
+
+	IEnumerator ClientUpdateTemperatureGauge() {
+		while (true) {
+			// TODO client gauge update
+			yield return null;
+		}
+	}
+
+	public override void OnClientFireplaceDeactivate() {
+		if (clientGaugeCoroutine != null) {
+			StopCoroutine (clientGaugeCoroutine);
+		}
+	}
+
+	public override void OnTemperatureUpdate() {	
+		base.OnTemperatureUpdate ();
+		test = temperatureGaugeMaxEuler * (temperature / maxTemperature);
+		Vector3 targetEuler = new Vector3 (temperatureGaugeOriginalEuler.x, temperatureGaugeOriginalEuler.y, temperatureGaugeOriginalEuler.z + (temperatureGaugeMaxEuler * (temperature / maxTemperature)));
+		//temperatureGaugePointer.transform.localRotation = Quaternion.Euler (targetEuler);
+		temperatureGaugePointer.transform.localEulerAngles = targetEuler;
 	}
 	// Child entities communicate with their parent entities using signals \\
 	#region CHILD SIGNALS

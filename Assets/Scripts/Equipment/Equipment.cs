@@ -484,30 +484,13 @@ public class Equipment : Item {
 	public virtual void SetHitMask() {
 		myHitMask = weaponController.hitMask;
 	}
-		
-	/// <summary>
-	/// When this function is called on the server is signals the client who wants to equip an equipment that he can spawn it. After that the entity is destroyed and
-	/// unregistered from the gamemanager. Must be called from the client!
-	/// </summary>
-
-	[Command]
-	public void CmdDestroyEquipment(string callerName) {
-		RpcDestroyEquipment (callerName);
-	}
 
 	[ClientRpc]
-	void RpcDestroyEquipment(string callerName) {
+	public void RpcEquipmentHandshake(string callerName) {
 		if (weaponController != null) {
 			if (GameManager.GetLocalPlayer().name == callerName) {
 				weaponController.canSpawnNewEquipment = true;
-				CmdDestroyFinalEquipment ();
 			}
 		}
-	}
-
-	[Command]
-	// Finally destroy this entity from every client
-	void CmdDestroyFinalEquipment() {
-		DestroyEntity ();
 	}
 }

@@ -8,6 +8,7 @@ public class Crucible : Equipment {
 	public float matterTemperature = 0;
 	public float meltTime = 0;
 	private Transform oreMesh;
+	private Vector3 oreMeshOriginalPos;
 	private Transform moltenMatterObject;
 	private Vector3 moltenMatterObjectOriginalScale;
 	private Vector3 moltenMatterObjectTargetScale;
@@ -31,6 +32,7 @@ public class Crucible : Equipment {
 		for (int i = 0; i < transform.childCount; i++) {
 			if (transform.GetChild (i).name == "Ore_Mesh") {
 				oreMesh = transform.GetChild (i);
+				oreMeshOriginalPos = oreMesh.transform.localPosition;
 			}
 			if (transform.GetChild (i).name == "Molten_Matter_Mesh") {
 				moltenMatterObject = transform.GetChild (i);
@@ -71,6 +73,7 @@ public class Crucible : Equipment {
 				// Increment melt time
 				meltTime += Time.deltaTime;
 				moltenMatterObject.transform.localScale = new Vector3 (moltenMatterObjectOriginalScale.x, moltenMatterObjectOriginalScale.y * (meltTime / mineral.meltTime), moltenMatterObjectOriginalScale.z);
+				oreMesh.transform.localPosition = oreMeshOriginalPos - (transform.up * (.15f * (meltTime / mineral.meltTime)));
 
 				// If 
 				if (serverVisualCoroutine == null) {

@@ -5,7 +5,9 @@ using System;
 
 public class GunController : NetworkBehaviour {
 
+	[HideInInspector]
 	public Transform gunHoldR;
+	[HideInInspector]
 	public Transform gunHoldL;
 	public Transform weaponHolsterR;
 	public Transform weaponHolsterL;
@@ -13,7 +15,7 @@ public class GunController : NetworkBehaviour {
 	public Transform armHolder;
 	public Weapon weapon01;
 	public Weapon weapon02;
-	public Weapon unarmed;
+	private Weapon unarmed;
 	public LayerMask hitMask;
 
 	//[HideInInspector]
@@ -60,7 +62,6 @@ public class GunController : NetworkBehaviour {
 	private static float bobTime;
 
 	// Misc
-	//[HideInInspector]
 	public bool isChargingSecondaryAction = false;
 	public bool canChangeEquipment = true;
 	public bool canSpawnNewEquipment = false;
@@ -188,6 +189,7 @@ public class GunController : NetworkBehaviour {
 		}
 	}
 
+	// Starts equipping weapon... Checks if we're the server or not
 	public void EquipEquipment(string equipmentName, int equipmentGroup, bool dropEquipment, float dropForce) {
 		if (isServer) {
 			EquipStart (equipmentName, equipmentGroup, dropEquipment, dropForce);
@@ -197,21 +199,25 @@ public class GunController : NetworkBehaviour {
 	}
 
 	[Command]
+	// Client equip route
 	void CmdEquipStart(string equipmentName, int equipmentGroup, bool dropEquipment, float dropForce) {
 		EquipStart (equipmentName, equipmentGroup, dropEquipment, dropForce);
 	}
 
+	// Start equip cycle... Here we determine should we drop the current equipment and should it 
+	// or the equipment we're picking up be stored in a equipment slot
 	void EquipStart(string equipmentName, int equipmentGroup, bool dropEquipment, float dropForce) {
 		if (!canChangeEquipment) {
 			return;
 		}
-		// State tracking vars
+
+		// Disable attacking and equipment changing while we're changing the equipment
 		canChangeEquipment = false;
 		canAttack = false;
 
 		Equipment equipmentToEquip = null;
-		// Get reference to the equipment we want to equip
 		if (equipmentName != null) {
+			// Get reference to the equipment we want to equip
 			equipmentToEquip = GameManager.instance.GetEntity (equipmentName, equipmentGroup) as Equipment;
 			if (equipmentToEquip == null) {
 				LivingEntity le = GameManager.instance.GetLivingEntity (equipmentName, equipmentGroup);
@@ -219,16 +225,59 @@ public class GunController : NetworkBehaviour {
 					equipmentToEquip = le.GetComponent<Equipment> ();
 				}
 			}
+
+			// Check if we should store or drop current equipment
+			if (currentEquipment != null) {
+				if ((equipmentToEquip as Weapon != null && currentEquipment.entityName != "Unarmed")) {
+					// If both slots are full and we're picking up a weapon exchange current weapon to the new one
+					if (weapon01 != null && weapon02 != null) {
+						if (equipmentName != weapon01.name && equipmentName != weapon02.name) {
+							dropEquipment = true;
+						}
+					} else {
+						// If there isn't a weapon in slot 1
+						if (weapon01 == null) {
+							// If current equipment is a weapon
+							if (currentEquipment as Weapon != null) {
+								if (weapon02 != null && weapon02.name != currentEquipment.name) {
+									weapon01 = currentEquipment as Weapon;
+									dropEquipment = false;
+								} else {
+									weapon01 = currentEquipment as Weapon;
+									dropEquipment = false;
+								}
+							}
+						} 
+						// If there isn't a weapon in slot 2
+						else if (weapon02 == null) {
+							if (weapon01 != null && weapon01.name != currentEquipment.name) {
+								weapon02 = currentEquipment as Weapon;
+								dropEquipment = false;
+							} else {
+								weapon02 = currentEquipment as Weapon;
+								dropEquipment = false;
+							}
+						}
+					}
+				}
+				// If we have a non weapon equipment in our hands drop it
+				else {
+					dropEquipment = true;
+				}
+			}
 		}
 
+		// Drop / disable equipment
 		if (currentEquipment != null) {
 			if (dropEquipment) {
 				DropEquipment (dropForce);
+				Debug.Log ("DRop");
 			} else {
 				RpcDisableEquipment (currentEquipment.name, currentEquipment.entityGroupIndex);
 			}
 		}
 
+		// If equipment reference is not valid get one from equipment slots
 		if (equipmentToEquip == null) {
 			equipmentToEquip = GameManager.instance.GetEntity (GetWeaponFromAnySlot(), equipmentGroup) as Equipment;
 		}
@@ -239,18 +288,18 @@ public class GunController : NetworkBehaviour {
 		}
 	}
 
+	// Sends handshake for the clients current equipment and waits for its response
 	IEnumerator CmdEquipmentSpawnDelay (string equipmentName, int entityGroup) {
-		
-		// Send message to the current equipment to destroy itself
+		// Send handshake for the client
 		if (currentEquipment != null) {
 			canSpawnNewEquipment = false;
-			currentEquipment.CmdDestroyEquipment (transform.name);
+			currentEquipment.RpcEquipmentHandshake (transform.name);
 		} else {
 			canSpawnNewEquipment = true;
 		}
 
-		// Wait until destroyed entity gives a signal that it is destroyed, then spawn the new equipment.... Or 2 second has passed as a failsafe....
-		float t = 2f;
+		// Wait until equipment gives returns the handshake, then spawn the new equipment.... Or 2 second has passed as a failsafe....
+		float t = 0f;
 		while (!canSpawnNewEquipment) {
 			t -= Time.deltaTime;
 
@@ -263,6 +312,7 @@ public class GunController : NetworkBehaviour {
 		SpawnEquipment(equipmentName, entityGroup);
 	}
 
+	// Spawn new equipment for every client
 	void SpawnEquipment (string equipmentName, int entityGroup) {
 		// Get reference to the equipment
 		Equipment equipmentRef = GameManager.instance.GetEntity (equipmentName, entityGroup) as Equipment;
@@ -281,6 +331,7 @@ public class GunController : NetworkBehaviour {
 	}
 
 	[ClientRpc]
+	// Disable components from the spawned equipment for other clients
 	void RpcSpawnEquipment (string equipmentName, int equipmentGroup, string ownerName) {
 		// Do stuff for the equipment on other clients
 		Equipment localEquipment = GameManager.instance.GetEntity(equipmentName, equipmentGroup) as Equipment;
@@ -310,11 +361,11 @@ public class GunController : NetworkBehaviour {
 		}
 
 		if (GameManager.GetLocalPlayer ().name == ownerName) {
-			Debug.Log ("Control");
 			GetControlOfEquipment (equipmentName, equipmentGroup);	
 		}
 	}
 
+	// Give equipment controls to the player who called this function
 	void GetControlOfEquipment(string equipmentName, int equipmentGroup) {
 		// Spawn new equipment
 		currentEquipment = GameManager.instance.GetEntity(equipmentName,equipmentGroup) as Equipment;
@@ -325,7 +376,6 @@ public class GunController : NetworkBehaviour {
 			}
 		}
 		currentEquipment.enabled = true;
-		EnableEquipment ();
 		currentEquipment.SetOwner (transform, transform.name);
 
 		// Move and rotate new equipment
@@ -363,13 +413,13 @@ public class GunController : NetworkBehaviour {
 		CmdEquippingFinished();
 	}
 
+	// Drop current equipment
 	void DropEquipment(float dropForce) {
 		// Raycast drop direction
 		Ray ray = new Ray (player.cam.transform.position, player.cam.transform.forward);
 		RaycastHit hit; 
 		if (Physics.Raycast (ray, out hit, 500, hitMask)) {
 			Vector3 dropDir = ((hit.point + -(transform.right * .6f)) - player.cam.transform.position).normalized;
-			//dropDir.y
 			currentEquipment.DropItem (transform.name, gunHoldR.position, gunHoldR.rotation, dropDir, dropForce);
 		} else {
 			currentEquipment.DropItem (transform.name, gunHoldR.position, gunHoldR.rotation, player.cam.transform.forward, dropForce);
@@ -389,6 +439,7 @@ public class GunController : NetworkBehaviour {
 		currentEquipment = null;
 	}
 
+	// Destroys current equipment and equips new one automaticly if wanted
 	public void DestroyCurrentEquipment(bool autoEquip) {
 		currentEquipment.DestroyEntity ();
 		currentEquipment = null;
@@ -398,22 +449,28 @@ public class GunController : NetworkBehaviour {
 		}
 	}
 
+
 	[ClientRpc]
+	// Disable equipment for every client
 	void RpcDisableEquipment(string equipmentName, int entitygroup) {
-		GameManager.instance.GetEntity(equipmentName, entitygroup).gameObject.SetActive (false);
-	}
-
-	void EnableEquipment() {
-
+		Entity targetEntity = GameManager.instance.GetEntity (equipmentName, entitygroup);
+		if (targetEntity == null) {
+			targetEntity = GameManager.instance.GetLivingEntity (equipmentName, entitygroup);
+		}
+		if (targetEntity != null) {
+			targetEntity.gameObject.SetActive (false);
+		}
 	}
 
 	[Command]
+	// When we finished equipping update server vars so player can perform actions again
 	void CmdEquippingFinished() {
 		canChangeEquipment = true;
 		canAttack = true;
 		isAttacking = false;
 	}
 
+	// Spawn weapon prefabs in the game world so we can get reference to them
 	void ServerSetupEquipment(string ownerName) {
 		if (weapon01 != null) {
 			weapon01 = Instantiate (EquipmentLibrary.instance.GetEquipment (weapon01.entityName)) as Weapon;
@@ -430,6 +487,7 @@ public class GunController : NetworkBehaviour {
 	}
 
 	[ClientRpc]
+	// Disable prespawned equipment and equip default weapon for this client
 	void RpcSetupEquipment(string w1Name, string w2Name, string w3Name, string ownerName) {
 		// Get references
 		Weapon equ1 = GameManager.instance.GetEntity (w1Name, 0) as Weapon;
