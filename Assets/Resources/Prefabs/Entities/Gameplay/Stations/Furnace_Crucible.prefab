@@ -1197,7 +1197,7 @@ MonoBehaviour:
   childEntities: []
   maxTemperature: 400
   temperature: 0
-  temperatureClimbRate: 15
+  temperatureClimbRate: 4
   temperatureClimbEfficiency: 0
   temperatureClimbEfficiencyRate: 3
   temperatureDescendRate: 1.5

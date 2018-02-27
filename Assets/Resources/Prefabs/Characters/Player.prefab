@@ -4422,9 +4422,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemSlotSize: 30
   itemSlotGap: 0.25
-  itemSlot: {fileID: 0}
-  menuBackground: {fileID: 0}
-  spawnMenuScreen: {fileID: 0}
+  itemSlot: {fileID: 224863789805658012, guid: 2c4fa494bac2d78409ab6c96ae059eea, type: 2}
+  menuBackground: {fileID: 224799503991740806}
+  spawnMenuScreen: {fileID: 224243423101813720}
   slotList: []
   equipmentList: []
 --- !u!114 &114990373382291192
@@ -4450,7 +4450,7 @@ MonoBehaviour:
   - {fileID: 20250541269944750}
   - {fileID: 223273059858437314}
   - {fileID: 114645103441171424}
-  - {fileID: 0}
+  - {fileID: 114924036483781552}
   viewMeshesToDisable:
   - {fileID: 137671532413819584}
   - {fileID: 137288435004032866}
