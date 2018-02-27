@@ -39,9 +39,10 @@ GameObject:
   - component: {fileID: 222265133419295212}
   - component: {fileID: 114631357280265736}
   - component: {fileID: 114720004652214934}
+  - component: {fileID: 114654112374229434}
   - component: {fileID: 114882929728319862}
   m_Layer: 5
-  m_Name: SpawnMenuSlot
+  m_Name: SpawnMenuButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -74,6 +75,17 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114654112374229434
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1972002220782410}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b7fc36c80d7fb14c805073c99afde63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114720004652214934
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -112,7 +124,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 114631357280265736}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 114654112374229434}
+        m_MethodName: OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &114882929728319862
