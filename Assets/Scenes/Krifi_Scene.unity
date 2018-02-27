@@ -1470,7 +1470,7 @@ MonoBehaviour:
   matchSize: 4
   isNetworkActive: 0
   matchMaker: {fileID: 0}
-  fastHost: 1
+  fastHost: 0
   startHostButton: {fileID: 1243809042}
   joinGameButton: {fileID: 133294077}
   inputField: {fileID: 1126542242}
@@ -1495,7 +1495,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 273557022}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 227461547, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
   m_Name: 
