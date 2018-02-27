@@ -97,7 +97,7 @@ public class Player : LivingEntity {
 			}
 			break;
 		case "Spawn_Equipment":
-			gunController.ClientSpawnWeapon (msg.objectId, gunController.gameObject.name);
+			//gunController.ClientSpawnWeapon (msg.objectId, gunController.gameObject.name);
 			break;
 		default:
 			break;

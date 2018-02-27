@@ -13,6 +13,7 @@ public class GunController : NetworkBehaviour {
 	public Transform armHolder;
 	public Weapon weapon01;
 	public Weapon weapon02;
+	public Weapon unarmed;
 	public LayerMask hitMask;
 
 	//[HideInInspector]
@@ -92,7 +93,7 @@ public class GunController : NetworkBehaviour {
 		gunHoldL = transform.Find ("Main Camera").transform.Find("Arm Holder").transform.Find("View_Model").transform.Find("Game_engine").transform.Find("spine_03").transform.Find("clavicle_l").transform.Find("upperarm_l").
 			transform.Find("lowerarm_l").transform.Find("hand_l").transform.Find("gunHold.L").transform;
 		// Setup weapon hold models
-		UpdateWeaponHolster();
+		//UpdateWeaponHolster();
 		if (armHolder != null) {
 			originalViewPos = armHolder.transform.localPosition;
 		}
@@ -100,10 +101,20 @@ public class GunController : NetworkBehaviour {
 		if (!isLocalPlayer) {
 			return;
 		}
+	}
 
+	public override void OnStartServer() {
+		base.OnStartServer ();
 		if (weapon01 != null) {
-			EquipEquipment (weapon01, false, 0);
+			if (isServer) {
+				StartCoroutine (SetupDelay ());
+			}
 		}
+	}
+
+	IEnumerator SetupDelay() {
+		yield return new WaitForSeconds (.1f);
+		ServerSetupEquipment (transform.name);
 	}
 
 	// Update is called once per frame
@@ -134,7 +145,7 @@ public class GunController : NetworkBehaviour {
 		// Shooting
 		if (Input.GetKeyDown (KeyCode.G)) {
 			if (currentEquipment != null && !isAttacking) {
-				EquipEquipment (null, true, 1);
+				EquipEquipment ("", 0, true, 1);
 			}
 		}
 
@@ -145,15 +156,15 @@ public class GunController : NetworkBehaviour {
 
 		// Weapon Equipping
 		if (Input.GetKeyDown(KeyCode.Alpha1)) {
-			if (weapon01 != null && !isAttacking && currentEquipment.entityName  != weapon01.entityName) {
-				EquipEquipment (weapon01, false, 0);
+			if (weapon01 != null && currentEquipment != null && !isAttacking && currentEquipment.entityName  != weapon01.entityName) {
+				EquipEquipment (weapon01.name, weapon01.entityGroupIndex ,false, 0);
 			}
 		}
 
 		// Weapon Equipping
 		if (Input.GetKeyDown(KeyCode.Alpha2)) {
-			if (weapon02 != null && !isAttacking && currentEquipment.entityName  != weapon02.entityName) {
-				EquipEquipment (weapon02, false, 0);
+			if (weapon02 != null && currentEquipment != null &&!isAttacking && currentEquipment.entityName  != weapon02.entityName) {
+				EquipEquipment (weapon02.name, weapon02.entityGroupIndex ,false, 0);
 			}
 		}
 
@@ -177,12 +188,280 @@ public class GunController : NetworkBehaviour {
 		}
 	}
 
+	public void EquipEquipment(string equipmentName, int equipmentGroup, bool dropEquipment, float dropForce) {
+		if (isServer) {
+			EquipStart (equipmentName, equipmentGroup, dropEquipment, dropForce);
+		} else {
+			CmdEquipStart (equipmentName, equipmentGroup, dropEquipment, dropForce);
+		}
+	}
+
+	[Command]
+	void CmdEquipStart(string equipmentName, int equipmentGroup, bool dropEquipment, float dropForce) {
+		EquipStart (equipmentName, equipmentGroup, dropEquipment, dropForce);
+	}
+
+	void EquipStart(string equipmentName, int equipmentGroup, bool dropEquipment, float dropForce) {
+		if (!canChangeEquipment) {
+			return;
+		}
+		// State tracking vars
+		canChangeEquipment = false;
+		canAttack = false;
+
+		Equipment equipmentToEquip = null;
+		// Get reference to the equipment we want to equip
+		if (equipmentName != null) {
+			equipmentToEquip = GameManager.instance.GetEntity (equipmentName, equipmentGroup) as Equipment;
+			if (equipmentToEquip == null) {
+				LivingEntity le = GameManager.instance.GetLivingEntity (equipmentName, equipmentGroup);
+				if (le != null) {
+					equipmentToEquip = le.GetComponent<Equipment> ();
+				}
+			}
+		}
+
+		if (currentEquipment != null) {
+			if (dropEquipment) {
+				DropEquipment (dropForce);
+			} else {
+				RpcDisableEquipment (currentEquipment.name, currentEquipment.entityGroupIndex);
+			}
+		}
+
+		if (equipmentToEquip == null) {
+			equipmentToEquip = GameManager.instance.GetEntity (GetWeaponFromAnySlot(), equipmentGroup) as Equipment;
+		}
+
+		// Spawn new equipment
+		if (equipmentToEquip != null) {
+			SpawnEquipment(equipmentToEquip.name, equipmentGroup);
+		}
+	}
+
+	IEnumerator CmdEquipmentSpawnDelay (string equipmentName, int entityGroup) {
+		
+		// Send message to the current equipment to destroy itself
+		if (currentEquipment != null) {
+			canSpawnNewEquipment = false;
+			currentEquipment.CmdDestroyEquipment (transform.name);
+		} else {
+			canSpawnNewEquipment = true;
+		}
+
+		// Wait until destroyed entity gives a signal that it is destroyed, then spawn the new equipment.... Or 2 second has passed as a failsafe....
+		float t = 2f;
+		while (!canSpawnNewEquipment) {
+			t -= Time.deltaTime;
+
+			if (t <= 0) {
+				canSpawnNewEquipment = true;
+			}
+			yield return null;
+		}
+		// Spawn new equipment
+		SpawnEquipment(equipmentName, entityGroup);
+	}
+
+	void SpawnEquipment (string equipmentName, int entityGroup) {
+		// Get reference to the equipment
+		Equipment equipmentRef = GameManager.instance.GetEntity (equipmentName, entityGroup) as Equipment;
+		if (equipmentRef == null) {
+			LivingEntity le = GameManager.instance.GetLivingEntity (equipmentName, entityGroup);
+			if (le != null) {
+				equipmentRef = le.GetComponent<Equipment> ();
+			}
+		}
+
+		if (equipmentRef != null) {
+			currentEquipment = equipmentRef;
+			// Modify properties of the equipment on every client
+			RpcSpawnEquipment (currentEquipment.name, currentEquipment.entityGroupIndex, transform.name);
+		}
+	}
+
+	[ClientRpc]
+	void RpcSpawnEquipment (string equipmentName, int equipmentGroup, string ownerName) {
+		// Do stuff for the equipment on other clients
+		Equipment localEquipment = GameManager.instance.GetEntity(equipmentName, equipmentGroup) as Equipment;
+		if (localEquipment == null) {
+			LivingEntity le = GameManager.instance.GetLivingEntity (equipmentName, equipmentGroup);
+			if (le != null) {
+				localEquipment = le.GetComponent<Equipment> ();
+			}
+		}
+		Player ownerPlayer = GameManager.GetPlayerByName (ownerName);
+		if (localEquipment != null) {
+			Rigidbody cloneRig = localEquipment.GetComponent<Rigidbody> ();
+			Transform gunHold = ownerPlayer.GetComponent<GunController> ().serverGunHold;
+			if (cloneRig != null) {
+				cloneRig.isKinematic = true;
+			}
+			localEquipment.gameObject.layer = LayerMask.NameToLayer ("ViewModel");
+			localEquipment.isAvailable = false;
+			localEquipment.gameObject.SetActive (true);
+			localEquipment.enabled = false;
+
+			if (gunHold != null) {
+				cloneRig.transform.parent = gunHold.transform;
+				cloneRig.transform.position = gunHold.transform.position;
+				cloneRig.transform.rotation = gunHold.transform.rotation;
+			}
+		}
+
+		if (GameManager.GetLocalPlayer ().name == ownerName) {
+			Debug.Log ("Control");
+			GetControlOfEquipment (equipmentName, equipmentGroup);	
+		}
+	}
+
+	void GetControlOfEquipment(string equipmentName, int equipmentGroup) {
+		// Spawn new equipment
+		currentEquipment = GameManager.instance.GetEntity(equipmentName,equipmentGroup) as Equipment;
+		if (currentEquipment == null) {
+			LivingEntity le = GameManager.instance.GetLivingEntity (equipmentName, equipmentGroup);
+			if (le != null) {
+				currentEquipment = le.GetComponent<Equipment> ();
+			}
+		}
+		currentEquipment.enabled = true;
+		EnableEquipment ();
+		currentEquipment.SetOwner (transform, transform.name);
+
+		// Move and rotate new equipment
+		currentEquipment.transform.parent = gunHoldR.transform;
+		currentEquipment.transform.localPosition = Vector3.zero;
+		currentEquipment.transform.localRotation = Quaternion.identity;
+		bobPos = Vector3.zero;
+		canAttack = true;
+		isAttacking = false;
+
+		// Stop sprinting if current equipment doesn't allow it
+		if (!currentEquipment.canRunWith) {
+			playerController.curSpeed = playerController.moveSpeed;
+		}
+
+		// Equipment offset, animations and visuals
+		weaponOffset = currentEquipment.positionOffset;
+		curOffset = weaponOffset;
+		animController.SetGunAnimationIds (currentEquipment.GetAnimationIds());
+		//UpdateWeaponHolster ();
+
+		// Set layers
+		currentEquipment.gameObject.layer = LayerMask.NameToLayer ("ViewModel");
+		if (currentEquipment.transform.childCount > 0) {
+			for (int i = 0; i < currentEquipment.transform.childCount; i++) {
+				currentEquipment.transform.GetChild (i).gameObject.layer = LayerMask.NameToLayer ("ViewModel");
+			}
+		}
+		// Misc
+		currentEquipment.SetHitMask ();
+		playerController.speedMultiplier = currentEquipment.speedMultiplier;
+		playerController.canRun = currentEquipment.canRunWith;
+
+		// Wait awhile after spawning new weapon before allowing actions with it
+		CmdEquippingFinished();
+	}
+
+	void DropEquipment(float dropForce) {
+		// Raycast drop direction
+		Ray ray = new Ray (player.cam.transform.position, player.cam.transform.forward);
+		RaycastHit hit; 
+		if (Physics.Raycast (ray, out hit, 500, hitMask)) {
+			Vector3 dropDir = ((hit.point + -(transform.right * .6f)) - player.cam.transform.position).normalized;
+			//dropDir.y
+			currentEquipment.DropItem (transform.name, gunHoldR.position, gunHoldR.rotation, dropDir, dropForce);
+		} else {
+			currentEquipment.DropItem (transform.name, gunHoldR.position, gunHoldR.rotation, player.cam.transform.forward, dropForce);
+		}
+
+		if (weapon01 != null) {
+			if (currentEquipment.name == weapon01.name) {
+				weapon01 = null;
+			}
+		}
+
+		if (weapon02 != null) {
+			if (currentEquipment.name == weapon02.name) {
+				weapon02 = null;
+			}
+		}
+		currentEquipment = null;
+	}
+
+	public void DestroyCurrentEquipment(bool autoEquip) {
+		currentEquipment.DestroyEntity ();
+		currentEquipment = null;
+
+		if (autoEquip) {
+			EquipEquipment ("", 0, false, 0);
+		}
+	}
+
+	[ClientRpc]
+	void RpcDisableEquipment(string equipmentName, int entitygroup) {
+		GameManager.instance.GetEntity(equipmentName, entitygroup).gameObject.SetActive (false);
+	}
+
+	void EnableEquipment() {
+
+	}
+
+	[Command]
+	void CmdEquippingFinished() {
+		canChangeEquipment = true;
+		canAttack = true;
+		isAttacking = false;
+	}
+
+	void ServerSetupEquipment(string ownerName) {
+		if (weapon01 != null) {
+			weapon01 = Instantiate (EquipmentLibrary.instance.GetEquipment (weapon01.entityName)) as Weapon;
+			NetworkServer.Spawn (weapon01.gameObject);
+		}
+		if (weapon02 != null) {
+			weapon02 = Instantiate (EquipmentLibrary.instance.GetEquipment (weapon02.entityName)) as Weapon;
+			NetworkServer.Spawn (weapon02.gameObject);
+		}
+			
+		unarmed = Instantiate (EquipmentLibrary.instance.GetEquipment ("Unarmed")) as Weapon;
+		NetworkServer.Spawn (unarmed.gameObject);
+		RpcSetupEquipment (weapon01.name, weapon02.name, unarmed.name, ownerName);
+	}
+
+	[ClientRpc]
+	void RpcSetupEquipment(string w1Name, string w2Name, string w3Name, string ownerName) {
+		// Get references
+		Weapon equ1 = GameManager.instance.GetEntity (w1Name, 0) as Weapon;
+		Weapon equ2 = GameManager.instance.GetEntity (w2Name, 0) as Weapon;
+		Weapon equ3 = GameManager.instance.GetEntity (w3Name, 0) as Weapon;
+
+		if (equ1 == null || equ2 == null || equ3 == null) {
+			return;
+		}
+		equ1.gameObject.SetActive (false);
+		equ2.gameObject.SetActive (false);
+		equ3.gameObject.SetActive (false);
+		equ1.enabled = false;
+		equ2.enabled = false;
+		equ3.enabled = false;
+
+		if (GameManager.GetLocalPlayer ().name == ownerName) {
+			weapon01 = equ1 ;
+			weapon02 = equ2;
+			unarmed = equ3;
+			EquipEquipment (weapon01.name, weapon01.entityGroupIndex, false, 0);
+		}
+	}
+
 	/// <summary>
 	/// Equips wanted equipment.
 	/// </summary>
 	/// <param name="equipmentToEquip">Equipment to equip. If NULL is passed as a parameter the gun controller class will check if player has a equipment that he can equip.</param>
 	/// <param name="dropEquipment">If set to <c>true</c> drop the current equipment. Else it will be destroyed.</param>
 	/// <param name="dropForce">Drop force.</param>
+
+	/**
 	public void EquipEquipment(Equipment equipmentToEquip, bool dropEquipment, float dropForce) {
 		if (!canChangeEquipment) {
 			return;
@@ -192,7 +471,7 @@ public class GunController : NetworkBehaviour {
 		canAttack = false;
 
 		// Animation
-		animController.ChangeWeapon();
+		//animController.ChangeWeapon();
 
 		Weapon newEqu = null;
 
@@ -463,6 +742,7 @@ public class GunController : NetworkBehaviour {
 			}
 		}
 	}
+	**/
 
 	public void CheckMouseButtonStates() {
 		if (Input.GetButtonDown ("Fire1")) {
@@ -594,13 +874,13 @@ public class GunController : NetworkBehaviour {
 		swayTargetPosition += swayAmount;
 	}
 
-	public Equipment GetWantedWeapon() {
+	public string GetWeaponFromAnySlot() {
 		if (weapon01 != null) {
-			return weapon01;
+			return weapon01.name;
 		} else if (weapon02 != null) {
-			return weapon02;
+			return weapon02.name;
 		} else {
-			return EquipmentLibrary.instance.GetEquipment ("Unarmed");
+			return unarmed.name;
 		}
 	}
 }

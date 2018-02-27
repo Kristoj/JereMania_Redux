@@ -96,14 +96,14 @@ public class Furnace : Fireplace {
 
 	// Crucible Add
 	#region Curcible Add
-	public void SignalCrucibleAdd(string playerName) {
+	public void SignalCrucibleAdd(string playerName, string crucibleName, int crucibleGroup) {
 		if (crucibleHolder != null) {
-			CmdSignalCrucibleAdd (playerName);
+			CmdSignalCrucibleAdd (playerName, crucibleName, crucibleGroup);
 		}
 	}
 
 	[Command]
-	void CmdSignalCrucibleAdd(string playerName) {
+	void CmdSignalCrucibleAdd(string playerName, string crucibleName, int crucibleGroup) {
 		if (crucibleHolder.GetEmptySlot() != null) {
 
 			// Get empty crucible slot and get its spawn position
@@ -111,28 +111,31 @@ public class Furnace : Fireplace {
 			Vector3 spawnPos = crucibleHolder.GetSlotPos (emptySlot);
 
 			// Spawn new crucible
-			Crucible clone = Instantiate (EquipmentLibrary.instance.GetEquipment ("Crucible"), spawnPos, Quaternion.identity) as Crucible;
-			NetworkServer.Spawn (clone.gameObject);
+			Crucible targetCrucible = GameManager.instance.GetEntity(crucibleName, crucibleGroup) as Crucible;
+			if (targetCrucible == null) {
+				return;
+			}
+
+			// Remove crucible from the player who added the crucible to the furnace
+			if (GameManager.GetPlayerByName (playerName).name == playerName) {
+				GameManager.GetPlayerByName (playerName).GetComponent<GunController> ().EquipEquipment ("", 0, true, 0);
+			}
 
 			// Update vars of the empty slot and it's crucible
-			emptySlot.crucible = clone;
+			emptySlot.crucible = targetCrucible;
 			emptySlot.OnCrucibleAdd (this);
-			clone.RpcSetFurnaceMode ();
+			targetCrucible.RpcSetFurnaceMode (spawnPos, transform.eulerAngles);
 
 			// Subscribe to crucibles death event so CrucibleSlot will update its properties when crucible is removed
-			clone.deathEvent += emptySlot.OnCrucibleRemove;
+			targetCrucible.pickupEvent += emptySlot.OnCrucibleRemove;
 
 			// Signal that new crucible is spawned on the clients
-			RpcSignalCrucibleAdd (playerName, clone.name, clone.entityGroupIndex);
+			RpcSignalCrucibleAdd (playerName, targetCrucible.name, targetCrucible.entityGroupIndex);
 		}
 	}
 
 	[ClientRpc]
 	void RpcSignalCrucibleAdd(string playerName, string crucibleName, int entityGroup) {
-		// Remove crucible from the player who added the crucible to the furnace
-		if (GameManager.GetLocalPlayer ().name == playerName) {
-			GameManager.GetLocalPlayer ().GetComponent<GunController> ().EquipEquipment (null, false, 0);
-		}
 		crucibleHolder.AddCrucible (crucibleName, entityGroup);
 	}
 	#endregion

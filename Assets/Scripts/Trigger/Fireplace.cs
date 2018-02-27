@@ -98,7 +98,7 @@ public class Fireplace : ParentEntity {
 	[ClientRpc]
 	void RpcAddFuel(string playerName) {
 		if (GameManager.GetLocalPlayer ().name == playerName) {
-			GameManager.GetLocalPlayer ().GetComponent<GunController> ().EquipEquipment (null, false, 0);
+			GameManager.GetLocalPlayer ().GetComponent<GunController> ().DestroyCurrentEquipment (true);
 		}
 	}
 

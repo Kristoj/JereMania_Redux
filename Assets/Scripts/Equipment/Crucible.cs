@@ -56,6 +56,9 @@ public class Crucible : Equipment {
 		moltenMatterObject.gameObject.SetActive (true);
 		moltenMatterObject.transform.localScale = new Vector3 (moltenMatterObjectOriginalScale.x, moltenMatterObjectOriginalScale.y * (meltTime / mineral.meltTime), moltenMatterObjectOriginalScale.z);
 
+		if (furnace == null) {
+			yield break;
+		}
 		// Update matter temperature
 		while (furnace.isBurning || matterTemperature > 0) {
 			// Increment matter temperature
@@ -142,15 +145,17 @@ public class Crucible : Equipment {
 	// Add ore mesh to the crucible and for the player who placed it there remove it from his inventory
 	void RpcAddOre(string playerName) {
 		if (GameManager.GetLocalPlayer ().name == playerName) {
-			GameManager.GetLocalPlayer ().GetComponent<GunController> ().EquipEquipment (null, false, 0);
+			GameManager.GetLocalPlayer ().GetComponent<GunController> ().DestroyCurrentEquipment (true);
 		}
 
 		oreMesh.gameObject.SetActive (true);
 	}
 
 	[ClientRpc]
-	public void RpcSetFurnaceMode() {
+	public void RpcSetFurnaceMode(Vector3 spawnPos, Vector3 spawnEulers) {
 		rig = GetComponent<Rigidbody> ();
 		rig.isKinematic = true;
+		transform.position = spawnPos;
+		transform.eulerAngles = spawnEulers;
 	}
 }

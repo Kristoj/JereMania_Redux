@@ -8,7 +8,7 @@ public class ChildLivingEntity : ChildEntity {
 		
 	}
 
-	public virtual void OnServerTakeDamage(string playerName) {
+	public virtual void OnServerTakeDamage(string playerName, string sourceEquipmentName) {
 
 	}
 }
