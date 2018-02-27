@@ -8,6 +8,7 @@ public class Crucible : Equipment {
 	public float matterTemperature = 0;
 	public float meltTime = 0;
 	private Transform oreMesh;
+	private Vector3 oreMeshOriginalPos;
 	private Transform moltenMatterObject;
 	private Vector3 moltenMatterObjectOriginalScale;
 	private Vector3 moltenMatterObjectTargetScale;
@@ -31,6 +32,7 @@ public class Crucible : Equipment {
 		for (int i = 0; i < transform.childCount; i++) {
 			if (transform.GetChild (i).name == "Ore_Mesh") {
 				oreMesh = transform.GetChild (i);
+				oreMeshOriginalPos = oreMesh.transform.localPosition;
 			}
 			if (transform.GetChild (i).name == "Molten_Matter_Mesh") {
 				moltenMatterObject = transform.GetChild (i);
@@ -56,6 +58,9 @@ public class Crucible : Equipment {
 		moltenMatterObject.gameObject.SetActive (true);
 		moltenMatterObject.transform.localScale = new Vector3 (moltenMatterObjectOriginalScale.x, moltenMatterObjectOriginalScale.y * (meltTime / mineral.meltTime), moltenMatterObjectOriginalScale.z);
 
+		if (furnace == null) {
+			yield break;
+		}
 		// Update matter temperature
 		while (furnace.isBurning || matterTemperature > 0) {
 			// Increment matter temperature
@@ -68,6 +73,7 @@ public class Crucible : Equipment {
 				// Increment melt time
 				meltTime += Time.deltaTime;
 				moltenMatterObject.transform.localScale = new Vector3 (moltenMatterObjectOriginalScale.x, moltenMatterObjectOriginalScale.y * (meltTime / mineral.meltTime), moltenMatterObjectOriginalScale.z);
+				oreMesh.transform.localPosition = oreMeshOriginalPos - (transform.up * (.15f * (meltTime / mineral.meltTime)));
 
 				// If 
 				if (serverVisualCoroutine == null) {
@@ -142,15 +148,17 @@ public class Crucible : Equipment {
 	// Add ore mesh to the crucible and for the player who placed it there remove it from his inventory
 	void RpcAddOre(string playerName) {
 		if (GameManager.GetLocalPlayer ().name == playerName) {
-			GameManager.GetLocalPlayer ().GetComponent<GunController> ().EquipEquipment (null, false, 0);
+			GameManager.GetLocalPlayer ().GetComponent<GunController> ().DestroyCurrentEquipment (true);
 		}
 
 		oreMesh.gameObject.SetActive (true);
 	}
 
 	[ClientRpc]
-	public void RpcSetFurnaceMode() {
+	public void RpcSetFurnaceMode(Vector3 spawnPos, Vector3 spawnEulers) {
 		rig = GetComponent<Rigidbody> ();
 		rig.isKinematic = true;
+		transform.position = spawnPos;
+		transform.eulerAngles = spawnEulers;
 	}
 }

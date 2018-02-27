@@ -241,8 +241,7 @@ public class Equipment : Item {
 		yield return new WaitForSeconds (.13f);
 		// Throw equipment with delay
 		if (eventTriggered) {
-			weaponController.WipeCurrentEquipmentSlot ();
-			weaponController.EquipEquipment(null, true, 6);
+			weaponController.EquipEquipment("", entityGroupIndex, true, 6);
 		}
 		// Enable attacking
 		weaponController.isChargingSecondaryAction = false;
@@ -252,7 +251,7 @@ public class Equipment : Item {
 	IEnumerator ConsumeItem() {
 		EquipmentLibrary.instance.ConsumeItem (this.entityName, owner.name);
 		AudioManager.instance.CmdPlaySound2D ("UI_Eat1",transform.position, owner.name, 1);
-		weaponController.EquipEquipment (null, false, 0);
+		weaponController.EquipEquipment (null, entityGroupIndex, false, 0);
 		yield return new WaitForSeconds (1);
 	}
 
@@ -269,17 +268,25 @@ public class Equipment : Item {
 		}
 	}
 
-	// 
-	public override void OnStartPickup(string masterId) {
+	// Client pickup
+	public override void OnClientStartPickup(string masterId) {
 		if (isAvailable) {
-			base.OnStartPickup (masterId);
-			base.CmdOnPickup ();
+			base.OnClientStartPickup (masterId);
+			//base.CmdOnPickup ();
 
 			// Play sound
 			if (pickupSound != null) {
 				AudioManager.instance.CmdPlaySound (pickupSound.name, transform.position, "", 1);
 			}
-			weaponController.EquipEquipment (this, true, 1);
+			//weaponController.EquipEquipment (this, true, 1);
+		}
+	}
+
+	// Server pickup
+	public override void OnServerStartPickup(string masterId) {
+		if (isAvailable) {
+			base.OnServerStartPickup (masterId);
+			GameManager.GetPlayerByName(masterId).GetComponent<GunController>().EquipEquipment (transform.name, entityGroupIndex, true, 1);
 		}
 	}
 
@@ -336,7 +343,7 @@ public class Equipment : Item {
 					player.SetAuthority (parentEntity.netId, GameManager.GetPlayerByName(playerName).GetComponent<NetworkIdentity>());
 				}
 				// Rpc the interaction
-				childLivingEntity.OnServerTakeDamage(playerName);
+				childLivingEntity.OnServerTakeDamage(playerName, transform.name);
 			}
 		}
 	}
@@ -477,30 +484,13 @@ public class Equipment : Item {
 	public virtual void SetHitMask() {
 		myHitMask = weaponController.hitMask;
 	}
-		
-	/// <summary>
-	/// When this function is called on the server is signals the client who wants to equip an equipment that he can spawn it. After that the entity is destroyed and
-	/// unregistered from the gamemanager. Must be called from the client!
-	/// </summary>
-
-	[Command]
-	public void CmdDestroyEquipment(string callerName) {
-		RpcDestroyEquipment (callerName);
-	}
 
 	[ClientRpc]
-	void RpcDestroyEquipment(string callerName) {
+	public void RpcEquipmentHandshake(string callerName) {
 		if (weaponController != null) {
 			if (GameManager.GetLocalPlayer().name == callerName) {
 				weaponController.canSpawnNewEquipment = true;
-				CmdDestroyFinalEquipment ();
 			}
 		}
-	}
-
-	[Command]
-	// Finally destroy this entity from every client
-	void CmdDestroyFinalEquipment() {
-		DestroyEntity ();
 	}
 }

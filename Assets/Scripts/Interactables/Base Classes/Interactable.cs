@@ -8,6 +8,8 @@ public class Interactable : Entity {
 	[SyncVar]
 	public bool isAvailable = true;
 	protected Transform owner;
+	public delegate void PickupDelegate();
+	public PickupDelegate pickupEvent;
 
 	public override void OnStartClient() {
 		base.OnStartClient ();
@@ -34,9 +36,17 @@ public class Interactable : Entity {
 	}
 
 	// Client pickup START
-	public virtual void OnStartPickup(string masterId) {
+	public virtual void OnClientStartPickup(string masterId) {
 		if (isAvailable) {
 			owner = GameManager.GetPlayerByName (masterId).transform;
+		}
+	}
+
+	// Server pickup START
+	public virtual void OnServerStartPickup(string masterId) {
+		if (isAvailable) {
+			owner = GameManager.GetPlayerByName (masterId).transform;
+			OnInteractablePickup ();
 		}
 	}
 
@@ -70,7 +80,9 @@ public class Interactable : Entity {
 		owner = null;
 	}
 
-	public class FocusWhiteList {
-		
+	public void OnInteractablePickup() {
+		if (pickupEvent != null) {
+			pickupEvent ();
+		}
 	}
 }

@@ -16,10 +16,11 @@ public class Item : Interactable {
 	public Sprite itemIcon;
 
 	public override void Start() {
+		base.Start ();
 		rig = GetComponent<Rigidbody>();
 	}
 
-	public override void OnClientStartInteraction(string masterId) {
+	public override void OnServerStartInteraction(string masterId) {
 		if (canStoreInInventory && isAvailable) {
 			PlayerInventory targetInventory = GameManager.GetPlayerByName(masterId).GetComponent<PlayerInventory>();
 			if (!targetInventory.isFull) {
@@ -28,9 +29,9 @@ public class Item : Interactable {
 		}
 	}
 
-	public override void OnStartPickup(string masterId) {
+	public override void OnClientStartPickup(string masterId) {
 		if (isAvailable) {
-			base.OnStartPickup (masterId);
+			base.OnClientStartPickup (masterId);
 		}
 	}
 
@@ -47,7 +48,7 @@ public class Item : Interactable {
 	}
 
 	/// <summary>
-	/// Drops the item for all clients.
+	/// Drops the item for all clients. Must be called from server
 	/// </summary>
 	/// <param name="objName">Entity name of the object to drop.</param>
 	/// <param name="masterId">Players name who called this function.</param>
@@ -55,13 +56,9 @@ public class Item : Interactable {
 	/// <param name="dropRot">Rotation of the item when dropped.</param>
 	/// <param name="dropDir">Direction where force is applied.</param>
 	/// <param name="dropForce">Amount of force added when dropped.</param>
-	[Command]
-	public void CmdDropItem(string entityName, string masterId, Vector3 dropPos, Quaternion dropRot, Vector3 dropDir, float dropForce) {
-		// Spawn item on client and then on the server
-		Item clone = Instantiate (EquipmentLibrary.instance.GetEquipment (entityName).GetComponent<Item> (), dropPos, dropRot) as Item;
-		NetworkServer.Spawn (clone.gameObject);
+	public void DropItem(string masterId, Vector3 dropPos, Quaternion dropRot, Vector3 dropDir, float dropForce) {
 		// Add force to the spawned item
-		clone.RpcDropItem (masterId, dropPos, dropRot, dropDir, dropForce);
+		RpcDropItem (masterId, dropPos, dropRot, dropDir, dropForce);
 	}
 
 	[ClientRpc]
@@ -69,6 +66,18 @@ public class Item : Interactable {
 		rig = GetComponent<Rigidbody> ();
 		if (rig != null) {
 			rig.isKinematic = false;
+			transform.parent = null;
+			isAvailable = true;
+
+			// Set layers
+			gameObject.layer = LayerMask.NameToLayer ("Default");
+			if (transform.childCount > 0) {
+				for (int i = 0; i < transform.childCount; i++) {
+					transform.GetChild (i).gameObject.layer = LayerMask.NameToLayer ("Default");
+				}
+			}
+
+			// Add force
 			float massMultiplier = rig.mass;
 			massMultiplier = Mathf.Clamp (massMultiplier, .3f, 1.4f);
 			rig.AddForce (dropDir / massMultiplier * rig.mass * dropForce + (GameManager.GetPlayerByName(masterId).GetComponent<CharacterController>().velocity * rig.mass), ForceMode.Impulse);

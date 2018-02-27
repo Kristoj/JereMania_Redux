@@ -35,7 +35,7 @@ public class Fireplace : ParentEntity {
 	protected ParticleSystem emberParticle;
 
 	private Coroutine burnCoroutine;
-	private Coroutine coolingCoroutine;
+	private Coroutine tempUpdateCoroutine;
 
 	void start() {
 		fuel = maxFuel;
@@ -73,16 +73,33 @@ public class Fireplace : ParentEntity {
 		Extinguish ();
 	}
 
-	IEnumerator Cooling() {
+	IEnumerator UpdateTemperature() {
 		while (temperature > 0 || isBurning) {
-			temperature -= temperatureDescendRate * temperatureDescendEfficiency * Time.deltaTime;
-			temperatureDescendEfficiency += temperatureDescendEfficiencyRate / Time.deltaTime / 100;
-
-			// Clamp values
-			temperatureDescendEfficiency = Mathf.Clamp (temperatureDescendEfficiency, 0, 1);
-			temperature = Mathf.Clamp (temperature, 0, maxTemperature);
+			OnTemperatureUpdate ();
 			yield return null;
 		}
+		OnServerFireplaceDeactivate ();
+	}
+
+	public virtual void OnServerFireplaceDeactivate() {
+		RpcFireplaceDeactivate ();
+	}
+
+	[ClientRpc]
+	void RpcFireplaceDeactivate() {
+		OnClientFireplaceDeactivate ();
+	}
+
+	public virtual void OnClientFireplaceDeactivate() {
+	}
+
+	public virtual void OnTemperatureUpdate() {
+		temperature -= temperatureDescendRate * temperatureDescendEfficiency * Time.deltaTime;
+		temperatureDescendEfficiency += temperatureDescendEfficiencyRate / Time.deltaTime / 100;
+
+		// Clamp values
+		temperatureDescendEfficiency = Mathf.Clamp (temperatureDescendEfficiency, 0, 1);
+		temperature = Mathf.Clamp (temperature, 0, maxTemperature);
 	}
 
 	public virtual void AddFuel (string playerName, string entityName) {
@@ -98,7 +115,7 @@ public class Fireplace : ParentEntity {
 	[ClientRpc]
 	void RpcAddFuel(string playerName) {
 		if (GameManager.GetLocalPlayer ().name == playerName) {
-			GameManager.GetLocalPlayer ().GetComponent<GunController> ().EquipEquipment (null, false, 0);
+			GameManager.GetLocalPlayer ().GetComponent<GunController> ().DestroyCurrentEquipment (true);
 		}
 	}
 
@@ -114,10 +131,10 @@ public class Fireplace : ParentEntity {
 		}
 		burnCoroutine = StartCoroutine (Burn ());
 		// Start cooling
-		if (coolingCoroutine != null) {
-			StopCoroutine (coolingCoroutine);
+		if (tempUpdateCoroutine != null) {
+			StopCoroutine (tempUpdateCoroutine);
 		}
-		coolingCoroutine = StartCoroutine (Cooling());
+		tempUpdateCoroutine = StartCoroutine (UpdateTemperature());
 		// Update fire effects for all clients
 		RpcIgnite ();
 	}

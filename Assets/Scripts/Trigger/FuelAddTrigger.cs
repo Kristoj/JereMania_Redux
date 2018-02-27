@@ -12,9 +12,9 @@ public class FuelAddTrigger : ChildLivingEntity {
 		}
 	}
 
-	public override void OnServerTakeDamage(string playerName) {
+	public override void OnServerTakeDamage(string playerName, string sourceEquipmentName) {
 		if (fireplace != null && fireplace.fuel < fireplace.maxFuel) {
-			Equipment e = GameManager.GetLocalPlayer ().GetComponent<GunController> ().currentEquipment;
+			Equipment e = GameManager.GetPlayerByName(playerName).GetComponent<GunController> ().currentEquipment;
 			if (e != null) {
 				fireplace.AddFuel (GameManager.GetLocalPlayer().name, e.entityName);
 			}

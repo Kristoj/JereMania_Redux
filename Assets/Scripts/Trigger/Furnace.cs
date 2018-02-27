@@ -6,10 +6,20 @@ using UnityEngine.UI;
 
 public class Furnace : Fireplace {
 
+	// Temperature gauge
+	public float test;
+	public Transform temperatureGaugePointer;
+	public float temperatureGaugeMaxEuler = 240f;
+	private Vector3 temperatureGaugeOriginalEuler;
+	private Vector3 gaugeTargetEuler;
+
+	// 
 	private ChildDoor furnaceDoor;
 	private ChildDoor crucibleDoor;
 	private FurnaceCrucibleHolder crucibleHolder;
 	private Coroutine temperatureUpdateCoroutine;
+	private Coroutine clientGaugeCoroutine;
+	private Coroutine serverGaugeCoroutine;
 
 	public override void Start() {
 		base.Start ();
@@ -28,6 +38,10 @@ public class Furnace : Fireplace {
 				crucibleHolder = ce as FurnaceCrucibleHolder;
 			}
 		}
+
+		if (temperatureGaugePointer != null) {
+			temperatureGaugeOriginalEuler = temperatureGaugePointer.transform.localEulerAngles;
+		}
 	}
 
 
@@ -39,6 +53,45 @@ public class Furnace : Fireplace {
 				crucibleHolder.crucibleSlots [i].crucible.StartMelting (this);
 			}
 		}
+		if (serverGaugeCoroutine == null) {
+			serverGaugeCoroutine = StartCoroutine (ServerGaugeUpdate ());
+		}
+	}
+
+	IEnumerator ServerGaugeUpdate() {
+		while (temperature > 0 || isBurning) {
+			yield return new WaitForSeconds (4f);
+			RpcUpdateTemperatureGauge (temperatureGaugeOriginalEuler.z + (temperatureGaugeMaxEuler * (temperature / maxTemperature)));
+		}
+	}
+
+	[ClientRpc]
+	void RpcUpdateTemperatureGauge(float newEuler) {
+		if (clientGaugeCoroutine == null) {
+			clientGaugeCoroutine = StartCoroutine (ClientUpdateTemperatureGauge());
+		}
+		gaugeTargetEuler = new Vector3 (temperatureGaugeOriginalEuler.x, temperatureGaugeOriginalEuler.y, newEuler);
+	}
+
+	IEnumerator ClientUpdateTemperatureGauge() {
+		while (true) {
+			// TODO client gauge update
+			yield return null;
+		}
+	}
+
+	public override void OnClientFireplaceDeactivate() {
+		if (clientGaugeCoroutine != null) {
+			StopCoroutine (clientGaugeCoroutine);
+		}
+	}
+
+	public override void OnTemperatureUpdate() {	
+		base.OnTemperatureUpdate ();
+		test = temperatureGaugeMaxEuler * (temperature / maxTemperature);
+		Vector3 targetEuler = new Vector3 (temperatureGaugeOriginalEuler.x, temperatureGaugeOriginalEuler.y, temperatureGaugeOriginalEuler.z + (temperatureGaugeMaxEuler * (temperature / maxTemperature)));
+		//temperatureGaugePointer.transform.localRotation = Quaternion.Euler (targetEuler);
+		temperatureGaugePointer.transform.localEulerAngles = targetEuler;
 	}
 	// Child entities communicate with their parent entities using signals \\
 	#region CHILD SIGNALS
@@ -96,14 +149,14 @@ public class Furnace : Fireplace {
 
 	// Crucible Add
 	#region Curcible Add
-	public void SignalCrucibleAdd(string playerName) {
+	public void SignalCrucibleAdd(string playerName, string crucibleName, int crucibleGroup) {
 		if (crucibleHolder != null) {
-			CmdSignalCrucibleAdd (playerName);
+			CmdSignalCrucibleAdd (playerName, crucibleName, crucibleGroup);
 		}
 	}
 
 	[Command]
-	void CmdSignalCrucibleAdd(string playerName) {
+	void CmdSignalCrucibleAdd(string playerName, string crucibleName, int crucibleGroup) {
 		if (crucibleHolder.GetEmptySlot() != null) {
 
 			// Get empty crucible slot and get its spawn position
@@ -111,28 +164,31 @@ public class Furnace : Fireplace {
 			Vector3 spawnPos = crucibleHolder.GetSlotPos (emptySlot);
 
 			// Spawn new crucible
-			Crucible clone = Instantiate (EquipmentLibrary.instance.GetEquipment ("Crucible"), spawnPos, Quaternion.identity) as Crucible;
-			NetworkServer.Spawn (clone.gameObject);
+			Crucible targetCrucible = GameManager.instance.GetEntity(crucibleName, crucibleGroup) as Crucible;
+			if (targetCrucible == null) {
+				return;
+			}
+
+			// Remove crucible from the player who added the crucible to the furnace
+			if (GameManager.GetPlayerByName (playerName).name == playerName) {
+				GameManager.GetPlayerByName (playerName).GetComponent<GunController> ().EquipEquipment ("", 0, true, 0);
+			}
 
 			// Update vars of the empty slot and it's crucible
-			emptySlot.crucible = clone;
+			emptySlot.crucible = targetCrucible;
 			emptySlot.OnCrucibleAdd (this);
-			clone.RpcSetFurnaceMode ();
+			targetCrucible.RpcSetFurnaceMode (spawnPos, transform.eulerAngles);
 
 			// Subscribe to crucibles death event so CrucibleSlot will update its properties when crucible is removed
-			clone.deathEvent += emptySlot.OnCrucibleRemove;
+			targetCrucible.pickupEvent += emptySlot.OnCrucibleRemove;
 
 			// Signal that new crucible is spawned on the clients
-			RpcSignalCrucibleAdd (playerName, clone.name, clone.entityGroupIndex);
+			RpcSignalCrucibleAdd (playerName, targetCrucible.name, targetCrucible.entityGroupIndex);
 		}
 	}
 
 	[ClientRpc]
 	void RpcSignalCrucibleAdd(string playerName, string crucibleName, int entityGroup) {
-		// Remove crucible from the player who added the crucible to the furnace
-		if (GameManager.GetLocalPlayer ().name == playerName) {
-			GameManager.GetLocalPlayer ().GetComponent<GunController> ().EquipEquipment (null, false, 0);
-		}
 		crucibleHolder.AddCrucible (crucibleName, entityGroup);
 	}
 	#endregion

@@ -97,6 +97,13 @@ public class PlayerInteraction : NetworkBehaviour {
 					player = GetComponent<Player> ();
 				}
 				player.SetAuthority (targetIntera.netId, targetPlayer);
+
+				// Server interaction
+				if (buttonId == 0) {
+					targetIntera.OnServerStartInteraction (targetPlayer.name);
+				} else if (buttonId == 1) {
+					targetIntera.OnServerStartPickup (targetPlayer.name);
+				}
 				// Rpc the interaction
 				RpcInteractionConfirm (targetPlayer, buttonId);
 			}
@@ -112,7 +119,7 @@ public class PlayerInteraction : NetworkBehaviour {
 			} else if (buttonId == 1) {
 				if (targetIntera as Equipment != null) {
 					(targetIntera as Equipment).SetOwner (transform, transform.name);
-					targetIntera.OnStartPickup (transform.name);
+					targetIntera.OnClientStartPickup (transform.name);
 				}
 			}
 		}
