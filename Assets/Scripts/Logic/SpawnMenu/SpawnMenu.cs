@@ -15,6 +15,7 @@ public class SpawnMenu : NetworkBehaviour {
 	public List<RectTransform> slotList = new List<RectTransform>();
 	public List<Equipment> equipmentList = new List<Equipment>();
 	private PlayerController playerController;
+	private List<Equipment> spawnedEquipments = new List<Equipment> ();
 
 	protected int currEquipments = 0;
 
@@ -70,21 +71,29 @@ public class SpawnMenu : NetworkBehaviour {
 	}
 	// Update is called once per frame
 	void Update () {
+		
+
+		if (Input.GetKeyDown (KeyCode.F2) && Input.GetKey (KeyCode.LeftShift)) {
+
+			ClearItems ();
+		
+		}
+
 		if (Input.GetKeyDown(KeyCode.F2)){
 
 			OpenMenu ();
 
 		}
-	
+
 	}
 
-			void OpenMenu() {
+		void OpenMenu() {
 		
-		menuOpen = !menuOpen;
+			menuOpen = !menuOpen;
 
-		switch (menuOpen) {
+			switch (menuOpen) {
 
-		case true:
+			case true:
 			
 			spawnMenuScreen.gameObject.SetActive (true);
 			Cursor.lockState = CursorLockMode.None;
@@ -92,7 +101,7 @@ public class SpawnMenu : NetworkBehaviour {
 			playerController.SetPlayerEnabled (false);
 			break;
 
-		case false:
+			case false:
 			
 			spawnMenuScreen.gameObject.SetActive (false);
 			Cursor.lockState = CursorLockMode.Locked;
@@ -102,31 +111,71 @@ public class SpawnMenu : NetworkBehaviour {
 		}
 	}
 
-	public void ButtonClicked (int itemNumber) {
+		public void ButtonClicked (int itemNumber) {
 		
-		if (isServer) {
+				if (isServer) {
 			
-			SpawnItem (itemNumber);
+				SpawnItem (itemNumber);
 		
-		}
-			else {
-			
-			CmdClientSignalSpawn (itemNumber);
+			}
 
+				else {
+			
+				CmdClientSignalSpawn (itemNumber);
+
+			}
+
+		}
+
+		[Command]
+		void CmdClientSignalSpawn (int itemNumber){
+		
+			SpawnItem(itemNumber);
+
+		}
+		
+		void SpawnItem(int itemNumber) {
+		
+			Equipment Clone = Instantiate (equipmentList [itemNumber], transform.position + transform.forward * 2 + transform.up, transform.rotation, null) as Equipment;
+			spawnedEquipments.Add (Clone);
+			NetworkServer.Spawn (Clone.gameObject);
+
+		}
+		
+		void ClearItems (){
+
+		switch (isServer) {
+
+		case true:
+			if (spawnedEquipments.Capacity != 0) {
+			foreach (Equipment item in spawnedEquipments) {
+			if (item.isAvailable) {
+			item.DestroyEntity ();
+			}		
 		}
 	}
-
-	[Command]
-	void CmdClientSignalSpawn (int itemNumber){
+			spawnedEquipments.Clear();
+			break;
 		
-		SpawnItem(itemNumber);
+		case false:
+			CmdClientClearItems ();
+			break;
+		
+		}
+			
 
 	}
-		
-	void SpawnItem(int itemNumber) {
-		
-		Equipment Clone = Instantiate (equipmentList [itemNumber], transform.position + transform.forward * 2 + transform.up, transform.rotation, null) as Equipment;
-		NetworkServer.Spawn (Clone.gameObject);
+	
+		[Command]
+		void CmdClientClearItems(){
+		if (spawnedEquipments.Capacity != 0) {
+			foreach (Equipment item in spawnedEquipments) {
+				if (item.isAvailable) {
+					item.DestroyEntity ();
+				}		
+			}
 
 		}
+		spawnedEquipments.Clear();
+	}
 }
