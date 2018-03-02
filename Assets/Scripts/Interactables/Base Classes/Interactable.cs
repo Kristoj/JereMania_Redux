@@ -4,12 +4,7 @@ using System.Collections;
 
 public class Interactable : Entity {
 
-	[HideInInspector]
-	[SyncVar]
-	public bool isAvailable = true;
-	protected Transform owner;
-	public delegate void PickupDelegate();
-	public PickupDelegate pickupEvent;
+	public Transform owner;
 
 	public override void OnStartClient() {
 		base.OnStartClient ();

@@ -20,4 +20,13 @@ public class ParentEntity : Entity {
 		}
 		return null;
 	}
+
+	public ChildEntity GetChildEntityByName (string childEntityName) {
+		foreach (ChildEntity c in childEntities) {
+			if (c.name == childEntityName) {
+				return c;
+			}
+		}
+		return null;
+	}
 }

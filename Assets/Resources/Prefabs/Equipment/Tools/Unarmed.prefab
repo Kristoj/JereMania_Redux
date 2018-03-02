@@ -69,8 +69,8 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4778451902362138}
+  - component: {fileID: 114328778183388868}
   - component: {fileID: 114110970198265042}
-  - component: {fileID: 114011318486723272}
   - component: {fileID: 65946032394713682}
   - component: {fileID: 54927434529952002}
   m_Layer: 9
@@ -261,52 +261,6 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &114011318486723272
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1898672491041380}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e5b1f863c5c85fd4cbb37f5b6d7d34ab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  entityName: Unarmed
-  entitySoundMaterial: 0
-  hurtSound: {fileID: 0}
-  entityGroupIndex: 0
-  isAvailable: 1
-  price: 10
-  canStoreInInventory: 0
-  itemId: 0
-  itemIcon: {fileID: 0}
-  fireMode: 0
-  rpm: 200
-  meleeRange: 3
-  hitDelay: 0.35
-  audioDelay: 0.15
-  impactForce: 5
-  holdStyle: 2
-  primaryAction: 0
-  secondaryAction: 1
-  weaponImpactSoundMaterial: 1
-  positionOffset: {x: 0, y: 0, z: -0.1}
-  speedMultiplier: 1
-  canRunWith: 1
-  pickupSound: {fileID: 0}
-  attackSound: {fileID: 0}
-  impactFX: {fileID: 0}
-  myHitMask:
-    serializedVersion: 2
-    m_Bits: 0
-  player: {fileID: 0}
-  slashDamage: 0
-  bluntDamage: 3
-  piercingDamage: 0
-  woodcuttingBonus: 0
-  miningBonus: 0
-  harvestingBonus: 0
 --- !u!114 &114110970198265042
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -339,3 +293,53 @@ MonoBehaviour:
     i15: 46
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 1
+--- !u!114 &114328778183388868
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1898672491041380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6590579a1edce854cad2b85afa3822e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  entityName: Unarmed
+  entitySoundMaterial: 0
+  entityGroupIndex: 0
+  isAvailable: 1
+  owner: {fileID: 0}
+  price: 10
+  canStoreInInventory: 1
+  itemId: 0
+  itemIcon: {fileID: 0}
+  fireMode: 1
+  rpm: 500
+  meleeRange: 5
+  hitDelay: 0
+  audioDelay: 0
+  impactForce: 0
+  holdStyle: 0
+  primaryAction: 0
+  secondaryAction: 4
+  weaponImpactSoundMaterial: 0
+  positionOffset: {x: 0, y: 0, z: 0}
+  speedMultiplier: 1
+  canRunWith: 1
+  pickupSound: {fileID: 0}
+  attackSound: {fileID: 8300000, guid: 8594a808b506aa149864ce7d6fe6e580, type: 3}
+  impactFX: {fileID: 0}
+  myHitMask:
+    serializedVersion: 2
+    m_Bits: 0
+  player: {fileID: 0}
+  slashDamage: 1
+  bluntDamage: 1
+  piercingDamage: 1
+  woodcuttingBonus: 0
+  miningBonus: 0
+  harvestingBonus: 0
+  liftSpeed: 150
+  maxLiftDistance: 3
+  distanceChangeSensitivity: 3
+  rotateSensitivity: 3

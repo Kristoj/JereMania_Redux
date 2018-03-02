@@ -118,33 +118,83 @@ public class GameManager : NetworkBehaviour {
 	public void RemoveLivingEntity(LivingEntity livingEntityToRemove, int entityGroupIndex) {
 		livingEntityGroups [entityGroupIndex].RemoveLivingEntityFromGroup (livingEntityToRemove, entityGroupIndex);
 	}
-
-
-
-	/**
-	public Entity GetEntity (string entityName) {
-		if (entities.ContainsKey (entityName)) {
-			return entities [entityName];
-		} else {
-			return null;
-		}
-	}
-	**/
-
-
-
+		
+	/// <summary>
+	/// Returns the target entity
+	/// </summary>
+	/// <returns>The entity.</returns>
+	/// <param name="entityName">Entity gameObject name we're looking for.</param>
+	/// <param name="entityGroupIndex">Entitys group index were looking for. This reference can be fetched from entity class</param>
 	public Entity GetEntity(string entityName, int entityGroupIndex) {
 		Entity e = null;
-		if (entityGroupIndex <= entityGroups.Count - 1) {
+		// Try to get a entity
+		if (entityGroupIndex <= entityGroups.Count) {
 			e = entityGroups [entityGroupIndex].GetEntityFromGroup (entityName);
+		} 
+		// Try to get a living entity
+		if (e == null) {
+			e = livingEntityGroups [entityGroupIndex].GetLivingEntityFromGroup (entityName) as Entity;
 		}
+		// Try to get a entity using alternate method
 		if (e == null) {
 			if (entities.ContainsKey (entityName)) {
-				e = entities [entityName];
+				e = entities [entityName] as Entity;
 				if (e != null) {
 					//Debug.LogWarning ("Used alternative fetch method on a entity");
 				} else {
-					Debug.LogError ("Could not find target entity");
+					Debug.LogError ("Vili pls...Could not find target entity");
+				}
+			}
+
+		}
+		// Try to get a living entity using alternate method
+		if (e == null) {
+			if (livingEntities.ContainsKey (entityName)) {
+				e = livingEntities [entityName] as Entity;
+				if (e != null) {
+					Debug.LogWarning ("Used alternative fetch method on a entity");
+				} else {
+					Debug.LogError ("Vili pls...Could not find target entity");
+				}
+			}
+		}
+		return e;
+	}
+
+	public Equipment GetEquipment(string entityName, int entityGroupIndex) {
+		Equipment e = null;
+		Entity reference = null;
+		// Try to get a entity
+		if (entityGroupIndex <= entityGroups.Count) {
+			e = entityGroups [entityGroupIndex].GetEntityFromGroup (entityName) as Equipment;
+		} 
+		// Try to get a living entity
+		if (e == null) {
+			reference = livingEntityGroups [entityGroupIndex].GetLivingEntityFromGroup (entityName);
+			if (reference != null) {
+				e = reference.GetComponent<Equipment> ();
+			}
+		}
+		// Try to get a entity using alternate method
+		if (e == null) {
+			if (entities.ContainsKey (entityName)) {
+				e = entities [entityName] as Equipment;
+				if (e != null) {
+					//Debug.LogWarning ("Used alternative fetch method on a entity");
+				} else {
+					Debug.LogError ("Vili pls...Could not find target entity");
+				}
+			}
+		}
+		// Try to get a living entity using alternate method
+		if (e == null) {
+			if (livingEntities.ContainsKey (entityName)) {
+				reference = livingEntities [entityName];
+				if (e != null) {
+					e = reference.GetComponent<Equipment> ();
+					//Debug.LogWarning ("Used alternative fetch method on a entity");
+				} else {
+					Debug.LogError ("Vili pls...Could not find target entity");
 				}
 			}
 		}
@@ -181,6 +231,8 @@ public class GameManager : NetworkBehaviour {
 		money = Mathf.Clamp (money, 0, 999999);
 	}
 
+	// Player related functions
+	#region Player related functions
 	public int GetPlayerCount() {
 		return players.Count;
 	}
@@ -192,6 +244,12 @@ public class GameManager : NetworkBehaviour {
 	public void SetLocalPlayer(Player p) {
 		localPlayer = p;
 	}
+
+	public static int GetLocalPlayerAveragePing() {
+		return Network.GetAveragePing (Network.player);
+	}
+	#endregion
+
 
 	[System.Serializable]
 	public class EntityGroup {

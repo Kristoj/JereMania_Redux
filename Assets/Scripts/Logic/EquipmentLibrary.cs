@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class EquipmentLibrary : MonoBehaviour {
 
+	public bool scanObjectsOnAwake = false;
 	public FarmPlant[] farmPlant;
 	public List<Equipment> equipmentList = new List<Equipment>();
 	public static EquipmentLibrary instance;
 
 	void Awake() {
-		//GetComponent<AutomaticObjectAssignerScript> ().AssignObjects ();
-	}
-
-	void Start() {
+		if (scanObjectsOnAwake) {
+			GetComponent<AutomaticObjectAssignerScript> ().AssignObjects ();
+		}
 		instance = this;
 	}
 
@@ -58,7 +58,7 @@ public class EquipmentLibrary : MonoBehaviour {
 			consumerStats.StaminaAdd (80);
 			consumerStats.HungerAdd (28);
 		}
-		// Food Ratio
+		// Food_Ratio
 		else if (itemName == "Food_Ratio") {
 			consumerStats.FatiqueAdd (3);
 			consumerStats.StaminaAdd (100);

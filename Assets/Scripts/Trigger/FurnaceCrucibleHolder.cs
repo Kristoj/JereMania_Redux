@@ -11,14 +11,14 @@ public class FurnaceCrucibleHolder : ChildLivingEntity {
 		Player sourcePlayer = GameManager.GetPlayerByName (playerName);
 		if (sourcePlayer != null) {
 			GunController gunController = sourcePlayer.GetComponent<GunController> ();
-			if (gunController.currentEquipment.entityName == "Crucible") {
+			if (gunController.currentEquipment != null && gunController.currentEquipment.entityName == "Crucible") {
 				(parentEntity as Furnace).SignalCrucibleAdd (playerName, sourceEquipmentName, gunController.currentEquipment.entityGroupIndex);
 			}
 		}
 	}
 
 	// If server accepeted our signal then parent the new crucible to this object
-	public void AddCrucible(string crucibleName, int entityGroup) {
+	public void OnClientAddCrucible(string crucibleName, int entityGroup) {
 		Crucible c = GameManager.instance.GetEntity (crucibleName, entityGroup)as Crucible;
 		if (c != null) {
 			c.transform.SetParent (transform);
