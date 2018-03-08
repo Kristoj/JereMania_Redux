@@ -225,7 +225,7 @@ public class Unarmed : Weapon {
 			targetEuler.x = Mathf.LerpAngle (targetRig.rotation.eulerAngles.x, masterEuler.x, 3 * Time.deltaTime);
 			targetEuler.y = Mathf.LerpAngle (targetRig.rotation.eulerAngles.y, masterEuler.y, 3 * Time.deltaTime);
 			targetEuler.z = Mathf.LerpAngle (targetRig.rotation.eulerAngles.z, masterEuler.z, 3 * Time.deltaTime);
-			targetRig.transform.eulerAngles = targetEuler;
+			//targetRig.transform.eulerAngles = targetEuler;
 			yield return null;
 		}
 
