@@ -26,6 +26,7 @@ public class SpawnMenu : NetworkBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		
 		playerController = GetComponent<PlayerController> ();
 		SetupMenu ();
 
