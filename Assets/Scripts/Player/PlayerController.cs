@@ -60,6 +60,8 @@ public class PlayerController : NetworkBehaviour {
 	private bool jumpIssued = false;
 	public bool isSliding = false;
 	public bool canSlide = false;
+	[HideInInspector]
+	public bool cameraEnabled = true;
 	public float xEuler;
 	public float zEuler;
 	[HideInInspector]
@@ -110,7 +112,7 @@ public class PlayerController : NetworkBehaviour {
 
 	void Update() {
 		CursorStateCheck ();
-		if (isEnabled) {
+		if (isEnabled && cameraEnabled) {
 			CameraRotation ();
 		}
 		/* Movement, here's the important part */

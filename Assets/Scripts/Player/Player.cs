@@ -61,47 +61,7 @@ public class Player : LivingEntity {
 	/// </summary>
 	/// <param name="netMsg">Message that is send to the client.</param>
 	public void OnMessageReceive(NetworkMessage netMsg) {
-
-		var msg = netMsg.ReadMessage<MyMessage>();
-		PlayerInteraction pi = GetComponent<PlayerInteraction> ();
-		GunController gunController = GetComponent<GunController>();
-		// INTERA
-		/**
-		if (msg.message == "Interact") {
-
-			if (pi.targetIntera != null) {
-				pi.targetIntera.OnStartInteraction (transform.name);
-			}
-		} else if (msg.message == "Pickup") {
-			Equipment qe = pi.targetIntera.GetComponent<Equipment> ();
-			if (qe != null) {
-				qe.SetOwner (transform, transform.name);
-				pi.targetIntera.OnStartPickup (transform.name);
-			}
-		} else {
-			GunController gunController = ClientScene.FindLocalObject(msg.playerId).GetComponent<GunController>();
-			gunController.ClientSpawnWeapon (msg.objectId, gunController.gameObject.name);
-		}
-		**/
-		switch (msg.message) {
-		case "Interact":
-			if (pi.targetIntera != null) {
-				//pi.targetIntera.OnClientStartInteraction (transform.name);
-			}
-			break;
-		case "Pickup":
-			Equipment equ = pi.targetIntera.GetComponent<Equipment> ();
-			if (equ != null) {
-				//equ.SetOwner (transform, transform.name);
-				//pi.targetIntera.OnStartPickup (transform.name);
-			}
-			break;
-		case "Spawn_Equipment":
-			//gunController.ClientSpawnWeapon (msg.objectId, gunController.gameObject.name);
-			break;
-		default:
-			break;
-		}
+		
 	}
 		
 	public void KillPlayer() {

@@ -6,8 +6,12 @@ using UnityEngine.Networking;
 public class Entity : NetworkBehaviour {
 
 	public string entityName = "Entity";
+	[SyncVar]
+	public bool isAvailable = true;
 	public delegate void DeathDelegate ();
 	public DeathDelegate deathEvent;
+	public delegate void PickupDelegate();
+	public PickupDelegate pickupEvent;
 	public EntitySoundMaterial entitySoundMaterial;
 	public enum EntitySoundMaterial {Wood, Metal, Rock}
 
@@ -84,7 +88,57 @@ public class Entity : NetworkBehaviour {
 		GameManager.GetLocalPlayer().SetAuthority (this.netId, GameManager.GetLocalPlayer().GetComponent<NetworkIdentity>());
 	}
 
-	public void SetEntityParent(Transform t) {
-		transform.parent = t;
+	/// <summary>
+	/// Sets the entity parent. HUOM! Target parent should always be a entity! If not this method will be higly taxing on the CPU!
+	/// </summary>
+	/// <param name="newParentName">New parent name.</param>
+	/// <param name="parentGroup">Parents entityGroupIndex. Can be referenced from parents entity class</param>
+	public void SetEntityParent(string newParentName, int parentGroup) {
+		RpcSetEntityParent (newParentName, parentGroup);
+	}
+
+	[ClientRpc]
+	void RpcSetEntityParent(string newParentName, int parentGroup) {
+		// Get reference to the parent
+		Entity newParent = GameManager.instance.GetEntity (newParentName, parentGroup);
+		// If we failed to find parent entity, try finding gameobject in the game world that has its name.. This is highly unoptimized and only should be used as a failsafe
+		if (newParentName == "" && newParent == null) {
+			GameObject  go = GameObject.Find(newParentName);
+			if (go != null) {
+				newParent = go.GetComponent<Entity>();
+			}
+		}
+
+		// Parent this object to the parent if it's valid
+		if (newParent != null) {
+			transform.SetParent (newParent.transform);
+		}
+	}
+
+	public void SetEntityParentToChildEntity(string parentEntityName, int parentEntityGroup, string childEntityName) {
+		RpcSetEntityParentToChildEntity (parentEntityName, parentEntityGroup, childEntityName);
+	}
+
+	[ClientRpc]
+	void RpcSetEntityParentToChildEntity(string parentEntityName, int parentEntityGroup, string childEntityName) {
+		// Get reference to the parent
+		ParentEntity parentEntity = GameManager.instance.GetEntity (parentEntityName, parentEntityGroup) as ParentEntity;
+
+		// Get reference to the child entity
+		if (parentEntity != null) {
+			ChildEntity childEntity = parentEntity.GetChildEntityByName (childEntityName);
+			// If we failed to find parent entity, try finding gameobject in the game world that has its name.. This is highly unoptimized and only should be used as a failsafe
+			if (parentEntityName == "" && childEntity == null) {
+				GameObject  go = GameObject.Find(parentEntityName);
+				if (go != null) {
+					childEntity = go.GetComponent<ChildEntity>();
+				}
+			}
+
+			// Parent this object to the parent if it's valid
+			if (childEntity != null) {
+				transform.SetParent (childEntity.transform);
+			}
+		}
 	}
 }

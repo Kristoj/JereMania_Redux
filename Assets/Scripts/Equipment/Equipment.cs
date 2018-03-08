@@ -47,6 +47,7 @@ public class Equipment : Item {
 	protected PlayerAnimationController playerAnimationController;
 	protected GunController weaponController;
 	protected PlayerStats playerStats;
+	protected PlayerController playerController;
 
 
 	public override void Start() {
@@ -101,7 +102,9 @@ public class Equipment : Item {
 		}
 		// Custom
 		else if (secondaryAction == ActionType.Custom) {
-
+			weaponController.isChargingSecondaryAction = false;
+			weaponController.isAttacking = false;
+			weaponController.canAttack = true;
 		}
 	}
 
@@ -143,7 +146,7 @@ public class Equipment : Item {
 					// Add force
 					Vector3 meleeForce = equipmentVelocity * impactForce;
 					CmdAddImpactForce (meleeForce, hit.point, livingEntity.name, livingEntity.entityGroupIndex);
-					CmdOnEntityHit (owner.name, livingEntity.name, entityGroupIndex);
+					OnClientEntityHit (owner.name, livingEntity.name, entityGroupIndex);
 				}
 
 				// Get Entity
@@ -151,7 +154,7 @@ public class Equipment : Item {
 				if (entity != null && livingEntity == null) {
 					Vector3 meleeForce = equipmentVelocity * impactForce;
 					CmdAddImpactForce (meleeForce, hit.point, entity.name, entity.entityGroupIndex);
-					CmdOnEntityHit (owner.name, entity.name, entityGroupIndex);
+					OnClientEntityHit (owner.name, entity.name, entityGroupIndex);
 				}
 
 				// Get Local Entity
@@ -238,7 +241,25 @@ public class Equipment : Item {
 		if (!eventTriggered) {
 			weaponController.animController.ActionEnd ();
 		}
-		yield return new WaitForSeconds (.13f);
+
+		// If we are the client wait x amount of time according to the last ping before continuing
+		float waitTime = .12f;
+		if (!isServer) {
+			int ping = GameManager.GetLocalPlayerAveragePing() / 1000;
+
+			if (ping < waitTime) {
+				float clientWaitTime = waitTime - ping;
+
+				while (clientWaitTime > 0) {
+					clientWaitTime -= Time.deltaTime;
+					yield return null;
+				}
+			}
+		} 
+		// If we're the server wait for specific amount of time before continuing
+		else {
+			yield return new WaitForSeconds (waitTime);
+		}
 		// Throw equipment with delay
 		if (eventTriggered) {
 			weaponController.EquipEquipment("", entityGroupIndex, true, 6);
@@ -251,7 +272,7 @@ public class Equipment : Item {
 	IEnumerator ConsumeItem() {
 		EquipmentLibrary.instance.ConsumeItem (this.entityName, owner.name);
 		AudioManager.instance.CmdPlaySound2D ("UI_Eat1",transform.position, owner.name, 1);
-		weaponController.EquipEquipment (null, entityGroupIndex, false, 0);
+		weaponController.EquipEquipment ("", 0, false, 0);
 		yield return new WaitForSeconds (1);
 	}
 
@@ -272,13 +293,11 @@ public class Equipment : Item {
 	public override void OnClientStartPickup(string masterId) {
 		if (isAvailable) {
 			base.OnClientStartPickup (masterId);
-			//base.CmdOnPickup ();
 
 			// Play sound
 			if (pickupSound != null) {
 				AudioManager.instance.CmdPlaySound (pickupSound.name, transform.position, "", 1);
 			}
-			//weaponController.EquipEquipment (this, true, 1);
 		}
 	}
 
@@ -314,9 +333,14 @@ public class Equipment : Item {
 		
 	}
 
-	// Called when player hits a entity
+	// Signals on entity hit from a client to the server
 	[Command]
-	void CmdOnEntityHit (string playerName, string entityName, int entityGroup) {
+	void CmdSignalOnEntityHit (string playerName, string entityName, int entityGroup) {
+		OnServerEntityHit (playerName, entityName, entityGroup);
+	}
+
+	// Called on the server when player hits a entity
+	public virtual void OnServerEntityHit(string playerName, string entityName, int entityGroup) {
 		Entity targetEntity = GameManager.instance.GetEntity (entityName, entityGroup);
 		if (targetEntity == null) {
 			targetEntity = GameManager.instance.GetLivingEntity (entityName, entityGroup)as Entity;
@@ -324,6 +348,11 @@ public class Equipment : Item {
 		if (targetEntity != null) {
 			targetEntity.OnEntityHit (playerName, this.entityName);
 		}
+	}
+
+	// Called on the client when player hits a entity
+	public virtual void OnClientEntityHit(string playerName, string entityName, int entityGroup) {
+		CmdSignalOnEntityHit (playerName, entityName, entityGroup);
 	}
 
 	[Command]
@@ -351,7 +380,6 @@ public class Equipment : Item {
 	[Command]
 	// Adds impact force when player hits a entity
 	void CmdAddImpactForce(Vector3 meleeForce, Vector3 forcePoint, string targetName, int targetGroup) {
-
 		LivingEntity targetLivingEntity = GameManager.instance.GetLivingEntity (targetName, targetGroup);
 		if (targetLivingEntity != null) {
 			targetLivingEntity.AddImpactForce (meleeForce, forcePoint);
@@ -474,6 +502,7 @@ public class Equipment : Item {
 		player = owner.GetComponent<Player> ();
 		playerAnimationController = owner.GetComponent<PlayerAnimationController> ();
 		playerStats = owner.GetComponent<PlayerStats> ();
+		playerController = owner.GetComponent<PlayerController> ();
 		myHitMask = weaponController.hitMask;
 
 		// Set authority
@@ -491,6 +520,95 @@ public class Equipment : Item {
 			if (GameManager.GetLocalPlayer().name == callerName) {
 				weaponController.canSpawnNewEquipment = true;
 			}
+		}
+	}
+	[ClientRpc]
+	public void RpcMoveCurrentEquipment(Vector3 movePos, Vector3 moveRot, string newParentName, int parentGroup) {
+		// Orientate this object
+		transform.position = movePos;
+		transform.eulerAngles = moveRot;
+
+		// Get parent reference
+		Entity newParent = GameManager.instance.GetEntity (newParentName, parentGroup);
+		if (newParentName == "" && newParent == null) {
+			GameObject  go = GameObject.Find(newParentName);
+			if (go != null) {
+				newParent = go.GetComponent<Entity>();
+			}
+		}
+
+		// Parent this object to the parent if it's valid
+		if (newParent != null) {
+			transform.SetParent (newParent.transform);
+		}
+	}
+
+	[ClientRpc]
+	public void RpcDiscardEquipment(string newParentName, int parentGroup) {
+		// Get parent reference
+		Entity newParent = GameManager.instance.GetEntity (newParentName, parentGroup);
+		if (newParentName == "" && newParent == null) {
+			GameObject  go = GameObject.Find(newParentName);
+			if (go != null) {
+				newParent = go.GetComponent<Entity>();
+			}
+		}
+
+		// Parent this object to the parent if it's valid
+		if (newParent != null) {
+			transform.SetParent (newParent.transform);
+		}
+	}
+
+	// Sets this equipment control mode to player controlled or control free on the server
+	public void SetEquipmentPlayerControlled(bool isPlayerController, string ownerName) {
+		// Player controlled
+		if (isPlayerController) {
+			isAvailable = false;
+		}
+		// Control free
+		else {
+			isAvailable = true;
+			if (weaponController != null) {
+				weaponController.currentEquipment = null;
+				owner = null;
+			}
+		}
+		RpcSetEquipmentPlayerControlled (isPlayerController, ownerName);
+	}
+
+	[ClientRpc]
+	// Sets this equipment control mode to player controlled or control free on the client
+	void RpcSetEquipmentPlayerControlled(bool isPlayerController, string ownerName) {
+		// Player controlled
+		if (isPlayerController) {
+			// Layers
+			gameObject.layer = LayerMask.NameToLayer ("ViewModel");
+			if (transform.childCount > 0) {
+				for (int i = 0; i < transform.childCount; i++) {
+					transform.GetChild (i).gameObject.layer = LayerMask.NameToLayer ("ViewModel");
+				}
+			}
+
+			// Enable this class for the owner player and disable it for other clients
+			if (GameManager.GetLocalPlayer ().name == ownerName) {
+				this.enabled = true;
+			} else {
+				this.enabled = false;
+			}
+
+			// Set active
+			gameObject.SetActive (true);
+		}
+		// Control free
+		else {
+			gameObject.layer = LayerMask.NameToLayer ("Default");
+			if (transform.childCount > 0) {
+				for (int i = 0; i < transform.childCount; i++) {
+					transform.GetChild (i).gameObject.layer = LayerMask.NameToLayer ("Default");
+				}
+			}
+			owner = null;
 		}
 	}
 }

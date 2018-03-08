@@ -143,8 +143,14 @@ public class PlayerInteraction : NetworkBehaviour {
 					player = GetComponent<Player> ();
 					player.SetAuthority (targetIntera.netId, targetPlayer);
 				}
-				// Rpc the interaction
-				childIntera.OnServerStartInteraction (targetPlayer.transform.name);
+				// Server side interaction
+				if (buttonId == 0) {
+					childIntera.OnServerStartInteraction (targetPlayer.transform.name);
+				} 
+				// Server side pickup
+				else if (buttonId == 1) {
+					childIntera.OnServerStartPickup (targetPlayer.transform.name);
+				}
 			}
 		}
 	}

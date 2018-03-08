@@ -102,21 +102,12 @@ public class Fireplace : ParentEntity {
 		temperature = Mathf.Clamp (temperature, 0, maxTemperature);
 	}
 
-	public virtual void AddFuel (string playerName, string entityName) {
-		if (entityName == "Wood") {
-			fuel += 20;
-			RpcAddFuel (playerName);
-		}
+	public virtual void AddFuel (float addAmount) {
+		fuel += addAmount;
+		fuel = Mathf.Clamp (fuel, 0, maxFuel);
 
 		// Audio
 		AudioManager.instance.RpcPlayCustomSound ("Place_Item", transform.position, "", 1, true);
-	}
-
-	[ClientRpc]
-	void RpcAddFuel(string playerName) {
-		if (GameManager.GetLocalPlayer ().name == playerName) {
-			GameManager.GetLocalPlayer ().GetComponent<GunController> ().DestroyCurrentEquipment (true);
-		}
 	}
 
 	#region Ignite

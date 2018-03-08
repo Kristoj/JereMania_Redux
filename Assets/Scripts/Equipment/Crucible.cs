@@ -41,6 +41,33 @@ public class Crucible : Equipment {
 		}
 	}
 
+	// Called when player attacks this crucible with mineral in his hand
+	public override void OnEntityHit(string playerName, string sourceEquipmentName) {
+		Mineral sourceMineral = EquipmentLibrary.instance.GetEquipment (sourceEquipmentName) as Mineral;
+		if (sourceMineral != null && mineral == null) {
+			RpcAddOre (playerName);
+
+			// Set mineral to the crucible
+			mineral = sourceMineral;
+			meltTime = 0;
+
+			if (tempUpdateCoroutine != null) {
+				StopCoroutine (tempUpdateCoroutine);
+			}
+			StartCoroutine (UpdateMineralTemperature ());
+		}
+	}
+
+	[ClientRpc]
+	// Add ore mesh to the crucible and for the player who placed it there remove it from his inventory
+	void RpcAddOre(string playerName) {
+		if (GameManager.GetLocalPlayer ().name == playerName) {
+			GameManager.GetLocalPlayer ().GetComponent<GunController> ().DestroyCurrentEquipment (true);
+		}
+
+		oreMesh.gameObject.SetActive (true);
+	}
+
 	// Called when crucible is in a crucible slot in a furnace.. Starts melting the ore...
 	public void StartMelting(Furnace fur) {
 		furnace = fur;
@@ -89,8 +116,9 @@ public class Crucible : Equipment {
 		}
 	}
 
+	// Server updates molten matter scale for every client
 	IEnumerator UpdateMoltenVisuals() {
-		float updateRate = 5f;
+		float updateRate = 4f;
 
 		while (matterTemperature >= mineral.meltingPoint) {
 			RpcUpdateMoltenVisuals (moltenMatterObject.localScale);
@@ -100,6 +128,7 @@ public class Crucible : Equipment {
 	}
 
 	[ClientRpc]
+	// Update the target scale for clients... If we aren't updating our visuals, start updating them
 	void RpcUpdateMoltenVisuals(Vector3 targetScale) {
 		if (!isServer) {
 			moltenMatterObjectTargetScale = targetScale;
@@ -109,53 +138,33 @@ public class Crucible : Equipment {
 		}
 	}
 
+	// Update molten matter visuals for every client... If our molten matter gameobjects size is the same as the servers, exit this coroutine
 	IEnumerator ClientUpdateMoltenVisuals() {
+		// First time setup
 		moltenMatterObject.gameObject.SetActive (true);
+		moltenMatterObject.transform.localScale = new Vector3 (moltenMatterObjectOriginalScale.x, moltenMatterObjectOriginalScale.y, 0);
+		// Update visuals while haven't reached the target scale
 		while (moltenMatterObject.transform.localScale != moltenMatterObjectTargetScale) {
 			moltenMatterObject.transform.localScale = Vector3.Lerp (moltenMatterObject.transform.localScale, moltenMatterObjectTargetScale, .3f * Time.deltaTime);
 			yield return null;
 		}
 		Debug.Log ("Client End");
 	}
-	// Called when server finishes melting the ore
+	// Called on the server when server finished melting the ore
 	void FinishMelting() {
 		RpcFinishMelting ();
 	}
 
 	[ClientRpc]
+	// Called on the client when server finished melting the ore
 	void RpcFinishMelting() {
 		oreMesh.gameObject.SetActive (false);
 	}
 
-	// Called when player attacks this crucible with mineral in his hand
-	public override void OnEntityHit(string playerName, string sourceEquipmentName) {
-		Mineral sourceMineral = EquipmentLibrary.instance.GetEquipment (sourceEquipmentName) as Mineral;
-		if (sourceMineral != null && mineral == null) {
-			RpcAddOre (playerName);
-
-			// Set mineral to the crucible
-			mineral = sourceMineral;
-			meltTime = 0;
-
-			if (tempUpdateCoroutine != null) {
-				StopCoroutine (tempUpdateCoroutine);
-			}
-			StartCoroutine (UpdateMineralTemperature ());
-		}
-	}
-
 	[ClientRpc]
-	// Add ore mesh to the crucible and for the player who placed it there remove it from his inventory
-	void RpcAddOre(string playerName) {
-		if (GameManager.GetLocalPlayer ().name == playerName) {
-			GameManager.GetLocalPlayer ().GetComponent<GunController> ().DestroyCurrentEquipment (true);
-		}
-
-		oreMesh.gameObject.SetActive (true);
-	}
-
-	[ClientRpc]
+	// Called when crucible is added to a furnace...
 	public void RpcSetFurnaceMode(Vector3 spawnPos, Vector3 spawnEulers) {
+		// Set our state to static and orientate this crucible accordingly
 		rig = GetComponent<Rigidbody> ();
 		rig.isKinematic = true;
 		transform.position = spawnPos;

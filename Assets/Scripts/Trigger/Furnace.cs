@@ -7,11 +7,10 @@ using UnityEngine.UI;
 public class Furnace : Fireplace {
 
 	// Temperature gauge
-	public float test;
 	public Transform temperatureGaugePointer;
 	public float temperatureGaugeMaxEuler = 240f;
 	private Vector3 temperatureGaugeOriginalEuler;
-	private Vector3 gaugeTargetEuler;
+	private float gaugeTargetEuler;
 
 	// 
 	private ChildDoor furnaceDoor;
@@ -60,7 +59,7 @@ public class Furnace : Fireplace {
 
 	IEnumerator ServerGaugeUpdate() {
 		while (temperature > 0 || isBurning) {
-			yield return new WaitForSeconds (4f);
+			yield return new WaitForSeconds (2.5f);
 			RpcUpdateTemperatureGauge (temperatureGaugeOriginalEuler.z + (temperatureGaugeMaxEuler * (temperature / maxTemperature)));
 		}
 	}
@@ -70,12 +69,14 @@ public class Furnace : Fireplace {
 		if (clientGaugeCoroutine == null) {
 			clientGaugeCoroutine = StartCoroutine (ClientUpdateTemperatureGauge());
 		}
-		gaugeTargetEuler = new Vector3 (temperatureGaugeOriginalEuler.x, temperatureGaugeOriginalEuler.y, newEuler);
+		gaugeTargetEuler = newEuler;
 	}
 
 	IEnumerator ClientUpdateTemperatureGauge() {
 		while (true) {
-			// TODO client gauge update
+			// Lerp towards target euler
+			temperatureGaugePointer.transform.localEulerAngles = new Vector3 (temperatureGaugeOriginalEuler.x, temperatureGaugeOriginalEuler.y, 
+				Mathf.LerpAngle (temperatureGaugePointer.transform.localEulerAngles.z, gaugeTargetEuler, .5f));
 			yield return null;
 		}
 	}
@@ -88,11 +89,9 @@ public class Furnace : Fireplace {
 
 	public override void OnTemperatureUpdate() {	
 		base.OnTemperatureUpdate ();
-		test = temperatureGaugeMaxEuler * (temperature / maxTemperature);
-		Vector3 targetEuler = new Vector3 (temperatureGaugeOriginalEuler.x, temperatureGaugeOriginalEuler.y, temperatureGaugeOriginalEuler.z + (temperatureGaugeMaxEuler * (temperature / maxTemperature)));
-		//temperatureGaugePointer.transform.localRotation = Quaternion.Euler (targetEuler);
-		temperatureGaugePointer.transform.localEulerAngles = targetEuler;
+		gaugeTargetEuler =  temperatureGaugeOriginalEuler.z + (temperatureGaugeMaxEuler * (temperature / maxTemperature));
 	}
+
 	// Child entities communicate with their parent entities using signals \\
 	#region CHILD SIGNALS
 
@@ -169,11 +168,6 @@ public class Furnace : Fireplace {
 				return;
 			}
 
-			// Remove crucible from the player who added the crucible to the furnace
-			if (GameManager.GetPlayerByName (playerName).name == playerName) {
-				GameManager.GetPlayerByName (playerName).GetComponent<GunController> ().EquipEquipment ("", 0, true, 0);
-			}
-
 			// Update vars of the empty slot and it's crucible
 			emptySlot.crucible = targetCrucible;
 			emptySlot.OnCrucibleAdd (this);
@@ -189,7 +183,10 @@ public class Furnace : Fireplace {
 
 	[ClientRpc]
 	void RpcSignalCrucibleAdd(string playerName, string crucibleName, int entityGroup) {
-		crucibleHolder.AddCrucible (crucibleName, entityGroup);
+		if (GameManager.GetLocalPlayer ().name == playerName) {
+			GameManager.GetLocalPlayer ().GetComponent<GunController> ().ParentCurrentEquipmentToChildEntity (transform.name, entityGroup, crucibleHolder.transform.name, true);
+		}
+		crucibleHolder.OnClientAddCrucible (crucibleName, entityGroup);
 	}
 	#endregion
 	#endregion

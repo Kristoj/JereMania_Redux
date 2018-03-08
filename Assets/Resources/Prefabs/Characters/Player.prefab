@@ -4334,6 +4334,7 @@ MonoBehaviour:
   entitySoundMaterial: 0
   entityGroupIndex: 0
   isAvailable: 1
+  owner: {fileID: 0}
   slotCountX: 4
   slotCountY: 3
   slotSize: 30

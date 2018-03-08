@@ -79,8 +79,14 @@ public class Item : Interactable {
 
 			// Add force
 			float massMultiplier = rig.mass;
-			massMultiplier = Mathf.Clamp (massMultiplier, .3f, 1.4f);
+			massMultiplier = Mathf.Clamp (massMultiplier, .3f, 1.4f) * .8f;
 			rig.AddForce (dropDir / massMultiplier * rig.mass * dropForce + (GameManager.GetPlayerByName(masterId).GetComponent<CharacterController>().velocity * rig.mass), ForceMode.Impulse);
+
+
+			if (owner != null) {
+				rig.maxAngularVelocity = 100;
+				rig.AddTorque (owner.transform.right * 1500, ForceMode.Impulse);
+			}
 		}
 	}
 
