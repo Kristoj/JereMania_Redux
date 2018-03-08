@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 
 public class SpawnMenu : NetworkBehaviour {
 	
@@ -38,7 +39,7 @@ public class SpawnMenu : NetworkBehaviour {
 	void SetupMenu(){
 		//Scan Lists
 		equipmentList = EquipmentLibrary.instance.equipmentList;
-		equipmentAmount = EquipmentLibrary.instance.equipmentList.Capacity;
+		equipmentAmount = EquipmentLibrary.instance.equipmentList.Count-1;
 		//Get start pos for slots
 		Vector3 startPosition;
 		startPosition.x = -((menuBackground.sizeDelta.x * 0.5f) - itemSlotSize);
@@ -64,8 +65,7 @@ public class SpawnMenu : NetworkBehaviour {
 				itemSlotClone.transform.localPosition = itemSlotPosition;
 				slotList.Add (itemSlotClone);
 				itemSlotClone.gameObject.name = ("" + currEquipments);
-
-
+				itemSlotClone.GetChild (0).GetComponent<Image> ().sprite = equipmentList [currEquipments].itemIcon;
 			}
 
 		} 
