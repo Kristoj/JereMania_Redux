@@ -26,7 +26,7 @@ public class Unarmed : Weapon {
 	public Entity targetEntity;
 
 	// Coroutines
-	private Coroutine clientRotationUpdateCoroutine;
+	private Coroutine clientOrientationUpdateCoroutine;
 	private Coroutine liftCoroutine;
 
 	public override void OnClientEntityHit(string playerName, string entityName, int entityGroup) {
@@ -201,8 +201,8 @@ public class Unarmed : Weapon {
 			targetRig.angularVelocity = Vector3.zero;
 		}
 
-		if (clientRotationUpdateCoroutine == null) {
-			clientRotationUpdateCoroutine = StartCoroutine(ClientEntityOrientationUpdate (pos, euler));
+		if (clientOrientationUpdateCoroutine == null) {
+			clientOrientationUpdateCoroutine = StartCoroutine(ClientEntityOrientationUpdate (pos, euler));
 		}
 	}
 

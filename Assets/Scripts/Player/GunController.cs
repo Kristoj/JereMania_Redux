@@ -101,18 +101,19 @@ public class GunController : NetworkBehaviour {
 			originalViewPos = armHolder.transform.localPosition;
 		}
 
-		if (!isLocalPlayer) {
-			return;
-		}
-	}
-
-	public override void OnStartServer() {
-		base.OnStartServer ();
+		// Setup weapons at start
 		if (weapon01 != null) {
 			if (isServer) {
 				StartCoroutine (SetupDelay ());
+			} else {
+				CmdWeaponSetupDelay ();
 			}
 		}
+	}
+
+	[Command] 
+	void CmdWeaponSetupDelay() {
+		StartCoroutine (SetupDelay ());
 	}
 
 	IEnumerator SetupDelay() {
