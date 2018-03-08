@@ -255,6 +255,10 @@ public class GunController : NetworkBehaviour {
 				else {
 					dropEquipment = true;
 				}
+
+				if (currentEquipment.entityName == "Unarmed") {
+					dropEquipment = false;
+				}
 			}
 		}
 
@@ -262,12 +266,8 @@ public class GunController : NetworkBehaviour {
 
 		// Drop / disable equipment
 		if (currentEquipment != null) {
-			if (currentEquipment.entityName == "Unarmed") {
-				dropEquipment = false;
-			}
 			if (dropEquipment) {
 				DropEquipment (dropForce);
-				Debug.Log ("DRop");
 			} else {
 				RpcDisableEquipment (currentEquipment.name, currentEquipment.entityGroupIndex);
 			}
