@@ -368,7 +368,7 @@ public class Equipment : Item {
 			if (childLivingEntity != null) {
 				// Set authority for the object that we hit
 				if (player == null) {
-					player = GetComponent<Player> ();
+					player = owner.GetComponent<Player> ();
 					player.SetAuthority (parentEntity.netId, GameManager.GetPlayerByName(playerName).GetComponent<NetworkIdentity>());
 				}
 				// Rpc the interaction
@@ -496,18 +496,26 @@ public class Equipment : Item {
 	}
 
 	// Set the owner of this equipment
-	public void SetOwner (Transform newOwner, string ownerName) {
-		owner = newOwner;
-		weaponController = owner.GetComponent<GunController> ();
-		player = owner.GetComponent<Player> ();
-		playerAnimationController = owner.GetComponent<PlayerAnimationController> ();
-		playerStats = owner.GetComponent<PlayerStats> ();
-		playerController = owner.GetComponent<PlayerController> ();
-		myHitMask = weaponController.hitMask;
+	public void SetOwner (string ownerName) {
+		Player newOwner = GameManager.GetPlayerByName (ownerName);
+		if (newOwner != null) {
+			Debug.Log ("Not Null");
 
-		// Set authority
-		NetworkIdentity playerId = player.GetComponent<NetworkIdentity> ();
-		player.SetAuthority (netId, playerId);
+			owner = newOwner.transform;
+			weaponController = owner.GetComponent<GunController> ();
+			player = owner.GetComponent<Player> ();
+			playerAnimationController = owner.GetComponent<PlayerAnimationController> ();
+			playerStats = owner.GetComponent<PlayerStats> ();
+			playerController = owner.GetComponent<PlayerController> ();
+			myHitMask = weaponController.hitMask;
+
+			// Set authority
+			NetworkIdentity playerId = player.GetComponent<NetworkIdentity> ();
+			player.SetAuthority (netId, playerId);
+		} else {
+			Debug.Log ("NULL");
+
+		}
 	}
 
 	public virtual void SetHitMask() {
@@ -565,6 +573,10 @@ public class Equipment : Item {
 		// Player controlled
 		if (isPlayerController) {
 			isAvailable = false;
+
+			// Set new owner
+			Debug.Log ("Call Fucntion");
+			SetOwner(ownerName);
 		}
 		// Control free
 		else {

@@ -25,6 +25,7 @@ public class GunController : NetworkBehaviour {
 	public PlayerAnimationController animController;
 	private PlayerController playerController;
 	private CharacterController controller;
+	private PlayerInteraction playerInteraction;
 
 	[Header ("Sway")]
 	public Vector3 weaponOffset;
@@ -88,7 +89,9 @@ public class GunController : NetworkBehaviour {
 		animController = GetComponent<PlayerAnimationController> ();
 		playerController = GetComponent<PlayerController> ();
 		controller = GetComponent<CharacterController> ();
+		playerInteraction = GetComponent<PlayerInteraction> ();
 		kickPosVector = Vector3.zero;
+		CmdStart ();
 
 		// Get GunHolds
 		gunHoldR = transform.Find ("Main Camera").transform.Find("Arm Holder").transform.Find("View_Model").transform.Find("Game_engine").transform.Find("spine_03").transform.Find("clavicle_r").transform.Find("upperarm_r").
@@ -111,6 +114,17 @@ public class GunController : NetworkBehaviour {
 		}
 	}
 
+	[Command]
+	void CmdStart() {
+		player = GetComponent<Player> ();
+		playerController = GetComponent<PlayerController> ();
+		// Get GunHolds
+		gunHoldR = transform.Find ("Main Camera").transform.Find("Arm Holder").transform.Find("View_Model").transform.Find("Game_engine").transform.Find("spine_03").transform.Find("clavicle_r").transform.Find("upperarm_r").
+			transform.Find("lowerarm_r").transform.Find("hand_r").transform.Find("gunHold.R").transform;
+		gunHoldL = transform.Find ("Main Camera").transform.Find("Arm Holder").transform.Find("View_Model").transform.Find("Game_engine").transform.Find("spine_03").transform.Find("clavicle_l").transform.Find("upperarm_l").
+			transform.Find("lowerarm_l").transform.Find("hand_l").transform.Find("gunHold.L").transform;
+	}
+
 	[Command] 
 	void CmdWeaponSetupDelay() {
 		StartCoroutine (SetupDelay ());
@@ -127,13 +141,13 @@ public class GunController : NetworkBehaviour {
 		CheckMouseButtonStates ();
 
 		// Shooting
-		if (Input.GetButton ("Fire1") && currentEquipment != null && currentEquipment.gameObject.activeSelf) {
+		if (Input.GetButton ("Fire1") && currentEquipment != null && !isAttacking && currentEquipment.gameObject.activeSelf) {
 			ShootPrimary ();
 			mouseLeftReleased = false;
 		}
 
 		// Shooting
-		if (Input.GetButtonDown ("Fire2") && currentEquipment != null && currentEquipment.gameObject.activeSelf) {
+		if (Input.GetButtonDown ("Fire2") && currentEquipment != null && !isAttacking && currentEquipment.gameObject.activeSelf) {
 			if (currentEquipment != null) {
 				//Aim ();
 				currentEquipment.OnSecondaryAction();
@@ -141,10 +155,8 @@ public class GunController : NetworkBehaviour {
 		}
 
 		// Shooting
-		if (Input.GetKeyDown (KeyCode.G) || Input.GetButtonDown ("thumb0")) {
-			if (currentEquipment != null && !isAttacking) {
-				EquipEquipment ("", 0, true, 1);
-			}
+		if (Input.GetKeyDown (KeyCode.G) || Input.GetButtonDown ("thumb0") && isAttacking && !playerInteraction.isPickingUpEquipment) {
+			CmdReadClientInput (0);
 		}
 
 		if (animController.viewModelEnabled) {
@@ -154,18 +166,14 @@ public class GunController : NetworkBehaviour {
 
 		// Weapon Equipping
 		if (Input.GetKeyDown(KeyCode.Alpha1)) {
-			if (weapon01 != null && currentEquipment != null && !isAttacking && currentEquipment.entityName  != weapon01.entityName) {
-				EquipEquipment (weapon01.name, weapon01.entityGroupIndex ,false, 0);
-			}
+			CmdReadClientInput (1);
 		}
 
 		// Weapon Equipping
 		if (Input.GetKeyDown(KeyCode.Alpha2)) {
-			if (weapon02 != null && currentEquipment != null &&!isAttacking && currentEquipment.entityName  != weapon02.entityName) {
-				EquipEquipment (weapon02.name, weapon02.entityGroupIndex ,false, 0);
-			}
+			CmdReadClientInput (2);
 		}
-
+		
 		// Recoil Lerp
 		/**
 		curRecoilVector.x = Mathf.Lerp (curRecoilVector.x, targetRecoilVector.x, currentWeapon.recoilSpeedX * Time.deltaTime);
@@ -179,6 +187,32 @@ public class GunController : NetworkBehaviour {
 		**/
 	}
 
+	// Read clients input... This function is called whenever player presses
+	// a button that has a action binded to it and needs to communicat with the server
+	/// <summary>
+	/// Reads clients input.
+	/// </summary>
+	/// <param name="buttonId">0 = Drop | 1 = Switch to weapon01 | 2 = Switch to weapon02 </param>
+	[Command]
+	void CmdReadClientInput(int buttonId) {
+		switch (buttonId) {
+		case 0:
+			if (weapon01 != null && currentEquipment != null && currentEquipment.entityName  != weapon01.entityName) {
+				EquipEquipment ("", 0 ,true, 1);
+			}
+			break;
+		case 1:
+			if (weapon01 != null && currentEquipment != null && currentEquipment.entityName  != weapon01.entityName) {
+				EquipEquipment (weapon01.name, weapon01.entityGroupIndex ,false, 0);
+			}
+			break;
+		case 2:
+			if (weapon02 != null && currentEquipment != null &&!isAttacking && currentEquipment.entityName  != weapon02.entityName) {
+				EquipEquipment (weapon02.name, weapon02.entityGroupIndex ,false, 0);
+			}
+			break;
+		}
+	}
 
 	void ShootPrimary() {
 		if (currentEquipment != null && playerController.isActive && playerController.isEnabled && !isAttacking && canAttack) {
@@ -469,7 +503,7 @@ public class GunController : NetworkBehaviour {
 		if (currentEquipment != null) {
 			// Enable equipment class
 			// Set equipment owner to this player so he can control it
-			currentEquipment.SetOwner (transform, transform.name);
+			currentEquipment.SetOwner (transform.name);
 
 			// Move and rotate new equipment
 			currentEquipment.transform.parent = gunHoldR.transform;
@@ -1095,7 +1129,6 @@ public class GunController : NetworkBehaviour {
 			//bobPos.x += curHorizontalRange * Time.deltaTime;
 
 		}
-
 	}
 
 	public void AddSway (Vector3 swayAmount) {

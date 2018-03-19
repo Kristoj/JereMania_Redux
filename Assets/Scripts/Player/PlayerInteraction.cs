@@ -23,7 +23,7 @@ public class PlayerInteraction : NetworkBehaviour {
 	private Player player;
 	private GunController weaponController;
 	private PlayerAnimationController animationController;
-	private bool isPickingUpEquipment = false;
+	public bool isPickingUpEquipment = false;
 
 	// Use this for initialization
 	void Start () {
@@ -118,7 +118,7 @@ public class PlayerInteraction : NetworkBehaviour {
 				targetIntera.OnClientStartInteraction (transform.name);
 			} else if (buttonId == 1) {
 				if (targetIntera as Equipment != null) {
-					(targetIntera as Equipment).SetOwner (transform, transform.name);
+					(targetIntera as Equipment).SetOwner (transform.name);
 					targetIntera.OnClientStartPickup (transform.name);
 				}
 			}
