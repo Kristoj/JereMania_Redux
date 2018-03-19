@@ -219,7 +219,7 @@ public class GunController : NetworkBehaviour {
 			#region SETUP
 			String w1Name = "";
 			String w2Name = "";
-			if(weapon01 == null && weapon02==null && currentEquipment.entityName != "Unarmed"){
+			if(weapon01 == null && weapon02==null && currentEquipment.entityName != "Unarmed" && currentEquipment as Weapon != null){
 				weapon01 = currentEquipment as Weapon;
 			}
 			if (weapon01 != null) {
@@ -266,10 +266,17 @@ public class GunController : NetworkBehaviour {
 						}
 					}
 					//UNARMED
-					else {
-						weapon01 = equipmentToEquip as Weapon;
-						weapon01.entityName = equipmentToEquip.entityName;
-						currentEquipment = equipmentToEquip;
+					else if(currentEquipment.entityName == "Unarmed"){
+						//WEAPON
+						if(equipmentToEquip as Weapon != null){
+							weapon01 = equipmentToEquip as Weapon;
+							currentEquipment = equipmentToEquip;
+						}
+						//EQUIPMENT
+						else if(equipmentToEquip as Equipment != null && equipmentToEquip as Weapon == null){
+							currentEquipment = equipmentToEquip;
+						}
+
 					}
 				}
 				#endregion
@@ -503,14 +510,16 @@ public class GunController : NetworkBehaviour {
 		} else {
 			currentEquipment.DropItem (transform.name, gunHoldR.position, gunHoldR.rotation, player.cam.transform.forward, dropForce);
 		}
-			
+		if(weapon01 != null){
 		if (currentEquipment.entityName == weapon01.entityName) {
 				weapon01 = null;
 			}
-			
+		}
+		if(weapon02 != null){
 		if (currentEquipment.entityName == weapon02.entityName) {
 				weapon02 = null;
 			}
+		}
 		currentEquipment.SetEquipmentPlayerControlled (false, "");
 		currentEquipment = null;
 	}
