@@ -201,9 +201,10 @@ public class Unarmed : Weapon {
 			targetRig.angularVelocity = Vector3.zero;
 		}
 
-		if (clientOrientationUpdateCoroutine == null && !isServer) {
-			clientOrientationUpdateCoroutine = StartCoroutine(ClientEntityOrientationUpdate (pos, euler));
+		if (clientOrientationUpdateCoroutine != null && !isServer) {
+			StopCoroutine (clientOrientationUpdateCoroutine);
 		}
+		StartCoroutine(ClientEntityOrientationUpdate (pos, euler));
 	}
 
 	// Update target entity rotation for every client

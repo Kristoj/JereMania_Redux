@@ -3,26 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class Seed : MeleeWeapon {
+public class Seed : Resource {
 
 	public string seedName = "Potato";
-	public LayerMask seedPlantLayer;
+	public LayerMask seedPlantMask;
 
 	public override void SetHitMask() {
-		myHitMask = seedPlantLayer;
+		myHitMask = seedPlantMask;
 	}
 
-	public override void TakeDamage (string victimId, int targetGroup, string playerId) {
-		FarmPatch farmPatch = GameManager.instance.GetEntity (victimId, targetGroup).GetComponent<FarmPatch> ();
+	public override void TakeDamage (string victimId, int victimGroup, string playerId) {
+		FarmPatch farmPatch = GameManager.instance.GetEntity (victimId, victimGroup).GetComponent<FarmPatch> ();
 		if (!farmPatch.hasPlant) {
-			CmdPlantSeed (victimId, playerId);
-			weaponController.EquipEquipment(null, entityGroupIndex , false, 0);
+			CmdPlantSeed (victimId, victimGroup);
+			weaponController.EquipEquipment("", entityGroupIndex , false, 0);
 		}
 	}
 
 	[Command]
-	void CmdPlantSeed(string victimId, string playerId) {
-		FarmPatch farmPatch = GameManager.GetCharacterByName (victimId).GetComponent<FarmPatch> ();
+	void CmdPlantSeed(string victimId , int victimGroup) {
+		FarmPatch farmPatch = GameManager.instance.GetLivingEntity (victimId, victimGroup).GetComponent<FarmPatch> ();
 		if (!farmPatch.hasPlant) {
 			farmPatch.PlantSeed(seedName);
 		}

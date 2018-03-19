@@ -50,8 +50,11 @@ public class Fireplace : ParentEntity {
 		}
 	}
 
+	
+	/// <summary>
+	/// Burn loop coroutine. This loop is active until fuel runs out or fire is extinguished.
+	/// </summary>
 	IEnumerator Burn() {
-
 		// Set temperature vars
 		temperatureClimbEfficiency = 0;
 		temperatureDescendEfficiency = 0;
@@ -73,6 +76,7 @@ public class Fireplace : ParentEntity {
 		Extinguish ();
 	}
 
+	// Calls OnTemperatureUpdate constantly, while temperature is above or fireplace is burning... When we exit the loop OnServerFirePlaceDeactivate is called.
 	IEnumerator UpdateTemperature() {
 		while (temperature > 0 || isBurning) {
 			OnTemperatureUpdate ();
@@ -81,18 +85,24 @@ public class Fireplace : ParentEntity {
 		OnServerFireplaceDeactivate ();
 	}
 
+	// Server fireplace deactivate.. Is called when fireplace deactivates
 	public virtual void OnServerFireplaceDeactivate() {
 		RpcFireplaceDeactivate ();
 	}
+
 
 	[ClientRpc]
 	void RpcFireplaceDeactivate() {
 		OnClientFireplaceDeactivate ();
 	}
 
+	// Client fireplace deactivate
 	public virtual void OnClientFireplaceDeactivate() {
 	}
 
+	/// <summary>
+	/// Updates tempererature constantly until the fireplace is deactivated.
+	/// </summary>
 	public virtual void OnTemperatureUpdate() {
 		temperature -= temperatureDescendRate * temperatureDescendEfficiency * Time.deltaTime;
 		temperatureDescendEfficiency += temperatureDescendEfficiencyRate / Time.deltaTime / 100;
@@ -102,6 +112,10 @@ public class Fireplace : ParentEntity {
 		temperature = Mathf.Clamp (temperature, 0, maxTemperature);
 	}
 
+	/// <summary>
+	/// Adds the fuel to the fireplace. Called when a player adds fuel to the fireplace.
+	/// </summary>
+	/// <param name="addAmount">Fuel add amount.</param>
 	public virtual void AddFuel (float addAmount) {
 		fuel += addAmount;
 		fuel = Mathf.Clamp (fuel, 0, maxFuel);
@@ -143,6 +157,9 @@ public class Fireplace : ParentEntity {
 	}
 	#endregion
 
+	/// <summary>
+	/// Extinguish the fireplace. Called when player extinguish the fireplace or fuel runs out.
+	/// </summary>
 	public virtual void Extinguish() {
 		isBurning = false;
 		if (burnCoroutine != null) {

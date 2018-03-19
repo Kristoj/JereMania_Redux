@@ -47,46 +47,56 @@ public class Furnace : Fireplace {
 	public override void OnServerIgnite() {
 		base.OnServerIgnite ();
 
+		// When we ignite the furnace start heating up every crucible in the slots
 		for (int i = 0; i < crucibleHolder.crucibleSlots.Length; i++) {
 			if (crucibleHolder.crucibleSlots [i].crucible != null) {
 				crucibleHolder.crucibleSlots [i].crucible.StartMelting (this);
 			}
 		}
-		if (serverGaugeCoroutine == null) {
-			serverGaugeCoroutine = StartCoroutine (ServerGaugeUpdate ());
+
+		// Start servers gauge euler update coroutine
+		if (serverGaugeCoroutine != null) {
+			StopCoroutine (serverGaugeCoroutine);
 		}
+		StartCoroutine (ServerGaugeUpdate ());
 	}
 
+	// Server updates temperature gauges euler ever x seconds
 	IEnumerator ServerGaugeUpdate() {
 		while (temperature > 0 || isBurning) {
-			yield return new WaitForSeconds (2.5f);
+			yield return new WaitForSeconds (1f);
 			RpcUpdateTemperatureGauge (temperatureGaugeOriginalEuler.z + (temperatureGaugeMaxEuler * (temperature / maxTemperature)));
 		}
 	}
 
+	// Clients server gauge update coroutine start
 	[ClientRpc]
 	void RpcUpdateTemperatureGauge(float newEuler) {
-		if (clientGaugeCoroutine == null) {
-			clientGaugeCoroutine = StartCoroutine (ClientUpdateTemperatureGauge());
+		if (clientGaugeCoroutine != null) {
+			StopCoroutine (clientGaugeCoroutine);
 		}
+		StartCoroutine (ClientUpdateTemperatureGauge());
 		gaugeTargetEuler = newEuler;
 	}
 
+	// Update clients temperature gauge euler while the fireplace is active
 	IEnumerator ClientUpdateTemperatureGauge() {
+		// Lerp towards target euler
 		while (true) {
-			// Lerp towards target euler
 			temperatureGaugePointer.transform.localEulerAngles = new Vector3 (temperatureGaugeOriginalEuler.x, temperatureGaugeOriginalEuler.y, 
-				Mathf.LerpAngle (temperatureGaugePointer.transform.localEulerAngles.z, gaugeTargetEuler, .5f));
+				Mathf.LerpAngle (temperatureGaugePointer.transform.localEulerAngles.z, gaugeTargetEuler, .2f));
 			yield return null;
 		}
 	}
 
+	// 
 	public override void OnClientFireplaceDeactivate() {
 		if (clientGaugeCoroutine != null) {
 			StopCoroutine (clientGaugeCoroutine);
 		}
 	}
 
+	// Update temperature and tmeperature gauge eulers
 	public override void OnTemperatureUpdate() {	
 		base.OnTemperatureUpdate ();
 		gaugeTargetEuler =  temperatureGaugeOriginalEuler.z + (temperatureGaugeMaxEuler * (temperature / maxTemperature));

@@ -6,11 +6,6 @@ using UnityEngine.Networking;
 public class MeleeWeapon : Weapon {
 
 	public override void TakeDamage(string victimId, int targetGroup, string playerId) {
-		CmdTakeDamage (victimId, targetGroup, playerId);
-	}
-
-	[Command]
-	void CmdTakeDamage (string victimId, int targetGroup, string playerId) {
 		if (GameManager.instance.GetLivingEntity (victimId, targetGroup) != null) {
 			// Calculate Damage
 			LivingEntity victim = GameManager.instance.GetLivingEntity (victimId, targetGroup);

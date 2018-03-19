@@ -38,7 +38,7 @@ public class Equipment : Item {
 	public AudioClip attackSound;
 	[Header("FX")]
 	public ImpactFX impactFX;
-	[HideInInspector]
+	//[HideInInspector]
 	public LayerMask myHitMask;
 
 	// Classes
@@ -135,10 +135,11 @@ public class Equipment : Item {
 			RaycastHit hit;
 
 			if (Physics.Raycast (ray, out hit, meleeRange, myHitMask, QueryTriggerInteraction.Collide)) {
+
 				// Take damage
 				LivingEntity livingEntity = hit.collider.GetComponent<LivingEntity>();
 				if (livingEntity != null) {
-					TakeDamage (hit.collider.name, livingEntity.entityGroupIndex, transform.name);
+					CmdTakeDamage (hit.collider.name, livingEntity.entityGroupIndex, transform.name);
 					if (playerStats != null) {
 						playerStats.HungerRemove (.09f);
 						playerStats.FatiqueRemove (.005f);
@@ -163,14 +164,9 @@ public class Equipment : Item {
 					CmdOnChildEntityHit (owner.name, childLivingEntity.parentEntity.name, childLivingEntity.GetType().ToString(), childLivingEntity.name, childLivingEntity.parentEntity.entityGroupIndex);
 				}
 
+				// -------------------------------------- EFFECTS  START ------------------------------------------------ \\
 				// Animation
 				playerAnimationController.MeleeImpact();
-
-				Quaternion impactRot = Quaternion.identity;
-				if (hit.normal != Vector3.zero) {
-					impactRot = Quaternion.LookRotation (hit.normal);
-				}
-
 				// Play impact audio
 				if (entity != null) {
 					AudioManager.instance.CmdPlayEntityImpactSound (entity.entitySoundMaterial.ToString(), this.weaponImpactSoundMaterial.ToString(), hit.point, "", 1f);
@@ -181,8 +177,15 @@ public class Equipment : Item {
 					}
 				}
 
+				// Impact rotation
+				Quaternion impactRot = Quaternion.identity;
+				if (hit.normal != Vector3.zero) {
+					impactRot = Quaternion.LookRotation (hit.normal);
+				}
+
 				// Tell server to spawn ImpactFX for all clients
 				CmdOnActionHit (hit.point, transform.name, Quaternion.Euler (tracerRot), impactRot);
+				// -------------------------------------- EFFECTS  END ------------------------------------------------ \\
 			}
 		}
 	}
@@ -328,9 +331,15 @@ public class Equipment : Item {
 	}
 
 
+	// Call take damage from the server... This function is called when player hits a living entity
+	[Command]
+	public void CmdTakeDamage(string victimId, int targetGroup, string playerId) {
+		TakeDamage (victimId, targetGroup, playerId);
+	}
+
 	// Called when player hits a object that has LivingEntity class attached to it... This function is meant to be overridden from other classes who inherit from this..
 	public virtual void TakeDamage(string victimId, int targetGroup, string playerId) {
-		
+
 	}
 
 	// Signals on entity hit from a client to the server
@@ -499,7 +508,6 @@ public class Equipment : Item {
 	public void SetOwner (string ownerName) {
 		Player newOwner = GameManager.GetPlayerByName (ownerName);
 		if (newOwner != null) {
-			Debug.Log ("Not Null");
 
 			owner = newOwner.transform;
 			weaponController = owner.GetComponent<GunController> ();
@@ -507,13 +515,11 @@ public class Equipment : Item {
 			playerAnimationController = owner.GetComponent<PlayerAnimationController> ();
 			playerStats = owner.GetComponent<PlayerStats> ();
 			playerController = owner.GetComponent<PlayerController> ();
-			myHitMask = weaponController.hitMask;
 
 			// Set authority
 			NetworkIdentity playerId = player.GetComponent<NetworkIdentity> ();
 			player.SetAuthority (netId, playerId);
 		} else {
-			Debug.Log ("NULL");
 
 		}
 	}
@@ -575,7 +581,6 @@ public class Equipment : Item {
 			isAvailable = false;
 
 			// Set new owner
-			Debug.Log ("Call Fucntion");
 			SetOwner(ownerName);
 		}
 		// Control free

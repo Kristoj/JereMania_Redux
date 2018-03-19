@@ -74,7 +74,15 @@ public class Entity : NetworkBehaviour {
 	/// Must be called from the server!
 	/// </summary>
 	public virtual void DestroyEntity() {
+		// Call OnEntityDestroy event and disable this entity immediatly
 		OnEntityDestroy ();
+		RpcDisableEntity ();
+		// Wait for x amount of seconds before completely destroying the entity
+		StartCoroutine (DestroyEntityDelay ());
+	}
+
+	IEnumerator DestroyEntityDelay() {
+		yield return new WaitForSeconds (1f);
 		GameManager.instance.RemoveEntity (this, entityGroupIndex);
 		NetworkServer.Destroy (this.gameObject);
 	}
@@ -109,7 +117,7 @@ public class Entity : NetworkBehaviour {
 	}
 
 	/// <summary>
-	/// Sets the entity parent. HUOM! Target parent should always be a entity! If not this method will be higly taxing on the CPU!
+	/// Sets the entity parent. HUOM! Target parent should always be a entity! Otherwise this method will be higly taxing on the CPU!
 	/// </summary>
 	/// <param name="newParentName">New parent name.</param>
 	/// <param name="parentGroup">Parents entityGroupIndex. Can be referenced from parents entity class</param>
@@ -135,6 +143,12 @@ public class Entity : NetworkBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Sets the entity parent to child entity. HUOM! Target parent should always be a entity! Otherwise this method will be higly taxing on the CPU!
+	/// </summary>
+	/// <param name="parentEntityName">Parent entity name.</param>
+	/// <param name="parentEntityGroup">Parent entity group.</param>
+	/// <param name="childEntityName">Child entity name.</param>
 	public void SetEntityParentToChildEntity(string parentEntityName, int parentEntityGroup, string childEntityName) {
 		RpcSetEntityParentToChildEntity (parentEntityName, parentEntityGroup, childEntityName);
 	}

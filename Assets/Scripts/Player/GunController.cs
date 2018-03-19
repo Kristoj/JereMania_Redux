@@ -155,7 +155,7 @@ public class GunController : NetworkBehaviour {
 		}
 
 		// Shooting
-		if (Input.GetKeyDown (KeyCode.G) || Input.GetButtonDown ("thumb0") && isAttacking && !playerInteraction.isPickingUpEquipment) {
+		if ((Input.GetKeyDown (KeyCode.G) || Input.GetButtonDown ("thumb0")) && !isAttacking && !playerInteraction.isPickingUpEquipment) {
 			CmdReadClientInput (0);
 		}
 
@@ -197,7 +197,7 @@ public class GunController : NetworkBehaviour {
 	void CmdReadClientInput(int buttonId) {
 		switch (buttonId) {
 		case 0:
-			if (weapon01 != null && currentEquipment != null && currentEquipment.entityName  != weapon01.entityName) {
+			if (currentEquipment != null) {
 				EquipEquipment ("", 0 ,true, 1);
 			}
 			break;
@@ -421,7 +421,6 @@ public class GunController : NetworkBehaviour {
 				RpcDisableEquipment (currentEquipment.name, currentEquipment.entityGroupIndex);
 			}
 		}
-
 		// If equipment reference is not valid get one from equipment slots
 		if (equipmentToEquip == null) {
 			equipmentToEquip = GameManager.instance.GetEquipment (GetWeaponFromAnySlot(), equipmentGroup) as Equipment;
