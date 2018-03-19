@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Networking;
 
 public class TimeManager : NetworkBehaviour {
@@ -20,6 +21,14 @@ public class TimeManager : NetworkBehaviour {
 	private int playersSleeping;
 	public static TimeManager instance;
 
+	[HideInInspector]
+	public float gameSecond;
+	public int clockSecond;
+	public int clockMinute;
+	public int clockHour;
+
+	public Text viliText;
+
 	void Awake() {
 		instance = this;
 	}
@@ -30,6 +39,7 @@ public class TimeManager : NetworkBehaviour {
 		ogAmbientIntensity = RenderSettings.ambientIntensity;
 		if (sun != null) {
 			StartCoroutine (UpdateSunRotation ());
+			StartCoroutine (ClockTime ());
 		}
 	}
 	
@@ -80,6 +90,27 @@ public class TimeManager : NetworkBehaviour {
 		playersSleeping = 0;
 
 		RpcOnPlayerWakeUp ();
+	}
+
+	IEnumerator ClockTime() {
+		gameSecond = dayLength / 86400;
+		while(sun != null){
+		yield return new WaitForSecondsRealtime (gameSecond);
+		++clockSecond;
+		if (clockSecond >= 60) {
+			++clockMinute;
+			clockSecond = 0;
+		}
+		if (clockMinute >= 60){
+			++clockHour;
+			clockMinute = 0;
+		}
+		if (clockHour >= 24){
+			clockHour = 0;
+		}
+			viliText.text = (clockHour + ":" + clockMinute + ":" + clockSecond);
+		}
+	
 	}
 
 	[ClientRpc]

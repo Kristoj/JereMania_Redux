@@ -211,64 +211,172 @@ public class GunController : NetworkBehaviour {
 		// Disable attacking and equipment changing while we're changing the equipment
 		canChangeEquipment = false;
 		canAttack = false;
-
 		Equipment equipmentToEquip = null;
 		if (equipmentName != "") {
 			// Get reference to the equipment we want to equip
 			equipmentToEquip = GameManager.instance.GetEquipment (equipmentName, equipmentGroup);
-			//Debug.Log (equipmentToEquip.name);
-			// Check if we should store or drop current equipment
-			if (currentEquipment != null) {
-				if ((equipmentToEquip as Weapon != null && currentEquipment.entityName != "Unarmed")) {
-					// If both slots are full and we're picking up a weapon exchange current weapon to the new one
-					if (weapon01 != null && weapon02 != null) {
-						if (equipmentName != weapon01.name && equipmentName != weapon02.name) {
-							dropEquipment = true;
+			//Equipment Setup
+			#region SETUP
+			String w1Name = "";
+			String w2Name = "";
+			if(weapon01 == null && weapon02==null && currentEquipment.entityName != "Unarmed"){
+				weapon01 = currentEquipment as Weapon;
+			}
+			if (weapon01 != null) {
+				w1Name = weapon01.entityName;
+			}
+			if (weapon02 != null) {
+				w2Name = weapon02.entityName;
+			}
+			//If having equipment in hand and switching to a weapon
+			#endregion
+			//If picking something up
+			if(equipmentToEquip.entityName != w1Name && equipmentToEquip.entityName != w2Name){
+				//If weaponslot 1 is empty
+				#region Weaponslot 1 empty
+				if(weapon01 == null){
+					//Check for held object
+					//WEAPON2
+					if(currentEquipment.entityName == w2Name){
+						//Check for pickupable object
+						//WEAPON
+						if(equipmentToEquip as Weapon != null && equipmentToEquip.entityName != w2Name){
+							RpcDisableEquipment (currentEquipment.name, currentEquipment.entityGroupIndex);
+							currentEquipment = equipmentToEquip as Weapon;
 						}
-					} else {
-						// If there isn't a weapon in slot 1
-						if (weapon01 == null) {
-							// If current equipment is a weapon
-							if (currentEquipment as Weapon != null) {
-								if (weapon02 != null && weapon02.name != currentEquipment.name) {
-									weapon01 = currentEquipment as Weapon;
-									dropEquipment = false;
-								} else {
-									weapon01 = currentEquipment as Weapon;
-									dropEquipment = false;
-								}
-							}
-						} 
-						// If there isn't a weapon in slot 2
-						else if (weapon02 == null) {
-							if (weapon01 != null && weapon01.name != currentEquipment.name) {
-								weapon02 = currentEquipment as Weapon;
-								dropEquipment = false;
-							} else {
-								weapon02 = currentEquipment as Weapon;
-								dropEquipment = false;
-							}
+						//EQUIPMENT
+						else if(equipmentToEquip as Equipment != null && equipmentToEquip as Weapon == null){
+							RpcDisableEquipment (currentEquipment.name, currentEquipment.entityGroupIndex);
+							currentEquipment = equipmentToEquip;
+						}
+
+					}
+					//EQUIPMENT
+					else if (currentEquipment as Equipment != null && equipmentToEquip as Weapon == null){
+						//WEAPON
+						if(equipmentToEquip as Weapon != null){
+							DropEquipment(1);
+							weapon01 = equipmentToEquip as Weapon;
+							currentEquipment = equipmentToEquip;
+						}
+						//EQUIPMENT
+						else if(equipmentToEquip as Equipment != null && equipmentToEquip as Weapon == null){
+							RpcDisableEquipment (currentEquipment.name, currentEquipment.entityGroupIndex);
+							currentEquipment = equipmentToEquip;
 						}
 					}
+					//UNARMED
+					else {
+						weapon01 = equipmentToEquip as Weapon;
+						weapon01.entityName = equipmentToEquip.entityName;
+						currentEquipment = equipmentToEquip;
+					}
 				}
-				// If we have a non weapon equipment in our hands drop it
-				else {
-					dropEquipment = true;
+				#endregion
+				//if slot2 is empty
+				#region Weaponslot 2 empty
+				else if(weapon01 != null && weapon02 == null) {
+					//Check for held object
+					//WEAPON1
+					if(currentEquipment.entityName == w1Name){
+						//Check for pickupable object
+						//WEAPON
+						if(equipmentToEquip as Weapon != null && equipmentToEquip.entityName != w1Name){
+							RpcDisableEquipment (currentEquipment.name, currentEquipment.entityGroupIndex);
+							weapon02 = equipmentToEquip as Weapon;
+							currentEquipment = equipmentToEquip;
+						}
+						//EQUIPMENT
+						else if(equipmentToEquip as Equipment != null && equipmentToEquip as Weapon == null){
+							RpcDisableEquipment (currentEquipment.name, currentEquipment.entityGroupIndex);
+							currentEquipment = equipmentToEquip;
+						}
+
+					}
+					//EQUIPMENT
+					else if (currentEquipment as Equipment != null && equipmentToEquip as Weapon == null){
+						//WEAPON
+						if(equipmentToEquip as Weapon != null){
+							DropEquipment(1);
+							weapon02 = equipmentToEquip as Weapon;
+							currentEquipment = equipmentToEquip;
+						}
+						//EQUIPMENT
+						else if(equipmentToEquip as Equipment != null && equipmentToEquip as Weapon == null){
+							RpcDisableEquipment (currentEquipment.name, currentEquipment.entityGroupIndex);
+							currentEquipment = equipmentToEquip;
+						}
+					}
+					//UNARMED
+					else{
+						weapon02 = equipmentToEquip as Weapon;
+						currentEquipment = equipmentToEquip;
+					}
 				}
 
-				if (currentEquipment.entityName == "Unarmed") {
-					dropEquipment = false;
+				#endregion
+				//If both slots are occupied
+				#region Weaponslots occupied
+				else if(weapon01 != null && weapon02 != null) {
+					//Check for held object
+					//WEAPON01
+					if(currentEquipment.entityName == w1Name){
+						//Check for pickupable object
+						//WEAPON
+						if(equipmentToEquip as Weapon != null && equipmentToEquip.entityName != w1Name){
+							DropEquipment(1);
+							currentEquipment = equipmentToEquip as Weapon;
+						}
+						//EQUIPMENT
+						else if(equipmentToEquip as Equipment != null && equipmentToEquip as Weapon == null){
+							RpcDisableEquipment (currentEquipment.name, currentEquipment.entityGroupIndex);
+							currentEquipment = equipmentToEquip;
+						}
+					}
+					//WEAPON2
+					else if(currentEquipment.entityName == w2Name){
+						//Check for pickupable object
+						//WEAPON
+						if(equipmentToEquip as Weapon != null && equipmentToEquip.entityName != w2Name && equipmentToEquip.entityName != w2Name){
+							DropEquipment(1);
+							weapon02 = equipmentToEquip as Weapon;
+							currentEquipment = equipmentToEquip as Weapon;
+						}
+						//EQUIPMENT
+						else if(equipmentToEquip as Equipment != null && equipmentToEquip as Weapon == null){
+							RpcDisableEquipment (currentEquipment.name, currentEquipment.entityGroupIndex);
+							currentEquipment = equipmentToEquip;
+						}
+					}
+					//EQUIPMENT
+					else if (currentEquipment as Equipment != null && equipmentToEquip as Weapon == null){
+						//Check for pickupable object
+						//WEAPON1
+						//EQUIPMENT
+						if(equipmentToEquip as Equipment != null && equipmentToEquip as Weapon == null){
+							DropEquipment(1);
+							currentEquipment = equipmentToEquip;
+						}
+						else{
+							DropEquipment(1);
+						}
+
+					}
 				}
+				#endregion
 			}
 		}
-
-
-
+		if (currentEquipment as Weapon != null && weapon01 == null && currentEquipment.entityName != "Unarmed") {
+			weapon01 = currentEquipment as Weapon;
+		}
+		else if (currentEquipment as Weapon != null && weapon02 == null && currentEquipment.entityName != "Unarmed") {
+			weapon02 = currentEquipment as Weapon;
+		}
 		// Drop / disable equipment
 		if (currentEquipment != null) {
 			if (dropEquipment) {
 				DropEquipment (dropForce);
-			} else {
+			} else{
 				RpcDisableEquipment (currentEquipment.name, currentEquipment.entityGroupIndex);
 			}
 		}
@@ -283,7 +391,7 @@ public class GunController : NetworkBehaviour {
 			SpawnEquipment(equipmentToEquip.name, equipmentGroup);
 		}
 	}
-
+		
 	// Sends handshake for the clients current equipment and waits for its response
 	IEnumerator CmdEquipmentSpawnDelay (string equipmentName, int entityGroup) {
 		// Send handshake for the client
@@ -395,18 +503,14 @@ public class GunController : NetworkBehaviour {
 		} else {
 			currentEquipment.DropItem (transform.name, gunHoldR.position, gunHoldR.rotation, player.cam.transform.forward, dropForce);
 		}
-
-		if (weapon01 != null) {
-			if (currentEquipment.name == weapon01.name) {
+			
+		if (currentEquipment.entityName == weapon01.entityName) {
 				weapon01 = null;
 			}
-		}
-
-		if (weapon02 != null) {
-			if (currentEquipment.name == weapon02.name) {
+			
+		if (currentEquipment.entityName == weapon02.entityName) {
 				weapon02 = null;
 			}
-		}
 		currentEquipment.SetEquipmentPlayerControlled (false, "");
 		currentEquipment = null;
 	}
