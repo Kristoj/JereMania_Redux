@@ -601,7 +601,7 @@ public class GunController : NetworkBehaviour {
 
 	// Destroys current equipment and equips new one automaticly if wanted
 	public void DestroyCurrentEquipment(bool autoEquip) {
-		currentEquipment.DestroyEntity ();
+		currentEquipment.DestroyEntity (transform.name);
 		currentEquipment = null;
 
 		if (autoEquip) {
