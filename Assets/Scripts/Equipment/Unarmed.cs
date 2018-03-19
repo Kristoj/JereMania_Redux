@@ -36,7 +36,6 @@ public class Unarmed : Weapon {
 	public override void OnServerEntityHit(string playerName, string entityName, int entityGroup) {
 		// Get reference to the target entity
 		targetEntity = GameManager.instance.GetEntity (entityName, entityGroup) as Entity;
-
 		if (targetEntity != null && targetEntity.isAvailable) {
 			// Set authority
 			GameManager.GetPlayerByName (playerName).SetAuthority (targetEntity.netId, GameManager.GetPlayerByName (playerName).GetComponent<NetworkIdentity> ());
@@ -58,10 +57,11 @@ public class Unarmed : Weapon {
 
 			// If we're the player who issued this lift, start lifting
 			if (GameManager.GetLocalPlayer ().name == playerName) {
-				if (liftCoroutine == null) {
-					liftCoroutine = StartCoroutine (Lift ());
-					StartCoroutine (UpdateVelocity ());
+				if (liftCoroutine != null) {
+					StopCoroutine (liftCoroutine);
 				}
+				liftCoroutine = StartCoroutine (Lift ());
+				StartCoroutine (UpdateVelocity ());
 			}
 		}
 	}
@@ -84,6 +84,7 @@ public class Unarmed : Weapon {
 		while (weaponController.mouseLeftDown && targetEntity != null) {
 			// Add scroll input to lift distance
 			liftDst += Input.GetAxisRaw ("Mouse ScrollWheel") * distanceChangeSensitivity;
+			liftDst = Mathf.Clamp (liftDst, minLiftDistance, maxLiftDistance);
 			// Orientate entity
 			OrientateEntity ();
 			// Throwing
@@ -99,8 +100,6 @@ public class Unarmed : Weapon {
 
 		// Set target rig properties
 		targetRig.useGravity = true;
-		targetRig = null;
-		targetEntity = null;
 
 		// Drop entity for other clients
 		CmdDrop ();
@@ -112,7 +111,7 @@ public class Unarmed : Weapon {
 		targetPos = player.cam.transform.position + (player.cam.transform.forward * liftDst);
 
 		// Add force to lifting direction
-		targetRig.AddForce ((targetPos - targetRig.position) * liftSpeed * rig.mass);
+		targetRig.AddForce ((targetPos - targetRig.position) * liftSpeed, ForceMode.Acceleration);
 
 		// Zero velocities after applying them to get rid of buoyancy
 		targetRig.velocity = Vector3.zero;
@@ -163,6 +162,7 @@ public class Unarmed : Weapon {
 	void CmdDrop() {
 		if (targetEntity != null) {
 			targetEntity.isAvailable = true;
+
 			// Unsubscribe from delegates
 			targetEntity.deathEvent -= CmdYieldEntity;
 			RpcDrop ();
@@ -201,7 +201,7 @@ public class Unarmed : Weapon {
 			targetRig.angularVelocity = Vector3.zero;
 		}
 
-		if (clientOrientationUpdateCoroutine == null) {
+		if (clientOrientationUpdateCoroutine == null && !isServer) {
 			clientOrientationUpdateCoroutine = StartCoroutine(ClientEntityOrientationUpdate (pos, euler));
 		}
 	}
@@ -225,7 +225,7 @@ public class Unarmed : Weapon {
 			targetEuler.x = Mathf.LerpAngle (targetRig.rotation.eulerAngles.x, masterEuler.x, 3 * Time.deltaTime);
 			targetEuler.y = Mathf.LerpAngle (targetRig.rotation.eulerAngles.y, masterEuler.y, 3 * Time.deltaTime);
 			targetEuler.z = Mathf.LerpAngle (targetRig.rotation.eulerAngles.z, masterEuler.z, 3 * Time.deltaTime);
-			//targetRig.transform.eulerAngles = targetEuler;
+			targetRig.transform.eulerAngles = targetEuler;
 			yield return null;
 		}
 

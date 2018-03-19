@@ -129,7 +129,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1056361635174502}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.224, y: 0.116, z: -1.6558838}
+  m_LocalPosition: {x: 1.819, y: 0.116, z: -1.745}
   m_LocalScale: {x: 0.85, y: 0.85, z: 0.85}
   m_Children:
   - {fileID: 4091366049799910}
@@ -327,11 +327,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   entityName: Crucible
+  isAvailable: 1
   entitySoundMaterial: 0
   entityGroupIndex: 0
-  isAvailable: 1
+  owner: {fileID: 0}
   price: 10
-  canStoreInInventory: 0
+  canStoreInInventory: 1
   itemId: 0
   itemIcon: {fileID: 0}
   fireMode: 0
@@ -355,8 +356,7 @@ MonoBehaviour:
     m_Bits: 0
   player: {fileID: 0}
   matterTemperature: 0
-  furnaceTemperature: 0
-  meltProgress: 0
+  meltTime: 0
   furnace: {fileID: 0}
   oreMeltingTemperature: 1000
   oreMeltingProgress: 0

@@ -152,7 +152,7 @@ public class GameManager : NetworkBehaviour {
 			if (livingEntities.ContainsKey (entityName)) {
 				e = livingEntities [entityName] as Entity;
 				if (e != null) {
-					Debug.LogWarning ("Used alternative fetch method on a entity");
+					//Debug.LogWarning ("Used alternative fetch method on a entity");
 				} else {
 					Debug.LogError ("Vili pls...Could not find target entity");
 				}

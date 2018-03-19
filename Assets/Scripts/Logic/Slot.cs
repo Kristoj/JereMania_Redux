@@ -8,6 +8,7 @@ public class Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
 
 	public Item slotItem;
 	public Image slotIcon;
+	public int slotIndex;
 	private Container container;
 
 	void Start() {
@@ -15,18 +16,24 @@ public class Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
 	}
 
 	public void SetSlotIcon(Sprite newIcon) {
+		
 		if (slotIcon != null) {
 			slotIcon.sprite = newIcon;
 			slotIcon.gameObject.SetActive (true);
+			if (newIcon != null) {
+				Debug.Log ("SEt new icon: " + newIcon.name);
+			}
+		} else {
+			Debug.Log ("SLOT ICON IS NULL");
 		}
 	}
 
-	public void SetupSlot(Container inv) {
+	public void SetupSlot(Container inv, int index) {
 		container = inv;
+		slotIndex = index;
 	}
 
-	public void AddItem(string itemName) {
-		Item itemToAdd = EquipmentLibrary.instance.GetEquipment (itemName);
+	public void AddItem(Item itemToAdd) {
 		slotItem = itemToAdd;
 		SetSlotIcon (itemToAdd.itemIcon);
 	}
@@ -80,7 +87,7 @@ public class Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
 		}
 
 		if (eventData.pointerId == -2) {
-			container.DropItem (this);
+			container.DropItem (this.slotIndex);
 		}
 	}
 

@@ -39,7 +39,7 @@ public class Item : Interactable {
 		if (isAvailable) {
 			for (int i = 0; i < inv.slots.Count; i++) {
 				if (inv.slots [i].slotItem == null) {
-					inv.AddItem (this, i);
+					inv.AddItem (this.name, i, this.entityGroupIndex);
 					CmdOnPickup ();
 					break;
 				}
@@ -58,6 +58,7 @@ public class Item : Interactable {
 	/// <param name="dropForce">Amount of force added when dropped.</param>
 	public void DropItem(string masterId, Vector3 dropPos, Quaternion dropRot, Vector3 dropDir, float dropForce) {
 		// Add force to the spawned item
+		EnableEntity ();
 		RpcDropItem (masterId, dropPos, dropRot, dropDir, dropForce);
 	}
 
@@ -77,6 +78,9 @@ public class Item : Interactable {
 				}
 			}
 
+			// Position
+			transform.position = dropPos;
+
 			// Add force
 			float massMultiplier = rig.mass;
 			massMultiplier = Mathf.Clamp (massMultiplier, .3f, 1.4f) * .8f;
@@ -92,6 +96,6 @@ public class Item : Interactable {
 
 	[Command]
 	public void CmdOnPickup() {
-		DestroyEntity ();
+		DisableEntity ();
 	}
 }

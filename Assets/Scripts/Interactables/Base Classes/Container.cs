@@ -36,14 +36,6 @@ public class Container : Interactable {
 		}
 	}
 
-	public virtual void Update() {
-		if (!isPlayer && playerInventory != null) {
-			//Vector3 difference = new Vector3 (playerInventory.transform.position.x, containerWindow.transform.position.y,  playerInventory.transform.position.z) - new Vector3 (containerWindow.transform.position.x, 0,  containerWindow.transform.position.z);
-			//Quaternion lookRot = Quaternion.LookRotation (difference);
-			//containerWindow.transform.rotation = lookRot;
-		}
-	}
-
 	public override void OnClientStartInteraction(string masterId) {
 		base.OnClientStartInteraction (masterId);
 		playerInventory = owner.GetComponent<PlayerInventory> ();
@@ -90,6 +82,7 @@ public class Container : Interactable {
 		startPos.z = 0;
 
 		// Instantiate slots
+		int iCount = 0;
 		for (int i = 0; i < slotCountY; i++) {
 			for (int j = 0; j < slotCountX; j++) {
 				RectTransform slotClone = Instantiate (slot, slotHolder.position, slotHolder.rotation, slotHolder.transform) as RectTransform;
@@ -98,20 +91,41 @@ public class Container : Interactable {
 				slotClone.transform.localPosition = targetSlotPos;
 
 				Slot cloneSlot = slotClone.GetComponent<Slot> ();
-				cloneSlot.SetupSlot (this);
+				cloneSlot.SetupSlot (this, iCount);
 				cloneSlot.slotIcon.rectTransform.sizeDelta = new Vector2 (slotSize, slotSize) * .75f;
 				slots.Add (slotClone.GetComponent<Slot> ());
+				iCount++;
 			}
 		}
 	}
 
-	public void AddItem (Item itemToAdd, int index) {
-		slots [index].AddItem (itemToAdd.entityName);
+	public void AddItem (string itemName, int slotIndex, int itemGroupIndex) {
+		Entity itemToAdd = GameManager.instance.GetEntity (itemName, itemGroupIndex) as Entity;
+		if (itemToAdd != null) {
+			slots [slotIndex].AddItem (itemToAdd.GetComponent<Item>());
+			RpcAddItem (itemToAdd.entityName, slotIndex);
+			RefreshOpenSlots ();
+		}
+	}
 
-		int openSlots = slotCountX * slotCountY;
+	[ClientRpc]
+	void RpcAddItem(string itemName, int slotIndex) {
+		Debug.Log ("Try to add item");
+		if (!isServer) {
+			slots [slotIndex].SetSlotIcon (EquipmentLibrary.instance.GetEquipment (itemName).itemIcon);
+		}
+	}
+
+	public void DropItem(int slotIndex) {
+		CmdDropItem (slotIndex);
+	}
+
+	void RefreshOpenSlots() {
+		int openSlots = 0;
+		// Check if our inventory is full or not
 		foreach (Slot s in slots) {
-			if (s.slotItem != null) {
-				openSlots--;
+			if (s.slotItem == null) {
+				openSlots++;
 			}
 		}
 		if (openSlots <= 0) {
@@ -121,28 +135,32 @@ public class Container : Interactable {
 		}
 	}
 
-	public void DropItem(Slot dropSlot) {
+	[Command]
+	public void CmdDropItem(int slotIndex) {
+		Slot dropSlot = slots [slotIndex];
 		if (dropSlot.slotItem != null) {
 			Camera playerCam = GetComponent<Player> ().cam;
-			CmdDropItem (playerCam.transform.position + playerCam.transform.forward, dropSlot.slotItem.entityName);
-			dropSlot.ClearSlot ();
+			if (playerCam != null) {
+				dropSlot.slotItem.DropItem (owner.name, playerCam.transform.position + playerCam.transform.forward, Quaternion.identity, playerCam.transform.forward, 1);
+				RefreshOpenSlots ();
+			}
+			RpcDropItem (dropSlot.slotItem.entityName, slotIndex);
 		}
 	}
 
-	[Command]
-	public void CmdDropItem(Vector3 dropPos, string objName) {
-		Rigidbody clone = Instantiate (EquipmentLibrary.instance.GetEquipment (objName).GetComponent<Rigidbody> (), dropPos, Quaternion.identity) as Rigidbody;
-		clone.isKinematic = false;
-		//clone.AddForce (
-		NetworkServer.Spawn (clone.gameObject);
+	[ClientRpc]
+	void RpcDropItem(string itemName, int slotIndex) {
+		slots [slotIndex].ClearSlot ();
 	}
 
+	/**
 	void MoveItem(Slot startSlot, Slot endSlot) {
 		if (endSlot.slotItem == null) {
 			endSlot.AddItem (startSlot.slotItem.entityName);
 			startSlot.ClearSlot ();
 		}
 	}
+	**/
 
 	public void FlushInventory() {
 		foreach (Slot s in slots) {
@@ -151,6 +169,7 @@ public class Container : Interactable {
 		}
 	}
 
+	/**
 	public IEnumerator DragItem(Slot startSlot) {
 
 		// Drag item while holding left mouse down
@@ -170,7 +189,7 @@ public class Container : Interactable {
 					// Move item
 					else if (playerInventory.targetSlot.slotItem == null) {
 						print ("Move");
-						MoveItem (startSlot, playerInventory.targetSlot);
+						//MoveItem (startSlot, playerInventory.targetSlot);
 						dragIcon.transform.SetParent (startSlot.transform);
 						dragIcon.transform.localPosition = Vector3.zero;
 					} 
@@ -189,4 +208,5 @@ public class Container : Interactable {
 			yield return null;
 		}
 	}
+	**/
 }
