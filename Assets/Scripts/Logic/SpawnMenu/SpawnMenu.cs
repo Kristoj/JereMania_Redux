@@ -149,9 +149,9 @@ public class SpawnMenu : NetworkBehaviour {
 
 		case true:
 			if (spawnedEquipments.Capacity != 0) {
-			foreach (Equipment item in spawnedEquipments) {
-			if (item.isAvailable) {
-			item.DestroyEntity ();
+				foreach (Equipment item in spawnedEquipments) {
+				if (item.isAvailable) {
+						item.DestroyEntity (transform.name);
 			}		
 		}
 	}
@@ -172,7 +172,7 @@ public class SpawnMenu : NetworkBehaviour {
 		if (spawnedEquipments.Capacity != 0) {
 			foreach (Equipment item in spawnedEquipments) {
 				if (item.isAvailable) {
-					item.DestroyEntity ();
+					item.DestroyEntity (transform.name);
 				}		
 			}
 

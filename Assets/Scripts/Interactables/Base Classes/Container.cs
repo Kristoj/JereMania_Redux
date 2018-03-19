@@ -110,7 +110,6 @@ public class Container : Interactable {
 
 	[ClientRpc]
 	void RpcAddItem(string itemName, int slotIndex) {
-		Debug.Log ("Try to add item");
 		if (!isServer) {
 			slots [slotIndex].SetSlotIcon (EquipmentLibrary.instance.GetEquipment (itemName).itemIcon);
 		}

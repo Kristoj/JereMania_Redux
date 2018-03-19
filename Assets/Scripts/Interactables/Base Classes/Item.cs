@@ -24,14 +24,9 @@ public class Item : Interactable {
 		if (canStoreInInventory && isAvailable) {
 			PlayerInventory targetInventory = GameManager.GetPlayerByName(masterId).GetComponent<PlayerInventory>();
 			if (!targetInventory.isFull) {
+				base.OnServerStartInteraction (masterId);
 				PickUpItem (targetInventory);
 			}
-		}
-	}
-
-	public override void OnClientStartPickup(string masterId) {
-		if (isAvailable) {
-			base.OnClientStartPickup (masterId);
 		}
 	}
 
@@ -84,13 +79,14 @@ public class Item : Interactable {
 			// Add force
 			float massMultiplier = rig.mass;
 			massMultiplier = Mathf.Clamp (massMultiplier, .3f, 1.4f) * .8f;
-			rig.AddForce (dropDir / massMultiplier * rig.mass * dropForce + (GameManager.GetPlayerByName(masterId).GetComponent<CharacterController>().velocity * rig.mass), ForceMode.Impulse);
+			Player targetPlayer = GameManager.GetPlayerByName (masterId);
+			if (targetPlayer != null) {
+				rig.AddForce (dropDir / massMultiplier * rig.mass * dropForce + (targetPlayer.GetComponent<CharacterController>().velocity * rig.mass), ForceMode.Impulse);
 
-
-			if (owner != null) {
-				rig.maxAngularVelocity = 100;
-				rig.AddTorque (owner.transform.right * 1500, ForceMode.Impulse);
+				//rig.maxAngularVelocity = 100;
+				rig.AddTorque (transform.right * 250, ForceMode.Impulse);
 			}
+
 		}
 	}
 

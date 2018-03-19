@@ -48,8 +48,8 @@ public class Npc : LivingEntity {
 		StartCoroutine (Stagger ());
 	}
 
-	public override void Die() {
-		base.Die ();
+	public override void Die(string sourcePlayer) {
+		base.Die (sourcePlayer);
 		agent.enabled = false;
 		animator.enabled = false;
 

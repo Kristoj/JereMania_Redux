@@ -22,7 +22,6 @@ public class LivingEntity : Entity{
 	public List<ExperienceDropTable> expDropTable = new List<ExperienceDropTable>();
 
 	[Header ("FX")]
-	public bool destroyOnDeath = false;
 	protected bool dead;
 
 	public override void Start() {
@@ -30,19 +29,24 @@ public class LivingEntity : Entity{
 		rig = GetComponent<Rigidbody> ();
 	}
 
-	public virtual void TakeDamage (float damage, string masterId) {
+	/// <summary>
+	/// Apply damage to target living entity.
+	/// </summary>
+	/// <param name="damage">Damage amount.</param>
+	/// <param name="masterId">Who caused the damage.</param>
+	public virtual void TakeDamage (float damage, string sourcePlayer) {
 		if (!dead) {
 			health -= (int)damage;
 
 			if (health <= 0 && !dead) {
-				Die ();
+				Die (sourcePlayer);
 			}
 		}
 	}
-
-	public void InstaKill() {
-		health -= health;
-		Die ();
+		
+	public virtual void Die(string sourcePlayer) {
+		OnEntityDestroy (sourcePlayer);
+		RpcDie ();
 	}
 
 	[ClientRpc]
@@ -54,16 +58,15 @@ public class LivingEntity : Entity{
 	public virtual void OnClientDie() {
 		AchievementProgressTracker.instance.AddAchievementProgress (entityName);
 	}
-		
-	public virtual void Die() {
-		RpcDie ();
-		OnEntityDestroy ();
-		if (destroyOnDeath) {
-			Destroy (gameObject);
-		}
-	}
 
-	public override void DestroyEntity() {
+	/// <summary>
+	/// Destroys the entity from all clients and unregisters it from the gamemanager.
+	/// Must be called from the server!
+	/// </summary>
+	/// <param name="sourcePlayer">Player who called this function.</param>
+	public override void DestroyEntity(string sourcePlayer) {
+		Debug.Log ("LE");
+		//base.DestroyEntity (sourcePlayer);
 		GameManager.instance.RemoveLivingEntity (this, entityGroupIndex);
 		NetworkServer.Destroy (this.gameObject);
 	}

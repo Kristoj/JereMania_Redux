@@ -3,8 +3,7 @@ using UnityEngine.Networking;
 
 public class PlayerSetup : NetworkBehaviour {
 
-	[SerializeField]
-	private Behaviour[] componentsToDisable;
+	public Behaviour[] componentsToDisable;
 	public SkinnedMeshRenderer[] viewMeshesToDisable;
 	public GameObject[] serverMeshesToDisable;
 	private Camera sceneCamera;

@@ -535,6 +535,7 @@ GameObject:
   - component: {fileID: 95881876756320470}
   - component: {fileID: 114293580632898918}
   - component: {fileID: 114924036483781552}
+  - component: {fileID: 114876465299341358}
   m_Layer: 9
   m_Name: Player
   m_TagString: Player
@@ -3935,7 +3936,6 @@ MonoBehaviour:
   professionWeakness: 0
   weaknessAmount: 25
   expDropTable: []
-  destroyOnDeath: 0
   cam: {fileID: 20605921141499132}
   myMsgId: 1000
 --- !u!114 &114356827734481730
@@ -4144,6 +4144,7 @@ MonoBehaviour:
   throwSound: {fileID: 0}
   focusIntera: {fileID: 0}
   targetIntera: {fileID: 0}
+  isPickingUpEquipment: 0
 --- !u!114 &114584213148754172
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4348,6 +4349,21 @@ MonoBehaviour:
   slot: {fileID: 224863789805658012, guid: 47f5f6c2a76706b44ad2729163a99060, type: 2}
   playerInventory: {fileID: 0}
   targetSlot: {fileID: 0}
+--- !u!114 &114876465299341358
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1281667382303850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26d1b6bb24112ba419cb3fe965d27300, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  xpDrops:
+  - skillName: 0
+    yieldType: 0
+    dropAmount: 25
 --- !u!114 &114888984633070644
 MonoBehaviour:
   m_ObjectHideFlags: 1

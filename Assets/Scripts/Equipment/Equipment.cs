@@ -293,9 +293,9 @@ public class Equipment : Item {
 	}
 
 	// Client pickup
-	public override void OnClientStartPickup(string masterId) {
+	public override void OnClientStartSwap(string masterId) {
 		if (isAvailable) {
-			base.OnClientStartPickup (masterId);
+			base.OnClientStartSwap (masterId);
 
 			// Play sound
 			if (pickupSound != null) {
@@ -305,9 +305,9 @@ public class Equipment : Item {
 	}
 
 	// Server pickup
-	public override void OnServerStartPickup(string masterId) {
+	public override void OnServerStartSwap(string masterId) {
 		if (isAvailable) {
-			base.OnServerStartPickup (masterId);
+			base.OnServerStartSwap (masterId);
 			GameManager.GetPlayerByName(masterId).GetComponent<GunController>().EquipEquipment (transform.name, entityGroupIndex, true, 1);
 		}
 	}

@@ -128,8 +128,8 @@ public class FarmPatch : LivingEntity {
 		}
 	}
 
-	public override void Die() {
-		base.Die ();
+	public override void Die(string sourcePlayer) {
+		base.Die (sourcePlayer);
 		DropResource (curPlantName);
 		hasPlant = false;
 	}

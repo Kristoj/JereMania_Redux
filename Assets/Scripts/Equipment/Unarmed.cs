@@ -40,7 +40,7 @@ public class Unarmed : Weapon {
 			// Set authority
 			GameManager.GetPlayerByName (playerName).SetAuthority (targetEntity.netId, GameManager.GetPlayerByName (playerName).GetComponent<NetworkIdentity> ());
 			// Subscride to target entitys on pickup and TODO on use methods
-			targetEntity.pickupEvent += CmdYieldEntity;
+			//targetEntity.pickupEvent += CmdYieldEntity;
 			// Confrim hit and store target rig
 			targetRig = targetEntity.GetComponent<Rigidbody> ();
 			targetEntity.isAvailable = false;
@@ -204,7 +204,7 @@ public class Unarmed : Weapon {
 		if (clientOrientationUpdateCoroutine != null && !isServer) {
 			StopCoroutine (clientOrientationUpdateCoroutine);
 		}
-		StartCoroutine(ClientEntityOrientationUpdate (pos, euler));
+		clientOrientationUpdateCoroutine = StartCoroutine(ClientEntityOrientationUpdate (pos, euler));
 	}
 
 	// Update target entity rotation for every client
@@ -234,7 +234,7 @@ public class Unarmed : Weapon {
 
 	[Command]
 	// Called when player is lifting a entity and same entity is picked up or added to inventory
-	void CmdYieldEntity() {
+	void CmdYieldEntity(string targetPlayer) {
 		isAvailable = false;
 
 		// Unsubscribe from delegates

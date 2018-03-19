@@ -44,15 +44,14 @@ public class DynamicResourceEntity : Resource {
 
 	[ClientRpc]
 	void RpcSetStatic() {
-		//GameManager.instance.GetEntity (_name, entityGroupIndex).gameObject.SetActive (false);
 		this.gameObject.SetActive(false);
 	}
 
-	public void OnChunkDeath() {
+	public void OnChunkDeath(string sourcePlayer) {
 		chunkCount--;
 
 		if (chunkCount <= 0) {
-			DestroyEntity ();
+			DestroyEntity (sourcePlayer);
 		}
 	}
 }

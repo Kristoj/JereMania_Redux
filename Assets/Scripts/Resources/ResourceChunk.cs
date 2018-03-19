@@ -20,8 +20,8 @@ public class ResourceChunk : LivingEntity {
 		item = GetComponent<Item> ();
 	}
 
-	public override void Die() {
-		base.Die ();
+	public override void Die(string sourcePlayer) {
+		base.Die (sourcePlayer);
 		rig.isKinematic = false;
 		item.isAvailable = true;
 	}

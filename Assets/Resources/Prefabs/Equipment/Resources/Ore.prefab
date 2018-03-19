@@ -23,6 +23,7 @@ GameObject:
   - component: {fileID: 33424530133053470}
   - component: {fileID: 114746825113350134}
   - component: {fileID: 114343130268302658}
+  - component: {fileID: 114533177794871384}
   - component: {fileID: 114684903910946546}
   - component: {fileID: 54599768529129636}
   - component: {fileID: 64815513285490160}
@@ -142,6 +143,21 @@ MonoBehaviour:
   destroyOnDeath: 0
   originalPrefab: {fileID: 114988886934263314, guid: 9c8420015c65f394183af93c3bdda027,
     type: 2}
+--- !u!114 &114533177794871384
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1056361635174502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26d1b6bb24112ba419cb3fe965d27300, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  xpDrops:
+  - skillName: 1
+    yieldType: 0
+    dropAmount: 25
 --- !u!114 &114684903910946546
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -22,7 +22,7 @@ public class ChoppingBlock : NetworkBehaviour {
 		}
 	}
 
-	void ResetChoppingBlock() {
+	void ResetChoppingBlock(string sourcePlayer) {
 		hasWoodBlock = false;
 	}
 }

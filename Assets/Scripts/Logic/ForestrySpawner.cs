@@ -56,9 +56,6 @@ public class ForestrySpawner : NetworkBehaviour {
 	[ClientRpc]
 	void RpcSetForestryStatic(string entityName, int entityGroup) {
 		Entity e = GameManager.instance.GetEntity (entityName, entityGroup);
-		if (e == null) {
-			e = GameManager.instance.GetLivingEntity (entityName, entityGroup);
-		}
 		if (e != null) {
 			e.GetComponent<Rigidbody>().isKinematic = true;
 		}
@@ -76,7 +73,7 @@ public class ForestrySpawner : NetworkBehaviour {
 
 	}
 
-	public void RemoveForestry() {
+	public void RemoveForestry(string targetPlayer) {
 		curForestryCount--;
 	}
 }

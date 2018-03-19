@@ -26,6 +26,7 @@ GameObject:
   - component: {fileID: 64470175633345034}
   - component: {fileID: 114700781435291450}
   - component: {fileID: 54151140308917508}
+  - component: {fileID: 114227251045204956}
   m_Layer: 0
   m_Name: Wood
   m_TagString: Untagged
@@ -40,7 +41,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1459134518774008}
   m_LocalRotation: {x: -0.000001032599, y: 0.7071059, z: 0.0000010325965, w: 0.7071077}
-  m_LocalPosition: {x: 45.25, y: 0.6, z: 10.77}
+  m_LocalPosition: {x: 1.01, y: 1.295, z: 0.14}
   m_LocalScale: {x: 2, y: 1.5, z: 2}
   m_Children: []
   m_Father: {fileID: 0}
@@ -116,6 +117,21 @@ MeshCollider:
   m_CookingOptions: 14
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300008, guid: f0b523a83d444df44a8c08dcf3c09f31, type: 3}
+--- !u!114 &114227251045204956
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1459134518774008}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26d1b6bb24112ba419cb3fe965d27300, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  xpDrops:
+  - skillName: 0
+    yieldType: 0
+    dropAmount: 50
 --- !u!114 &114238567532241438
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -128,9 +144,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   entityName: Wood
+  isAvailable: 1
   entitySoundMaterial: 0
   entityGroupIndex: 0
-  isAvailable: 1
+  owner: {fileID: 0}
   price: 10
   canStoreInInventory: 1
   itemId: 0
@@ -167,6 +184,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   entityName: Wood
+  isAvailable: 1
   entitySoundMaterial: 0
   entityGroupIndex: 0
   startingHealth: 25
@@ -177,7 +195,6 @@ MonoBehaviour:
   professionWeakness: 0
   weaknessAmount: 200
   expDropTable: []
-  destroyOnDeath: 0
   originalPrefab: {fileID: 114063220970265644, guid: ac33476bef2ba764195430dfb22f7dfd,
     type: 2}
 --- !u!114 &114700781435291450

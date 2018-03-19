@@ -10,6 +10,16 @@ public class Interactable : Entity {
 		base.OnStartClient ();
 	}
 
+	// Server START interaction
+	public virtual void OnServerStartInteraction(string masterId) {
+		OnInteractablePickup (masterId);
+	}
+
+	// Server END interaction
+	public virtual void OnServerEndInteraction() {
+
+	}
+
 	/// <summary>
 	/// Called when player is aiming at a interactable object and "Interact" key is down.
 	/// </summary>
@@ -31,17 +41,17 @@ public class Interactable : Entity {
 	}
 
 	// Client pickup START
-	public virtual void OnClientStartPickup(string masterId) {
+	public virtual void OnClientStartSwap(string masterId) {
 		if (isAvailable) {
 			owner = GameManager.GetPlayerByName (masterId).transform;
 		}
 	}
 
 	// Server pickup START
-	public virtual void OnServerStartPickup(string masterId) {
+	public virtual void OnServerStartSwap(string masterId) {
 		if (isAvailable) {
 			owner = GameManager.GetPlayerByName (masterId).transform;
-			OnInteractablePickup ();
+			OnInteractablePickup (masterId);
 		}
 	}
 
@@ -60,24 +70,8 @@ public class Interactable : Entity {
 	public virtual void OnClientFocusExit() {
 
 	}
-
-	// Server START interaction
-	public virtual void OnServerStartInteraction(string masterId) {
-		
-	}
-
-	// Server END interaction
-	public virtual void OnServerEndInteraction() {
-		
-	}
 		
 	public virtual void OnExit(string masterId) {
 		owner = null;
-	}
-
-	public void OnInteractablePickup() {
-		if (pickupEvent != null) {
-			pickupEvent ();
-		}
 	}
 }

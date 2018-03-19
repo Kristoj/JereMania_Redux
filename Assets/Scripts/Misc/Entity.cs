@@ -8,10 +8,10 @@ public class Entity : NetworkBehaviour {
 	public string entityName = "Entity";
 	[SyncVar]
 	public bool isAvailable = true;
-	public delegate void DeathDelegate ();
-	public DeathDelegate deathEvent;
-	public delegate void PickupDelegate();
-	public PickupDelegate pickupEvent;
+	public delegate void DeathDelegate (string targetPlayer);
+	public event DeathDelegate deathEvent;
+	public delegate void PickupDelegate(string targetPlayer);
+	public event PickupDelegate pickupEvent;
 	public EntitySoundMaterial entitySoundMaterial;
 	public enum EntitySoundMaterial {Wood, Metal, Rock}
 
@@ -43,12 +43,21 @@ public class Entity : NetworkBehaviour {
 		
 	}
 
-	public void OnEntityDestroy() {
+	// ------------------------------------------ EVENTS START ------------------------------------------------------------ \\
+	public void OnEntityDestroy(string targetPlayer) {
 		if (deathEvent != null) {
-			deathEvent ();
+			deathEvent (targetPlayer);
+			deathEvent = null;
 		}
 	}
 
+	public void OnInteractablePickup(string targetPlayer) {
+		if (pickupEvent != null) {
+			pickupEvent (targetPlayer);
+			pickupEvent = null;
+		}
+	}
+	// ------------------------------------------ EVENTS END ------------------------------------------------------------ \\
 	public void AddImpactForce(Vector3 impactForce, Vector3 impactPos) {
 		RpcAddImpactForce (impactForce, impactPos);
 	}
@@ -69,16 +78,26 @@ public class Entity : NetworkBehaviour {
 		entityGroupIndex = i;
 	}
 
+
+
 	/// <summary>
 	/// Destroys the entity from all clients and unregisters it from the gamemanager.
 	/// Must be called from the server!
 	/// </summary>
-	public virtual void DestroyEntity() {
+	/// <param name="sourcePlayer">Player who called this function.</param>
+	public virtual void DestroyEntity(string sourcePlayer) {
 		// Call OnEntityDestroy event and disable this entity immediatly
-		OnEntityDestroy ();
+		OnEntityDestroy (sourcePlayer);
 		RpcDisableEntity ();
 		// Wait for x amount of seconds before completely destroying the entity
-		StartCoroutine (DestroyEntityDelay ());
+		if (gameObject.activeSelf) {
+			StartCoroutine (DestroyEntityDelay ());
+		} 
+		// If this gameobject is not active destroy it immediately
+		else {
+			GameManager.instance.RemoveEntity (this, entityGroupIndex);
+			NetworkServer.Destroy (this.gameObject);
+		}
 	}
 
 	IEnumerator DestroyEntityDelay() {

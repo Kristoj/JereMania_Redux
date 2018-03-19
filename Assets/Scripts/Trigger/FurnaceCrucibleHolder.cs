@@ -46,7 +46,7 @@ public class FurnaceCrucibleHolder : ChildLivingEntity {
 		public Vector3 slotOffset;
 		public Crucible crucible;
 
-		public void OnCrucibleRemove() {
+		public void OnCrucibleRemove(string targetPlayer) {
 			hasCrucible = false;
 			crucible = null;
 		}

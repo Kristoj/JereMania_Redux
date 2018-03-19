@@ -58,7 +58,7 @@ public class Furnace : Fireplace {
 		if (serverGaugeCoroutine != null) {
 			StopCoroutine (serverGaugeCoroutine);
 		}
-		StartCoroutine (ServerGaugeUpdate ());
+		serverGaugeCoroutine = StartCoroutine (ServerGaugeUpdate ());
 	}
 
 	// Server updates temperature gauges euler ever x seconds
@@ -75,7 +75,7 @@ public class Furnace : Fireplace {
 		if (clientGaugeCoroutine != null) {
 			StopCoroutine (clientGaugeCoroutine);
 		}
-		StartCoroutine (ClientUpdateTemperatureGauge());
+		clientGaugeCoroutine = StartCoroutine (ClientUpdateTemperatureGauge());
 		gaugeTargetEuler = newEuler;
 	}
 

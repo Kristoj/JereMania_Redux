@@ -16,15 +16,11 @@ public class Slot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
 	}
 
 	public void SetSlotIcon(Sprite newIcon) {
-		
 		if (slotIcon != null) {
 			slotIcon.sprite = newIcon;
 			slotIcon.gameObject.SetActive (true);
 			if (newIcon != null) {
-				Debug.Log ("SEt new icon: " + newIcon.name);
 			}
-		} else {
-			Debug.Log ("SLOT ICON IS NULL");
 		}
 	}
 
