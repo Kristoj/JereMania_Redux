@@ -89,6 +89,7 @@ public class GameManager : NetworkBehaviour {
 
 	public void RegisterLivingEntity(string netId, LivingEntity entity, string prefix) {
 		bool found = false;
+		// Check some group has space for new living entity
 		for (int i = 0; i < livingEntityGroups.Count; i++) {
 			if (livingEntityGroups [i].GetLivingEntityGroupCount () < groupLength) {
 				livingEntityGroups [i].AddLivingEntityToGroup (entity);
@@ -98,13 +99,14 @@ public class GameManager : NetworkBehaviour {
 				break;
 			}
 		}
+		// If we didn't find any empty spaces, make a new group and store target living entity there
 		if (!found) {
 			livingEntityGroups.Add (new LivingEntityGroup ());
 			livingEntityGroups [livingEntityGroups.Count - 1].AddLivingEntityToGroup (entity);
 			entity.SetGroupId (livingEntityGroups.Count - 1);
 		}
 
-		// Entity list
+		// Also add the target living entity to our living entities list
 		if (!livingEntities.ContainsKey (prefix + netId)) {
 			livingEntities.Add (prefix + netId, entity);
 			entity.transform.name = prefix + netId;
@@ -128,7 +130,7 @@ public class GameManager : NetworkBehaviour {
 	public Entity GetEntity(string entityName, int entityGroupIndex) {
 		Entity e = null;
 		// Try to get a entity
-		if (entityGroupIndex <= entityGroups.Count) {
+		if (entityGroupIndex <= entityGroups.Count-1) {
 			e = entityGroups [entityGroupIndex].GetEntityFromGroup (entityName);
 		} 
 		// Try to get a living entity
@@ -164,9 +166,9 @@ public class GameManager : NetworkBehaviour {
 	public Equipment GetEquipment(string entityName, int entityGroupIndex) {
 		Equipment e = null;
 		Entity reference = null;
-		//Debug.Log (entityName +" " + entityGroupIndex);
+		Debug.Log (entityName +" " + entityGroupIndex);
 		// Try to get a entity
-		if (entityGroupIndex <= entityGroups.Count) {
+		if (entityGroupIndex <= entityGroups.Count-1) {
 			e = entityGroups [entityGroupIndex].GetEntityFromGroup (entityName) as Equipment;
 		} 
 		// Try to get a living entity

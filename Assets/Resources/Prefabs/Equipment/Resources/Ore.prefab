@@ -132,7 +132,7 @@ MonoBehaviour:
   isAvailable: 1
   entitySoundMaterial: 2
   entityGroupIndex: 0
-  startingHealth: 180
+  startingHealth: 20
   health: 0
   slashResistance: 90
   bluntResistance: 0
@@ -140,7 +140,6 @@ MonoBehaviour:
   professionWeakness: 1
   weaknessAmount: 100
   expDropTable: []
-  destroyOnDeath: 0
   originalPrefab: {fileID: 114988886934263314, guid: 9c8420015c65f394183af93c3bdda027,
     type: 2}
 --- !u!114 &114533177794871384

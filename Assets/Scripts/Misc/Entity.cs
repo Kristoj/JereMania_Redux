@@ -16,7 +16,6 @@ public class Entity : NetworkBehaviour {
 	public enum EntitySoundMaterial {Wood, Metal, Rock}
 
 	protected Rigidbody rig;
-	[HideInInspector]
 	[SyncVar]
 	public int entityGroupIndex;
 
@@ -75,7 +74,10 @@ public class Entity : NetworkBehaviour {
 	}
 		
 	public void SetGroupId (int i) {
-		entityGroupIndex = i;
+		Entity[] eList = GetComponents<Entity> ();
+		foreach (Entity e in eList) {
+			e.entityGroupIndex = i;
+		}
 	}
 
 
