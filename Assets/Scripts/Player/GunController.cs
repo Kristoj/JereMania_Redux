@@ -202,12 +202,20 @@ public class GunController : NetworkBehaviour {
 			}
 			break;
 		case 1:
-			if (weapon01 != null && currentEquipment != null && currentEquipment.entityName  != weapon01.entityName) {
+			if (weapon01 != null && currentEquipment != null && currentEquipment.entityName  != weapon01.entityName && currentEquipment as Equipment != null && currentEquipment as Weapon == null) {
+				DropEquipment (1);
+				EquipEquipment (weapon01.name, weapon01.entityGroupIndex ,false, 0);
+			}
+			else if (weapon01 != null && currentEquipment != null && currentEquipment.entityName  != weapon01.entityName) {
 				EquipEquipment (weapon01.name, weapon01.entityGroupIndex ,false, 0);
 			}
 			break;
 		case 2:
-			if (weapon02 != null && currentEquipment != null &&!isAttacking && currentEquipment.entityName  != weapon02.entityName) {
+			if (weapon02 != null && currentEquipment != null && currentEquipment.entityName  != weapon02.entityName && currentEquipment as Equipment != null && currentEquipment as Weapon == null) {
+				DropEquipment (1);
+				EquipEquipment (weapon02.name, weapon02.entityGroupIndex ,false, 0);
+			}
+			else if (weapon02 != null && currentEquipment != null &&!isAttacking && currentEquipment.entityName  != weapon02.entityName) {
 				EquipEquipment (weapon02.name, weapon02.entityGroupIndex ,false, 0);
 			}
 			break;
@@ -262,7 +270,17 @@ public class GunController : NetworkBehaviour {
 			if (weapon02 != null) {
 				w2Name = weapon02.entityName;
 			}
-			//If having equipment in hand and switching to a weapon
+			if(currentEquipment != null){
+				if(equipmentToEquip as Weapon != null && equipmentToEquip.entityName == currentEquipment.entityName){
+					if(equipmentToEquip.entityName == w1Name){
+						dropEquipment = false;
+						equipmentToEquip = weapon01;
+					}else if(equipmentToEquip.entityName == w2Name){
+						dropEquipment = false;
+						equipmentToEquip = weapon02;
+					}
+				}
+			}
 			#endregion
 			//If picking something up
 			if(equipmentToEquip.entityName != w1Name && equipmentToEquip.entityName != w2Name){
@@ -275,6 +293,7 @@ public class GunController : NetworkBehaviour {
 						//Check for pickupable object
 						//WEAPON
 						if(equipmentToEquip as Weapon != null && equipmentToEquip.entityName != w2Name){
+							dropEquipment = false;
 							RpcDisableEquipment (currentEquipment.name, currentEquipment.entityGroupIndex);
 							currentEquipment = equipmentToEquip as Weapon;
 						}
@@ -305,6 +324,7 @@ public class GunController : NetworkBehaviour {
 						if(equipmentToEquip as Weapon != null){
 							weapon01 = equipmentToEquip as Weapon;
 							currentEquipment = equipmentToEquip;
+							print(weapon01);
 						}
 						//EQUIPMENT
 						else if(equipmentToEquip as Equipment != null && equipmentToEquip as Weapon == null){
@@ -323,9 +343,9 @@ public class GunController : NetworkBehaviour {
 						//Check for pickupable object
 						//WEAPON
 						if(equipmentToEquip as Weapon != null && equipmentToEquip.entityName != w1Name){
+							dropEquipment = false;
 							RpcDisableEquipment (currentEquipment.name, currentEquipment.entityGroupIndex);
-							weapon02 = equipmentToEquip as Weapon;
-							currentEquipment = equipmentToEquip;
+							currentEquipment = equipmentToEquip as Weapon;
 						}
 						//EQUIPMENT
 						else if(equipmentToEquip as Equipment != null && equipmentToEquip as Weapon == null){
@@ -333,6 +353,12 @@ public class GunController : NetworkBehaviour {
 							currentEquipment = equipmentToEquip;
 						}
 
+					}
+					//WEAPON
+					else if(equipmentToEquip as Weapon != null){
+						dropEquipment = true;
+						DropEquipment(1);
+						currentEquipment = equipmentToEquip as Weapon;
 					}
 					//EQUIPMENT
 					else if (currentEquipment as Equipment != null && equipmentToEquip as Weapon == null){
@@ -364,7 +390,8 @@ public class GunController : NetworkBehaviour {
 					if(currentEquipment.entityName == w1Name){
 						//Check for pickupable object
 						//WEAPON
-						if(equipmentToEquip as Weapon != null && equipmentToEquip.entityName != w1Name){
+						if(equipmentToEquip as Weapon != null && equipmentToEquip.entityName != w2Name){
+							dropEquipment = true;
 							DropEquipment(1);
 							currentEquipment = equipmentToEquip as Weapon;
 						}
@@ -372,15 +399,22 @@ public class GunController : NetworkBehaviour {
 						else if(equipmentToEquip as Equipment != null && equipmentToEquip as Weapon == null){
 							RpcDisableEquipment (currentEquipment.name, currentEquipment.entityGroupIndex);
 							currentEquipment = equipmentToEquip;
+						}
+						//WEAPON2
+						else if (equipmentToEquip.entityName == w2Name){
+							dropEquipment = false;
+							RpcDisableEquipment (currentEquipment.name, currentEquipment.entityGroupIndex);
+							equipmentToEquip = weapon02 as Weapon;
+							currentEquipment = weapon02;
 						}
 					}
 					//WEAPON2
 					else if(currentEquipment.entityName == w2Name){
 						//Check for pickupable object
 						//WEAPON
-						if(equipmentToEquip as Weapon != null && equipmentToEquip.entityName != w2Name && equipmentToEquip.entityName != w2Name){
+						if(equipmentToEquip as Weapon != null && equipmentToEquip.entityName != w1Name){
+							dropEquipment = true;
 							DropEquipment(1);
-							weapon02 = equipmentToEquip as Weapon;
 							currentEquipment = equipmentToEquip as Weapon;
 						}
 						//EQUIPMENT
@@ -388,20 +422,22 @@ public class GunController : NetworkBehaviour {
 							RpcDisableEquipment (currentEquipment.name, currentEquipment.entityGroupIndex);
 							currentEquipment = equipmentToEquip;
 						}
+						//WEAPON1
+						else if (equipmentToEquip.entityName == w1Name){
+							dropEquipment = false;
+							RpcDisableEquipment (currentEquipment.name, currentEquipment.entityGroupIndex);
+							equipmentToEquip = weapon01 as Weapon;
+							currentEquipment = weapon01;
+						}
 					}
 					//EQUIPMENT
 					else if (currentEquipment as Equipment != null && equipmentToEquip as Weapon == null){
 						//Check for pickupable object
-						//WEAPON1
 						//EQUIPMENT
 						if(equipmentToEquip as Equipment != null && equipmentToEquip as Weapon == null){
 							DropEquipment(1);
 							currentEquipment = equipmentToEquip;
 						}
-						else{
-							DropEquipment(1);
-						}
-
 					}
 				}
 				#endregion
@@ -413,6 +449,7 @@ public class GunController : NetworkBehaviour {
 		else if (currentEquipment as Weapon != null && weapon02 == null && currentEquipment.entityName != "Unarmed") {
 			weapon02 = currentEquipment as Weapon;
 		}
+
 		// Drop / disable equipment
 		if (currentEquipment != null) {
 			if (dropEquipment) {
@@ -421,6 +458,7 @@ public class GunController : NetworkBehaviour {
 				RpcDisableEquipment (currentEquipment.name, currentEquipment.entityGroupIndex);
 			}
 		}
+
 		// If equipment reference is not valid get one from equipment slots
 		if (equipmentToEquip == null) {
 			equipmentToEquip = GameManager.instance.GetEquipment (GetWeaponFromAnySlot(), equipmentGroup) as Equipment;
@@ -431,6 +469,7 @@ public class GunController : NetworkBehaviour {
 			SpawnEquipment(equipmentToEquip.name, equipmentGroup);
 		}
 	}
+		
 		
 	// Sends handshake for the clients current equipment and waits for its response
 	IEnumerator CmdEquipmentSpawnDelay (string equipmentName, int entityGroup) {
@@ -543,9 +582,11 @@ public class GunController : NetworkBehaviour {
 		} else {
 			currentEquipment.DropItem (transform.name, gunHoldR.position, gunHoldR.rotation, player.cam.transform.forward, dropForce);
 		}
+
 		if(weapon01 != null){
-		if (currentEquipment.entityName == weapon01.entityName) {
+			if (currentEquipment.entityName == weapon01.entityName) {
 				weapon01 = null;
+
 			}
 		}
 		if(weapon02 != null){
@@ -553,6 +594,7 @@ public class GunController : NetworkBehaviour {
 				weapon02 = null;
 			}
 		}
+
 		currentEquipment.SetEquipmentPlayerControlled (false, "");
 		currentEquipment = null;
 	}
