@@ -2896,7 +2896,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1281667382303850}
   m_LocalRotation: {x: -0, y: 0.38268277, z: -0, w: 0.92387986}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: -2, y: 1, z: -3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4912813745969926}
@@ -3929,7 +3929,7 @@ MonoBehaviour:
   entityGroupIndex: 0
   startingHealth: 100
   health: 0
-  slashResistance: 25
+  slashResistance: 20
   bluntResistance: 25
   piercingResistance: 25
   professionWeakness: 0
