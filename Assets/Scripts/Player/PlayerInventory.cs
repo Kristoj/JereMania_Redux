@@ -17,6 +17,8 @@ public class PlayerInventory : Container {
 	public override void Start() {
 		playerController = GetComponent<PlayerController> ();
 		playerInventory = GetComponent<PlayerInventory> ();
+		owner = transform;
+
 		base.Start ();
 		ShowInventory (false);
 	}
@@ -39,7 +41,11 @@ public class PlayerInventory : Container {
 			}
 		}
 	}
-	public override void Update() {
+
+	void Update() {
+		if (!isLocalPlayer) {
+			return;
+		}
 		if (Input.GetKeyDown (KeyCode.Tab)) {
 			ShowInventory (!isOpen);
 		}

@@ -79,6 +79,26 @@ public class Entity : NetworkBehaviour {
 		NetworkServer.Destroy (this.gameObject);
 	}
 
+	public void DisableEntity() {
+		RpcDisableEntity ();
+	}
+
+	public void EnableEntity(Vector3 wakePos = default(Vector3)) {
+		RpcEnableEntity (wakePos);
+	}
+
+	[ClientRpc]
+	void RpcEnableEntity(Vector3 wakePos) {
+		if (wakePos != Vector3.zero) {
+			transform.position = wakePos;
+		}
+		gameObject.SetActive (true);
+	}
+
+	[ClientRpc]
+	void RpcDisableEntity() {
+		gameObject.SetActive (false);
+	}
 
 	/// <summary>
 	/// Sets the authority for the this entity to the local player. Can be called from server or client.

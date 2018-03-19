@@ -3872,6 +3872,7 @@ MonoBehaviour:
     m_Bits: 5137
   isSliding: 0
   canSlide: 0
+  cameraEnabled: 1
   xEuler: 0
   zEuler: 0
   canRun: 1
@@ -3923,6 +3924,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   entityName: Player
+  isAvailable: 1
   entitySoundMaterial: 0
   entityGroupIndex: 0
   startingHealth: 100
@@ -4331,9 +4333,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   entityName: PlayerInv
+  isAvailable: 1
   entitySoundMaterial: 0
   entityGroupIndex: 0
-  isAvailable: 1
   owner: {fileID: 0}
   slotCountX: 4
   slotCountY: 3
@@ -4410,6 +4412,7 @@ MonoBehaviour:
   mouseRightDown: 0
   mouseLeftReleased: 0
   mouseRightReleased: 0
+  keyRDown: 0
 --- !u!114 &114924036483781552
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4442,7 +4445,7 @@ MonoBehaviour:
   componentsToDisable:
   - {fileID: 20605921141499132}
   - {fileID: 114223497437637804}
-  - {fileID: 114870397145757416}
+  - {fileID: 114921774432446480}
   - {fileID: 81813385453085706}
   - {fileID: 114686010985177000}
   - {fileID: 114581168339062124}

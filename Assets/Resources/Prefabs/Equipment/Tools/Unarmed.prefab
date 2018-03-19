@@ -305,9 +305,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   entityName: Unarmed
+  isAvailable: 1
   entitySoundMaterial: 0
   entityGroupIndex: 0
-  isAvailable: 1
   owner: {fileID: 0}
   price: 10
   canStoreInInventory: 1
@@ -339,7 +339,11 @@ MonoBehaviour:
   woodcuttingBonus: 0
   miningBonus: 0
   harvestingBonus: 0
-  liftSpeed: 150
+  liftSpeed: 220
   maxLiftDistance: 3
+  dropForce: 150
   distanceChangeSensitivity: 3
   rotateSensitivity: 3
+  syncRate: 10
+  targetRig: {fileID: 0}
+  targetEntity: {fileID: 0}

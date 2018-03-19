@@ -6,28 +6,41 @@ using UnityEditor;
 [CustomEditor(typeof(PlayerSkills))]
 public class PlayerSkillsEditor : Editor {
 
-	public static List<PlayerSkills.Skill> skillsEditor = new List<PlayerSkills.Skill> ();
-
 	public override void OnInspectorGUI() {
 		DrawDefaultInspector ();
+		PlayerSkills myScript = target as PlayerSkills;
 
 		// Draw areas for each skill
-		for (int i = 0; i < skillsEditor.Count; i++) {
-			if (GUILayout.Button (skillsEditor [i].skillName)) {
+		for (int i = 0; i < myScript.skills.Count; i++) {
 
+			// Begin body
+			GUILayout.BeginVertical ("Box");
+			GUILayout.Space (10);
+			GUILayout.BeginHorizontal ("textArea");
+			GUILayout.Space (200);
+			myScript.skills[i].skillName = EditorGUILayout.TextField (myScript.skills[i].skillName, GUILayout.MaxWidth (100));
+			GUILayout.Space (150);
+			GUILayout.EndHorizontal ();
+
+			// Start inner body
+			GUILayout.BeginVertical("Box", GUILayout.MaxWidth (60), GUILayout.MinHeight (30));
+			GUILayout.BeginHorizontal ("TextArea", GUILayout.MaxWidth (120), GUILayout.MinHeight (40));
+			GUILayout.Space (200);
+			myScript.skills[i].skillLevel = EditorGUILayout.IntField ("Level", myScript.skills[i].skillLevel, "Box", GUILayout.MinHeight (20));
+			GUILayout.Space (200);
+			GUILayout.EndHorizontal ();
+			GUILayout.EndVertical ();
+			// Remove button
+			if (GUILayout.Button ("Remove")) {
+				myScript.skills.RemoveAt (i);
 			}
+			GUILayout.Space (10);
+			GUILayout.EndVertical ();
+			// End body
 		}
 
 		if (GUILayout.Button ("Add Skill")) {
-			skillsEditor.Add(new PlayerSkills.Skill());
+			myScript.skills.Add(new PlayerSkills.Skill());
 		}
-
-		if (GUILayout.Button ("Remove Skill")) {
-			if (skillsEditor.Count > 0) {
-				skillsEditor.RemoveAt (skillsEditor.Count - 1);
-				Debug.Log (skillsEditor.Count);
-			}
-		}
-
 	}
 }

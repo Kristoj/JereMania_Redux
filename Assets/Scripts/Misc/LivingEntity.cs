@@ -67,15 +67,4 @@ public class LivingEntity : Entity{
 		GameManager.instance.RemoveLivingEntity (this, entityGroupIndex);
 		NetworkServer.Destroy (this.gameObject);
 	}
-
-	public void AddExpDropTable() {
-
-	}
-
-	[System.Serializable]
-	public class ExperienceDropTable {
-		public ProfessionType professionType;
-		public enum ProfessionType {Woodcutting, Mining}
-		public float experienceAmount = 0;
-	}
 }
