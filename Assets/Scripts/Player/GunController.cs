@@ -315,7 +315,8 @@ public class GunController : NetworkBehaviour {
 						}
 						//EQUIPMENT
 						else if(equipmentToEquip as Equipment != null && equipmentToEquip as Weapon == null){
-							RpcDisableEquipment (currentEquipment.name, currentEquipment.entityGroupIndex);
+							dropEquipment = true;
+							DropEquipment(1);
 							currentEquipment = equipmentToEquip;
 						}
 					}
@@ -371,7 +372,8 @@ public class GunController : NetworkBehaviour {
 						}
 						//EQUIPMENT
 						else if(equipmentToEquip as Equipment != null && equipmentToEquip as Weapon == null){
-							RpcDisableEquipment (currentEquipment.name, currentEquipment.entityGroupIndex);
+							dropEquipment = true;
+							DropEquipment(1);
 							currentEquipment = equipmentToEquip;
 						}
 					}
@@ -386,6 +388,7 @@ public class GunController : NetworkBehaviour {
 				//If both slots are occupied
 				#region Weaponslots occupied
 				else if(weapon01 != null && weapon02 != null) {
+					if(equipmentToEquip.entityName != w1Name || equipmentToEquip.entityName != w2Name){
 					//Check for held object
 					//WEAPON01
 					if(currentEquipment.entityName == w1Name){
@@ -439,6 +442,7 @@ public class GunController : NetworkBehaviour {
 							DropEquipment(1);
 							currentEquipment = equipmentToEquip;
 						}
+					}
 					}
 				}
 				#endregion

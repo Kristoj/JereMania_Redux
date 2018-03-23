@@ -8,6 +8,7 @@ public class Entity : NetworkBehaviour {
 	public string entityName = "Entity";
 	[SyncVar]
 	public bool isAvailable = true;
+	public Transform owner;
 	public delegate void DeathDelegate (string targetPlayer);
 	public event DeathDelegate deathEvent;
 	public delegate void PickupDelegate(string targetPlayer);

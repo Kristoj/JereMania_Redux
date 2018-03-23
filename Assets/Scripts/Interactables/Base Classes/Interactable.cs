@@ -4,7 +4,6 @@ using System.Collections;
 
 public class Interactable : Entity {
 
-	public Transform owner;
 
 	public override void OnStartClient() {
 		base.OnStartClient ();
