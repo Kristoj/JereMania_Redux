@@ -48,6 +48,7 @@ public class FurnaceCrucibleHolder : ChildLivingEntity {
 
 		public void OnCrucibleRemove(string targetPlayer) {
 			hasCrucible = false;
+			crucible.StopAllCoroutines ();
 			crucible = null;
 		}
 

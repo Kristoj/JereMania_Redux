@@ -16,6 +16,7 @@ public class Timber : LivingEntity {
 			CmdDropResource ();
 		}
 		base.Die (sourcePlayer);
+		base.DestroyEntity (sourcePlayer);
 	}
 
 	[Command]

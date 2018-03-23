@@ -1192,24 +1192,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   entityName: Furnace_Crucible
+  isAvailable: 1
   entitySoundMaterial: 0
   entityGroupIndex: 0
   childEntities: []
   maxTemperature: 400
   temperature: 0
-  temperatureClimbRate: 4
+  temperatureClimbRate: 500
   temperatureClimbEfficiency: 0
   temperatureClimbEfficiencyRate: 3
   temperatureDescendRate: 1.5
   temperatureDescendEfficiency: 0
   temperatureDescendEfficiencyRate: 1
-  temperatureEfficiency: 2
+  temperatureEfficiency: 100
   maxFuel: 100
   fuelConsumptionRate: 0.2
   fuel: 100
   isBurning: 0
   fireParticle: {fileID: 198760929199735286}
-  test: 0
   temperatureGaugePointer: {fileID: 4877701194999312}
   temperatureGaugeMaxEuler: 239.055
 --- !u!114 &114555053039246862

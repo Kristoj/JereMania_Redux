@@ -131,7 +131,7 @@ MonoBehaviour:
   xpDrops:
   - skillName: 0
     yieldType: 0
-    dropAmount: 50
+    dropAmount: 3
 --- !u!114 &114238567532241438
 MonoBehaviour:
   m_ObjectHideFlags: 1

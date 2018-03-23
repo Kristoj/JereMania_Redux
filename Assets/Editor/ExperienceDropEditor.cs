@@ -18,7 +18,6 @@ public class ExperienceDropTableEditor : Editor {
 			// Clone vars
 			ExperienceDropTable.ExperienceDrop.SkillName skillEnum = myScript.xpDrops[i].skillName;
 			ExperienceDropTable.ExperienceDrop.YieldType yieldEnum = myScript.xpDrops[i].yieldType;
-			float dropAmount = myScript.xpDrops [i].dropAmount;
 			GUILayout.Space (20);
 			GUILayout.BeginVertical ("Window");
 			GUILayout.BeginHorizontal ("Box", GUILayout.Width (100), GUILayout.MinHeight (40));
@@ -29,7 +28,7 @@ public class ExperienceDropTableEditor : Editor {
 
 
 			EditorGUILayout.LabelField ("Drop Amount", GUILayout.MaxWidth(100));
-			myScript.xpDrops[i].dropAmount = EditorGUILayout.FloatField (dropAmount, GUILayout.MaxWidth (40));
+			myScript.xpDrops[i].dropAmount = EditorGUILayout.IntField (myScript.xpDrops[i].dropAmount, GUILayout.MaxWidth (40));
 
 
 			EditorGUILayout.LabelField ("", GUILayout.MaxWidth(40));

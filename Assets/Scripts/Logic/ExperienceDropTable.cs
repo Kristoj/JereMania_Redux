@@ -15,12 +15,12 @@ public class ExperienceDropTable : MonoBehaviour {
 			foreach (ExperienceDrop exp in xpDrops) {
 				if (le != null) {
 					if (exp.yieldType == ExperienceDrop.YieldType.OnDeath) {
-						le.deathEvent += exp.GiveExperience;
+						le.deathEvent += exp.AddExperience;
 					}
 				}
 				if (e != null) {
 					if (exp.yieldType == ExperienceDrop.YieldType.OnPickup) {
-						e.pickupEvent += exp.GiveExperience;
+						e.pickupEvent += exp.AddExperience;
 					}
 				}
 			}
@@ -38,10 +38,10 @@ public class ExperienceDropTable : MonoBehaviour {
 		[HideInInspector]
 		public enum YieldType {OnDeath, OnPickup}
 		[HideInInspector]
-		public float dropAmount = 0;
+		public int dropAmount = 0;
 
-		public void GiveExperience (string targetPlayer) {
-			Debug.Log (skillName.ToString() + dropAmount);
+		public void AddExperience (string targetPlayer) {
+			PlayerSkills.instance.AddExperienceToSkill (skillName.ToString (), dropAmount);
 		}
 	}
 }

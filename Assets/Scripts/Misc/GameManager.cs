@@ -166,7 +166,6 @@ public class GameManager : NetworkBehaviour {
 	public Equipment GetEquipment(string entityName, int entityGroupIndex) {
 		Equipment e = null;
 		Entity reference = null;
-		Debug.Log (entityName +" " + entityGroupIndex);
 		// Try to get a entity
 		if (entityGroupIndex <= entityGroups.Count-1) {
 			e = entityGroups [entityGroupIndex].GetEntityFromGroup (entityName) as Equipment;
