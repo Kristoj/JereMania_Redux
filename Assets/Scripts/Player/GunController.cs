@@ -257,7 +257,6 @@ public class GunController : NetworkBehaviour {
 		if (equipmentName != "") {
 			// Get reference to the equipment we want to equip
 			equipmentToEquip = GameManager.instance.GetEquipment (equipmentName, equipmentGroup);
-			Debug.Log (equipmentName+" " +equipmentGroup);
 			//Equipment Setup
 			#region SETUP
 			String w1Name = "";
