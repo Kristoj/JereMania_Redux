@@ -203,13 +203,4 @@ public class ProceduralMesh : MonoBehaviour {
 		tris [5] = 3;
 		filter.sharedMesh.triangles = tris;
 	}
-
-	void OnDrawGizmos() {
-		
-	}
-
-	void OnGUI() {
-		
-		//GUI.Label (
-	}
 }

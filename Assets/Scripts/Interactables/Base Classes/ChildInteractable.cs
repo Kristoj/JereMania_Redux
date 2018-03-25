@@ -4,19 +4,26 @@ using UnityEngine;
 
 public class ChildInteractable : ChildEntity {
 
-	public virtual void OnClientStartInteraction (string masterId) {
+	// Vars
+	public bool isAvailable = true;
+
+	public virtual void OnClientStartInteraction (string sourcePlayer) {
 
 	}
 
-	public virtual void OnServerStartInteraction (string masterdId) {
+	public virtual void OnServerStartInteraction (string sourcePlayer) {
 		
 	}
 
-	public virtual void OnClientStartPickup (string masterId) {
+	public virtual void OnClientStartPickup (string sourcePlayer) {
 
 	}
 
-	public virtual void OnServerStartPickup (string masterdId) {
+	public virtual void OnServerStartPickup (string sourcePlayer) {
+
+	}
+
+	public virtual void OnServerExit(string sourcePlayer) {
 
 	}
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class VehicleController : Seat {
+public class VehicleController : Interactable {
 
 	[Header ("Movement Sync")]
 	public float posSyncRate = 15;
@@ -90,7 +90,7 @@ public class VehicleController : Seat {
 		owner.GetComponent<PlayerAnimationController>().EnableViewModel (false);
 	}
 
-	public override void OnExit(string masterId) {
+	public override void OnServerExit(string masterId) {
 		// Enable view model
 		if (owner != null) {
 			owner.GetComponent<PlayerAnimationController> ().EnableViewModel (true);
@@ -98,7 +98,7 @@ public class VehicleController : Seat {
 			Debug.Log ("Owner is NULL when exiting seat!!!");
 		}
 
-		base.OnExit (masterId);
+		base.OnServerExit (masterId);
 		OnVehicleDisable ();
 	}
 }

@@ -31,6 +31,10 @@ public class GameManager : NetworkBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Returns a player by its name.
+	/// </summary>
+	/// <param name="playerName">Target players name.</param>
 	public static Player GetPlayerByName (string playerName) {
 		if (players.ContainsKey (playerName)) {
 			return players [playerName];
@@ -38,7 +42,7 @@ public class GameManager : NetworkBehaviour {
 			return null;
 		}
 	}
-		
+
 	public static void RegisterCharacter(string netId, LivingEntity entity, string prefix) {
 		if (!characters.ContainsKey (prefix + netId)) {
 			characters.Add (prefix + netId, entity);
@@ -46,6 +50,7 @@ public class GameManager : NetworkBehaviour {
 		}
 	}
 
+	/**
 	public static LivingEntity GetCharacterByName (string characterName) {
 		if (characters.ContainsKey (characterName)) {
 			return characters [characterName];
@@ -54,7 +59,7 @@ public class GameManager : NetworkBehaviour {
 		}
 	}
 
-	/**
+
 	public static void RegisterEntity(string netId, Entity entity, string prefix) {
 		if (!entities.ContainsKey (prefix + netId)) {
 			entities.Add (prefix + netId, entity);
@@ -113,16 +118,26 @@ public class GameManager : NetworkBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Removes the target entity from a target group.
+	/// </summary>
+	/// <param name="entityToRemove">Entity to remove.</param>
+	/// <param name="entityGroupIndex">Entitys group index that we are trying to remove.</param>
 	public void RemoveEntity(Entity entityToRemove, int entityGroupIndex) {
 		entityGroups [entityGroupIndex].RemoveEntityFromGroup (entityToRemove, entityGroupIndex);
 	}
 
+	/// <summary>
+	/// Removes the target livingentity from a target group.
+	/// </summary>
+	/// <param name="livingEntityToRemove">Living entity to remove.</param>
+	/// <param name="entityGroupIndex">LivingEntitys group index that we are trying to remove.</param>
 	public void RemoveLivingEntity(LivingEntity livingEntityToRemove, int entityGroupIndex) {
 		livingEntityGroups [entityGroupIndex].RemoveLivingEntityFromGroup (livingEntityToRemove, entityGroupIndex);
 	}
 		
 	/// <summary>
-	/// Returns the target entity
+	/// Gets a entity by name.
 	/// </summary>
 	/// <returns>The entity.</returns>
 	/// <param name="entityName">Entity gameObject name we're looking for.</param>
@@ -163,6 +178,11 @@ public class GameManager : NetworkBehaviour {
 		return e;
 	}
 
+	/// <summary>
+	/// Gets a equipment by name.
+	/// </summary>
+	/// <param name="entityName">Target equipments gameobject name.</param>
+	/// <param name="entityGroupIndex">Entity group index. You can get this from the entity class.</param>
 	public Equipment GetEquipment(string entityName, int entityGroupIndex) {
 		Equipment e = null;
 		Entity reference = null;
@@ -203,6 +223,11 @@ public class GameManager : NetworkBehaviour {
 		return e;
 	}
 
+	/// <summary>
+	/// Gets a living entity by name.
+	/// </summary>
+	/// <param name="entityName">Living Entitys gameobject name.</param>
+	/// <param name="entityGroupIndex">Entity group index. You can get this from the entity class.</param>
 	public LivingEntity GetLivingEntity(string entityName, int entityGroupIndex) {
 		LivingEntity l = null;
 		if (livingEntityGroups.Count - 1 >= entityGroupIndex) {
@@ -239,14 +264,25 @@ public class GameManager : NetworkBehaviour {
 		return players.Count;
 	}
 
+	/// <summary>
+	/// Gets the local player.
+	/// </summary>
 	public static Player GetLocalPlayer() {
 		return localPlayer;
 	}
 
+	/// <summary>
+	/// Sets the local player.
+	/// </summary>
+	/// <param name="p">New local player.</param>
 	public void SetLocalPlayer(Player p) {
 		localPlayer = p;
 	}
 
+	/// <summary>
+	/// Gets the local player average ping.
+	/// </summary>
+	/// <returns>The local player average ping.</returns>
 	public static int GetLocalPlayerAveragePing() {
 		return Network.GetAveragePing (Network.player);
 	}

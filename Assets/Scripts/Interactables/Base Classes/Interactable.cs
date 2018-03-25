@@ -70,7 +70,7 @@ public class Interactable : Entity {
 
 	}
 		
-	public virtual void OnExit(string masterId) {
+	public virtual void OnServerExit(string masterId) {
 		owner = null;
 	}
 }

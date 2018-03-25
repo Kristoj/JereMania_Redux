@@ -450,6 +450,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityName: 
   isAvailable: 1
+  owner: {fileID: 0}
   entitySoundMaterial: 0
   entityGroupIndex: 0
 --- !u!64 &62306524
@@ -3301,6 +3302,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityName: 
   isAvailable: 1
+  owner: {fileID: 0}
   entitySoundMaterial: 1
   entityGroupIndex: 0
 --- !u!64 &1041561771
@@ -4649,7 +4651,31 @@ MonoBehaviour:
   depth: 1
   holeSize: 0.1
   holeVertexCount: 8
-  v: []
+  v:
+  - {x: -0.5, y: -0.5, z: -0.5}
+  - {x: -0.5, y: 0.5, z: -0.5}
+  - {x: 0.5, y: 0.5, z: -0.5}
+  - {x: 0.5, y: -0.5, z: -0.5}
+  - {x: -0.5, y: -0.5, z: 0.5}
+  - {x: -0.5, y: 0.5, z: 0.5}
+  - {x: -0.5, y: 0.5, z: -0.5}
+  - {x: -0.5, y: -0.5, z: -0.5}
+  - {x: 0.5, y: -0.5, z: 0.5}
+  - {x: 0.5, y: 0.5, z: 0.5}
+  - {x: -0.5, y: 0.5, z: 0.5}
+  - {x: -0.5, y: -0.5, z: 0.5}
+  - {x: 0.5, y: -0.5, z: -0.5}
+  - {x: 0.5, y: 0.5, z: -0.5}
+  - {x: 0.5, y: 0.5, z: 0.5}
+  - {x: 0.5, y: -0.5, z: 0.5}
+  - {x: -0.5, y: 0.5, z: -0.5}
+  - {x: -0.5, y: 0.5, z: 0.5}
+  - {x: 0.5, y: 0.5, z: 0.5}
+  - {x: 0.5, y: 0.5, z: -0.5}
+  - {x: -0.5, y: -0.5, z: -0.5}
+  - {x: -0.5, y: -0.5, z: 0.5}
+  - {x: 0.5, y: -0.5, z: 0.5}
+  - {x: 0.5, y: -0.5, z: -0.5}
 --- !u!23 &1282634362
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -7353,6 +7379,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityName: Entity
   isAvailable: 1
+  owner: {fileID: 0}
   entitySoundMaterial: 0
   entityGroupIndex: 0
   childEntities: []
@@ -7531,6 +7558,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityName: 
   isAvailable: 1
+  owner: {fileID: 0}
   entitySoundMaterial: 2
   entityGroupIndex: 0
 --- !u!114 &2088814784

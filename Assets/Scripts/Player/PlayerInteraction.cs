@@ -19,7 +19,7 @@ public class PlayerInteraction : NetworkBehaviour {
 	public Interactable focusIntera;
 	//[HideInInspector]
 	public Interactable targetIntera;
-	private ChildInteractable childIntera;
+	private ChildInteractable targetChildIntera;
 	private Player player;
 	private GunController weaponController;
 	private PlayerAnimationController animationController;
@@ -37,15 +37,7 @@ public class PlayerInteraction : NetworkBehaviour {
 		CheckPlayerInput ();
 	}
 
-	[Command]
-	void CmdOnExit() {
-		if (targetIntera != null) {
-			targetIntera.OnExit (transform.name);
-			targetIntera = null;
-		}
-	}
-
-	// CLIENT Focus Ray
+	// CLIENT Interaction Ray
 	void ClientUseRay(int buttonId) {
 		Ray ray = new Ray (player.cam.transform.position, player.cam.transform.forward);
 		RaycastHit hit;
@@ -79,9 +71,9 @@ public class PlayerInteraction : NetworkBehaviour {
 			}
 		}
 	}
-
-	// SERVER Focus Ray
+		
 	[Command]
+	// SERVER interaction confirm
 	void CmdInteractionConfirm(NetworkIdentity targetPlayer, string targetEntityGameObjectName, int entityGroup, int buttonId) {
 		// Get the target entity tha we interacted with
 		Entity interaObject = GameManager.instance.GetEntity(targetEntityGameObjectName, entityGroup);
@@ -111,6 +103,7 @@ public class PlayerInteraction : NetworkBehaviour {
 	}
 
 	[ClientRpc]
+	// Confirm our child interaction
 	void RpcInteractionConfirm(NetworkIdentity targetPlayer, int buttonId) {
 		// Check if we're the client who started this interaction
 		if (GameManager.GetLocalPlayer().netId == targetPlayer.netId && targetIntera != null) {
@@ -126,6 +119,7 @@ public class PlayerInteraction : NetworkBehaviour {
 	}
 
 	[Command]
+	// Confirm our child interaction
 	void CmdChildInteractionConfirm(NetworkIdentity targetPlayer, string parentEntityGameObjectName, string childEntityType,string childEntityName, int entityGroup, int buttonId) {
 		// Get the parent entity tha we interacted with
 		ParentEntity parentEntity = GameManager.instance.GetEntity(parentEntityGameObjectName, entityGroup) as ParentEntity;
@@ -134,10 +128,10 @@ public class PlayerInteraction : NetworkBehaviour {
 		}
 
 		// Get the child entity tha we interacted with
-		childIntera = parentEntity.GetChildEntity (childEntityType, childEntityName) as ChildInteractable;
+		targetChildIntera = parentEntity.GetChildEntity (childEntityType, childEntityName) as ChildInteractable;
 		// Interact with the object if we got valid reference to it
-		if (childIntera != null) {
-			if (childIntera != null) {
+		if (targetChildIntera != null) {
+			if (targetChildIntera != null) {
 				// Set authority for the object that we interacted
 				if (player == null) {
 					player = GetComponent<Player> ();
@@ -145,17 +139,17 @@ public class PlayerInteraction : NetworkBehaviour {
 				}
 				// Server side interaction
 				if (buttonId == 0) {
-					childIntera.OnServerStartInteraction (targetPlayer.transform.name);
+					targetChildIntera.OnServerStartInteraction (targetPlayer.transform.name);
 				} 
 				// Server side pickup
 				else if (buttonId == 1) {
-					childIntera.OnServerStartPickup (targetPlayer.transform.name);
+					targetChildIntera.OnServerStartPickup (targetPlayer.transform.name);
 				}
 			}
 		}
 	}
 
-	// Input
+	// Check for player input
 	void CheckPlayerInput() {
 		// Interaction
 		if (Input.GetKeyDown (KeyCode.E) && !weaponController.isAttacking) {
@@ -175,12 +169,31 @@ public class PlayerInteraction : NetworkBehaviour {
 		// Exit
 		if (Input.GetKeyDown (KeyCode.Q) && !weaponController.isAttacking) {
 			if (targetIntera != null) {
-				targetIntera.OnExit (transform.name);
-				targetIntera = null;
+				CmdOnInteraExit (transform.name);
+			} else if (targetChildIntera != null) {
+				CmdOnChildInteraExit (transform.name);
 			}
 		}
 	}
 
+	[Command]
+	void CmdOnInteraExit() {
+		if (targetIntera != null) {
+			targetIntera.OnServerExit (transform.name);
+			targetIntera = null;
+		}
+	}
+
+	[Command]
+	void CmdOnChildInteraExit() {
+		if (targetChildIntera != null) {
+			targetChildIntera.OnServerExit (transform.name);
+			targetChildIntera = null;
+		}
+	}
+
+
+	// Item that player picked up follows the hand for x amount of time
 	IEnumerator PickupItemFollow(string _name) {
 		yield return new WaitForSeconds (.14f);
 		Equipment eq = Instantiate (EquipmentLibrary.instance.GetEquipment(_name), weaponController.gunHoldL.position, weaponController.gunHoldL.rotation) as Equipment;
@@ -198,6 +211,7 @@ public class PlayerInteraction : NetworkBehaviour {
 		Destroy (eq.gameObject);
 	}
 
+	// Add pickup delay when picking up a equipment with 'F'
 	IEnumerator PickupDelay(int buttonId) {
 		isPickingUpEquipment = true;
 		yield return new WaitForSeconds (.18f);
