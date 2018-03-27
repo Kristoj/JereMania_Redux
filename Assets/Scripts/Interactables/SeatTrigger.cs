@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SeatTrigger : Interactable {
 
-	public Seat masterSeat;
+	public ChildSeat masterSeat;
 
 	public override void OnClientStartInteraction(string masterId) {
 		if (masterSeat != null) {
@@ -12,9 +12,9 @@ public class SeatTrigger : Interactable {
 		}
 	}
 
-	public override void OnExit(string masterId) {
+	public override void OnServerExit(string masterId) {
 		if (masterSeat != null) {
-			masterSeat.OnExit (masterId);
+			masterSeat.OnServerExit (masterId);
 		}
 	}
 }

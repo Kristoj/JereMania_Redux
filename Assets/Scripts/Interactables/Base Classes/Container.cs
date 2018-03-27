@@ -43,8 +43,8 @@ public class Container : Interactable {
 
 	}
 
-	public override void OnExit(string masterId) {
-		base.OnExit (masterId);
+	public override void OnServerExit(string masterId) {
+		base.OnServerExit (masterId);
 		//ShowInventory (false);
 	}
 
