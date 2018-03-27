@@ -11,6 +11,7 @@ public class GyroSeat : ChildSeat {
 	}
 	// On exit
 	public override void OnServerExit(string sourcePlayer) {
+		base.OnServerExit (sourcePlayer);
 		transform.parent.GetComponent<GyroController> ().OnExit(sourcePlayer);
 	}
 }
