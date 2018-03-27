@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GyroController : ParentEntity {
+public class GyroController : ParentSeat {
 
 	private bool isLooking = false;
 	private Player seatOwner = null;

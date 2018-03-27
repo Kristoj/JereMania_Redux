@@ -68,6 +68,8 @@ public class ChildSeat : ChildInteractable {
 
 		// Misc
 		player.isStatic = true;
+		player.isActive = false;
+
 		player.TeleportPlayer (transform.position + offset);
 		player.transform.parent = transform;
 
@@ -93,6 +95,7 @@ public class ChildSeat : ChildInteractable {
 		player.TeleportPlayer (transform.position + offset);
 		player.SetCameraRotationY (player.transform.eulerAngles.y);
 		player.isStatic = false;
+		player.isActive = true;
 
 		// Enable network position sync
 		netTransform.enabled = true;
