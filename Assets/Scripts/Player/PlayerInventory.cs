@@ -6,7 +6,7 @@ using UnityEngine.Networking;
 
 public class PlayerInventory : Container {
 
-	private PlayerController playerController;
+	private Player player;
 	private Container targetContainer;
 	public Slot targetSlot;
 
@@ -14,8 +14,12 @@ public class PlayerInventory : Container {
 
 	}
 
+	public override void OnStartServer() {
+		base.OnStartServer ();
+	}
+
 	public override void Start() {
-		playerController = GetComponent<PlayerController> ();
+		player = GetComponent<Player> ();
 		playerInventory = GetComponent<PlayerInventory> ();
 		owner = transform;
 
@@ -29,13 +33,13 @@ public class PlayerInventory : Container {
 			Cursor.lockState = CursorLockMode.None;
 			Cursor.visible = true;
 			isOpen = true;
-			playerController.SetPlayerEnabled (false);
+			player.isActive = false;
 		} else {
 			containerWindow.gameObject.SetActive (false);
 			Cursor.lockState = CursorLockMode.Locked;
 			Cursor.visible = false;
 			isOpen = false;
-			playerController.SetPlayerEnabled (true);
+			player.isActive = true;
 			if (targetContainer != null) {
 				targetContainer.ShowInventory (false);
 			}

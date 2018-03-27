@@ -6,12 +6,12 @@ using UnityEngine.Networking;
 public class AutomaticObjectAssignerScript : MonoBehaviour {
 
 	private SoundLibrary soundLibrary;
-	private EquipmentLibrary equipmentLibrary;
+	private ItemDatabase equipmentLibrary;
 	private NetworkManager_Custom customNetworkManager;
 
 	public void AssignObjects() {
 		// Get reference to components
-		equipmentLibrary = GetComponent<EquipmentLibrary> ();
+		equipmentLibrary = GetComponent<ItemDatabase> ();
 		soundLibrary = GetComponent<SoundLibrary> ();
 		customNetworkManager = GameObject.Find("#NETWORKMANAGER").GetComponent<NetworkManager_Custom> ();
 

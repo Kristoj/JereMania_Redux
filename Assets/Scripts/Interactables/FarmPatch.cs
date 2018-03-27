@@ -37,8 +37,8 @@ public class FarmPatch : LivingEntity {
 	}
 
 	public void PlantSeed(string plantName) {
-		EquipmentLibrary.FarmPlant farmPlant = null;
-		foreach (EquipmentLibrary.FarmPlant fp in EquipmentLibrary.instance.farmPlant) {
+		ItemDatabase.FarmPlant farmPlant = null;
+		foreach (ItemDatabase.FarmPlant fp in ItemDatabase.instance.farmPlant) {
 			if (fp.plantName == plantName) {
 				farmPlant = fp;
 			}
@@ -81,7 +81,7 @@ public class FarmPatch : LivingEntity {
 
 	[ClientRpc]
 	void RpcNextStage(int stage, string plantName) {
-		foreach (EquipmentLibrary.FarmPlant fp in EquipmentLibrary.instance.farmPlant) {
+		foreach (ItemDatabase.FarmPlant fp in ItemDatabase.instance.farmPlant) {
 			if (fp.plantName == plantName) {
 				// Update plant mesh for clients
 				if (fp.growStageMeshes.Length > stage - 1) {
@@ -112,7 +112,7 @@ public class FarmPatch : LivingEntity {
 
 	void DropResource(string plantName) {
 		// Instantiate drop resource
-		foreach (EquipmentLibrary.FarmPlant fp in EquipmentLibrary.instance.farmPlant) {
+		foreach (ItemDatabase.FarmPlant fp in ItemDatabase.instance.farmPlant) {
 			if (fp.plantName == plantName) {
 				if (fp.dropResource != null) {
 					int dropCount = Random.Range ((int)fp.dropCountMinMax.x, (int)fp.dropCountMinMax.y);

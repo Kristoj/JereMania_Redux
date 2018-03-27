@@ -12,11 +12,11 @@ public class FuelAddTrigger : ChildLivingEntity {
 		}
 	}
 
-	public override void OnServerTakeDamage(string playerName, string sourceEquipmentName) {
+	public override void OnChildEntityHit(string playerName, string sourceEquipmentName) {
 		// Add fuel only if fireplace needs it
 		if (fireplace != null && fireplace.fuel < fireplace.maxFuel) {
 			// Get reference to the player who added fuel
-			GunController gunController = GameManager.GetPlayerByName(playerName).GetComponent<GunController> ();
+			PlayerWeaponController gunController = GameManager.GetPlayerByName(playerName).GetComponent<PlayerWeaponController> ();
 			if (gunController != null && gunController.currentEquipment.entityName == "Wood") {
 				
 				// Check how much fuel we want to add

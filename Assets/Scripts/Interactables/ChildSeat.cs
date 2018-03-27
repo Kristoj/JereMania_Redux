@@ -15,7 +15,7 @@ public class ChildSeat : ChildInteractable {
 
 		// Enter the seat
 		OnServerEnterSeat ();
-		parentEntity.SendMessage ("SeatEnterRequest");
+		parentEntity.SendMessage ("SeatEnterRequest", sourcePlayer, SendMessageOptions.DontRequireReceiver);
 		//RpcEnterSeat (sourcePlayer);
 
 		// Sit animation
@@ -31,7 +31,7 @@ public class ChildSeat : ChildInteractable {
 
 		// Enter the seat
 		OnServerExitSeat ();
-		parentEntity.SendMessage ("SeatExitRequest");
+		parentEntity.SendMessage ("SeatExitRequest", sourcePlayer, SendMessageOptions.DontRequireReceiver);
 		//RpcExitSeat (sourcePlayer);
 
 		// Sit animation
@@ -53,34 +53,34 @@ public class ChildSeat : ChildInteractable {
 		
 	public void EnterSeat(string masterId) {
 		isAvailable = false;
-		PlayerController controller = GameManager.GetPlayerByName (masterId).GetComponent<PlayerController> ();
-		NetworkTransform netTransform = controller.GetComponent<NetworkTransform> ();
+		Player player = GameManager.GetPlayerByName (masterId);
+		NetworkTransform netTransform = player.GetComponent<NetworkTransform> ();
 
 		// Disable network position sync
 		netTransform.enabled = false;
 
 		// Teleport player
-		controller.SetCameraOffset (viewHeight);
+		player.SetCameraOffset (viewHeight);
 		Vector3 offset = Vector3.zero;
 		offset += transform.right * sitPosition.x;
 		offset += transform.up * sitPosition.y;
 		offset += transform.forward * sitPosition.z;
 
 		// Misc
-		controller.SetPlayerActive (false);
-		controller.TeleportPlayer (transform.position + offset);
-		controller.transform.parent = transform;
+		player.isStatic = true;
+		player.TeleportPlayer (transform.position + offset);
+		player.transform.parent = transform;
 
 		// Set Player rotation
-		controller.SetCameraRotationY (0);
-		controller.transform.localEulerAngles = new Vector3 (controller.transform.localEulerAngles.x, 0, controller.transform.localEulerAngles.z);
+		player.SetCameraRotationY (0);
+		player.transform.localEulerAngles = new Vector3 (player.transform.localEulerAngles.x, 0, player.transform.localEulerAngles.z);
 	}
 		
 	// Exit seat
 	public virtual void ExitSeat(string masterId) {
 		isAvailable = true;
-		PlayerController controller = GameManager.GetPlayerByName (masterId).GetComponent<PlayerController> ();
-		NetworkTransform netTransform = controller.GetComponent<NetworkTransform> ();
+		Player player = GameManager.GetPlayerByName (masterId);
+		NetworkTransform netTransform = player.GetComponent<NetworkTransform> ();
 
 		// Teleport player
 		Vector3 offset = Vector3.zero;
@@ -89,10 +89,10 @@ public class ChildSeat : ChildInteractable {
 		offset += transform.forward * exitPosition.z;
 
 		// Misc
-		controller.transform.parent = null;
-		controller.TeleportPlayer (transform.position + offset);
-		controller.SetCameraRotationY (controller.transform.eulerAngles.y);
-		controller.SetPlayerActive (true);
+		player.transform.parent = null;
+		player.TeleportPlayer (transform.position + offset);
+		player.SetCameraRotationY (player.transform.eulerAngles.y);
+		player.isStatic = false;
 
 		// Enable network position sync
 		netTransform.enabled = true;

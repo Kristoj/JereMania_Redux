@@ -12,18 +12,18 @@ public class Seed : Resource {
 		myHitMask = seedPlantMask;
 	}
 
-	public override void TakeDamage (string victimId, int victimGroup, string playerId) {
-		FarmPatch farmPatch = GameManager.instance.GetEntity (victimId, victimGroup).GetComponent<FarmPatch> ();
-		if (!farmPatch.hasPlant) {
-			CmdPlantSeed (victimId, victimGroup);
-			weaponController.EquipEquipment("", entityGroupIndex , false, 0);
+	public override void OnServerEntityHit (string victimName, int victimGroup, string sourcePlayer) {
+		FarmPatch farmPatch = GameManager.instance.GetEntity (victimName, victimGroup).GetComponent<FarmPatch> ();
+		if (farmPatch != null && !farmPatch.hasPlant) {
+			CmdPlantSeed (victimName, victimGroup);
+			player.weaponController.EquipEquipment("", entityGroupIndex , false, 0);
 		}
 	}
 
 	[Command]
 	void CmdPlantSeed(string victimId , int victimGroup) {
 		FarmPatch farmPatch = GameManager.instance.GetLivingEntity (victimId, victimGroup).GetComponent<FarmPatch> ();
-		if (!farmPatch.hasPlant) {
+		if (farmPatch != null && !farmPatch.hasPlant) {
 			farmPatch.PlantSeed(seedName);
 		}
 	}

@@ -12,20 +12,20 @@ public class Shotgun : Gun {
 		
 	public override void ShootPrimary() {
 
-		if (fireMode == FireMode.Semi && !weaponController.mouseLeftReleased) {
+		if (fireMode == FireMode.Semi && !player.weaponController.mouseLeftReleased) {
 			return;
 		}
 
 		if (Time.time - lastShotTime > timeBetweenShots) {
 
 			base.ShootPrimary ();
-			playerAnimationController.Attack();
+			player.animationController.Attack();
 
 			for (int i = 0; i < projectileCount; i++) {
 
 				float hipMultiplier = 1f;
 
-				if (!weaponController.isChargingSecondaryAction) {
+				if (!player.weaponController.isChargingSecondaryAction) {
 					hipMultiplier = hipSpreadMultiplier;
 				}
 				// Add recoil
@@ -38,7 +38,7 @@ public class Shotgun : Gun {
 				RaycastHit hit;
 				Vector3 hitPoint = Vector3.zero;
 
-				if (Physics.Raycast (ray, out hit, 500f, weaponController.hitMask, QueryTriggerInteraction.Collide)) {
+				if (Physics.Raycast (ray, out hit, 500f, player.weaponController.hitMask, QueryTriggerInteraction.Collide)) {
 					// Take damage
 
 					LivingEntity entity = hit.collider.GetComponent<LivingEntity>();
@@ -73,9 +73,7 @@ public class Shotgun : Gun {
 
 	[Command]
 	void CmdShootPrimary(string id) {
-		if (GameManager.GetCharacterByName (id) != null) {
-			//GameManager.GetCharacter (id).TakeDamage (damage, transform.name);
-		}
+		
 	}
 
 	[Command]

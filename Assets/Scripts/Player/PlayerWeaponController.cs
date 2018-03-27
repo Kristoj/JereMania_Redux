@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine.Networking;
 using System;
 
-public class GunController : NetworkBehaviour {
+public class PlayerWeaponController : NetworkBehaviour {
 
 	[HideInInspector]
 	public Transform gunHoldR;
@@ -148,15 +148,14 @@ public class GunController : NetworkBehaviour {
 
 		// Shooting
 		if (Input.GetButtonDown ("Fire2") && currentEquipment != null && !isAttacking && currentEquipment.gameObject.activeSelf) {
-			if (currentEquipment != null) {
-				//Aim ();
+			if (player.isActive) {
 				currentEquipment.OnSecondaryAction();
 			}
 		}
 
-		// Shooting
-		if ((Input.GetKeyDown (KeyCode.G) || Input.GetButtonDown ("thumb0")) && !isAttacking && !playerInteraction.isPickingUpEquipment) {
-			CmdReadClientInput (0);
+		// Dropping
+		if ((Input.GetKeyDown (KeyCode.G)) && !isAttacking && !playerInteraction.isPickingUpEquipment || Input.GetButtonDown ("thumb0") && !isAttacking && !playerInteraction.isPickingUpEquipment) {
+			CmdReadClientInput (5);
 		}
 
 		if (animController.viewModelEnabled) {
@@ -188,7 +187,7 @@ public class GunController : NetworkBehaviour {
 	}
 
 	// Read clients input... This function is called whenever player presses
-	// a button that has a action binded to it and needs to communicat with the server
+	// a button that has a action binded to it and needs to communicate with the server
 	/// <summary>
 	/// Reads clients input.
 	/// </summary>
@@ -196,11 +195,7 @@ public class GunController : NetworkBehaviour {
 	[Command]
 	void CmdReadClientInput(int buttonId) {
 		switch (buttonId) {
-		case 0:
-			if (currentEquipment != null) {
-				EquipEquipment ("", 0 ,true, 1);
-			}
-			break;
+		// Switch to Weapon01
 		case 1:
 			if (weapon01 != null && currentEquipment != null && currentEquipment.entityName  != weapon01.entityName && currentEquipment as Equipment != null && currentEquipment as Weapon == null) {
 				DropEquipment (1);
@@ -210,6 +205,7 @@ public class GunController : NetworkBehaviour {
 				EquipEquipment (weapon01.name, weapon01.entityGroupIndex ,false, 0);
 			}
 			break;
+		// Switch to Weapon02
 		case 2:
 			if (weapon02 != null && currentEquipment != null && currentEquipment.entityName  != weapon02.entityName && currentEquipment as Equipment != null && currentEquipment as Weapon == null) {
 				DropEquipment (1);
@@ -219,11 +215,18 @@ public class GunController : NetworkBehaviour {
 				EquipEquipment (weapon02.name, weapon02.entityGroupIndex ,false, 0);
 			}
 			break;
+		// Drop
+		case 5:
+			if (currentEquipment != null) {
+				DropEquipment (1, false);
+				EquipEquipment ("", 0 ,true, 1);
+			}
+			break;
 		}
 	}
 
 	void ShootPrimary() {
-		if (currentEquipment != null && playerController.isActive && playerController.isEnabled && !isAttacking && canAttack) {
+		if (currentEquipment != null && playerController.isActive && !playerController.isStatic && !isAttacking && canAttack) {
 			currentEquipment.OnPrimaryAction ();
 		}
 	}
@@ -325,7 +328,6 @@ public class GunController : NetworkBehaviour {
 						if(equipmentToEquip as Weapon != null){
 							weapon01 = equipmentToEquip as Weapon;
 							currentEquipment = equipmentToEquip;
-							print(weapon01);
 						}
 						//EQUIPMENT
 						else if(equipmentToEquip as Equipment != null && equipmentToEquip as Weapon == null){
@@ -505,6 +507,8 @@ public class GunController : NetworkBehaviour {
 		Equipment equipmentRef = GameManager.instance.GetEquipment (equipmentName, entityGroup);
 		if (equipmentRef != null) {
 			currentEquipment = equipmentRef;
+			// Set equipment owner to this player so he can control it
+			currentEquipment.SetOwner (transform.name);
 			currentEquipment.SetEquipmentPlayerControlled (true, transform.name);
 			// Modify properties of the equipment on every client
 			RpcSpawnEquipment (currentEquipment.name, currentEquipment.entityGroupIndex, transform.name);
@@ -520,7 +524,7 @@ public class GunController : NetworkBehaviour {
 
 		if (localEquipment != null) {
 			Rigidbody cloneRig = localEquipment.GetComponent<Rigidbody> ();
-			Transform gunHold = ownerPlayer.GetComponent<GunController> ().serverGunHold;
+			Transform gunHold = ownerPlayer.GetComponent<PlayerWeaponController> ().serverGunHold;
 			if (cloneRig != null) {
 				cloneRig.isKinematic = true;
 			}
@@ -543,10 +547,6 @@ public class GunController : NetworkBehaviour {
 		currentEquipment = GameManager.instance.GetEquipment(equipmentName,equipmentGroup);
 
 		if (currentEquipment != null) {
-			// Enable equipment class
-			// Set equipment owner to this player so he can control it
-			currentEquipment.SetOwner (transform.name);
-
 			// Move and rotate new equipment
 			currentEquipment.transform.parent = gunHoldR.transform;
 			currentEquipment.transform.localPosition = Vector3.zero;
@@ -576,15 +576,15 @@ public class GunController : NetworkBehaviour {
 	}
 
 	// Drop current equipment
-	void DropEquipment(float dropForce) {
+	void DropEquipment(float dropForce, bool addSpin = true) {
 		// Raycast drop direction
 		Ray ray = new Ray (player.cam.transform.position, player.cam.transform.forward);
-		RaycastHit hit; 
+		RaycastHit hit;
 		if (Physics.Raycast (ray, out hit, 500, hitMask)) {
 			Vector3 dropDir = ((hit.point + -(transform.right * .85f)) - player.cam.transform.position).normalized;
-			currentEquipment.DropItem (transform.name, gunHoldR.position, gunHoldR.rotation, dropDir, dropForce);
+			currentEquipment.DropItem (transform.name, gunHoldR.position, gunHoldR.rotation, dropDir, dropForce, addSpin);
 		} else {
-			currentEquipment.DropItem (transform.name, gunHoldR.position, gunHoldR.rotation, player.cam.transform.forward, dropForce);
+			currentEquipment.DropItem (transform.name, gunHoldR.position, gunHoldR.rotation, player.cam.transform.forward, dropForce, addSpin);
 		}
 
 		if(weapon01 != null){
@@ -604,7 +604,7 @@ public class GunController : NetworkBehaviour {
 	}
 
 	// Destroys current equipment and equips new one automaticly if wanted
-	public void DestroyCurrentEquipment(bool autoEquip) {
+	public void DestroyCurrentEquipment(bool autoEquip = true) {
 		currentEquipment.DestroyEntity (transform.name);
 		currentEquipment = null;
 
@@ -710,17 +710,17 @@ public class GunController : NetworkBehaviour {
 	// Spawn weapon prefabs in the game world so we can get reference to them
 	void ServerSetupEquipment(string ownerName) {
 		if (weapon01 != null) {
-			weapon01 = Instantiate (EquipmentLibrary.instance.GetEquipment (weapon01.entityName)) as Weapon;
+			weapon01 = Instantiate (ItemDatabase.instance.GetEquipment (weapon01.entityName)) as Weapon;
 			NetworkServer.Spawn (weapon01.gameObject);
 			weapon01.SetEquipmentPlayerControlled (false, "");
 		}
 		if (weapon02 != null) {
-			weapon02 = Instantiate (EquipmentLibrary.instance.GetEquipment (weapon02.entityName)) as Weapon;
+			weapon02 = Instantiate (ItemDatabase.instance.GetEquipment (weapon02.entityName)) as Weapon;
 			NetworkServer.Spawn (weapon02.gameObject);
 			weapon02.SetEquipmentPlayerControlled (false, "");
 		}
 			
-		unarmed = Instantiate (EquipmentLibrary.instance.GetEquipment ("Unarmed")) as Weapon;
+		unarmed = Instantiate (ItemDatabase.instance.GetEquipment ("Unarmed")) as Weapon;
 		NetworkServer.Spawn (unarmed.gameObject);
 		unarmed.SetEquipmentPlayerControlled (false, "");
 		RpcClientSetupEquipment (weapon01.name, weapon02.name, unarmed.name, ownerName);
@@ -751,13 +751,6 @@ public class GunController : NetworkBehaviour {
 			EquipEquipment (weapon01.name, weapon01.entityGroupIndex, false, 0);
 		}
 	}
-
-	/// <summary>
-	/// Equips wanted equipment.
-	/// </summary>
-	/// <param name="equipmentToEquip">Equipment to equip. If NULL is passed as a parameter the gun controller class will check if player has a equipment that he can equip.</param>
-	/// <param name="dropEquipment">If set to <c>true</c> drop the current equipment. Else it will be destroyed.</param>
-	/// <param name="dropForce">Drop force.</param>
 
 	/**
 	public void EquipEquipment(Equipment equipmentToEquip, bool dropEquipment, float dropForce) {
@@ -1004,6 +997,10 @@ public class GunController : NetworkBehaviour {
 	}
 
 
+
+	}
+	**/
+
 	void UpdateWeaponHolster() {
 
 		if (weaponHolsterL != null && weaponHolsterR != null) {
@@ -1040,7 +1037,6 @@ public class GunController : NetworkBehaviour {
 			}
 		}
 	}
-	**/
 
 	public void CheckMouseButtonStates() {
 		if (Input.GetButtonDown ("Fire1")) {
@@ -1100,7 +1096,7 @@ public class GunController : NetworkBehaviour {
 
 
 			// Add input to position
-			if (playerController.isEnabled) {
+			if (playerController.isStatic) {
 				swayTargetPosition.x -= xInput * swaySpeedX * Time.deltaTime / 10 * speedMultiplier;
 				swayTargetPosition.y -= yInput * swaySpeedY * Time.deltaTime / 10 * speedMultiplier;
 				swayTargetPosition.z -= zInput * swaySpeedZ * Time.deltaTime / 10 * speedMultiplier;

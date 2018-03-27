@@ -21,14 +21,14 @@ public class PlayerInteraction : NetworkBehaviour {
 	public Interactable targetIntera;
 	private ChildInteractable targetChildIntera;
 	private Player player;
-	private GunController weaponController;
+	private PlayerWeaponController weaponController;
 	private PlayerAnimationController animationController;
 	public bool isPickingUpEquipment = false;
 
 	// Use this for initialization
 	void Start () {
 		player = GetComponent<Player> ();
-		weaponController = GetComponent<GunController> ();
+		weaponController = GetComponent<PlayerWeaponController> ();
 		animationController = GetComponent<PlayerAnimationController> ();
 	}
 	
@@ -169,9 +169,9 @@ public class PlayerInteraction : NetworkBehaviour {
 		// Exit
 		if (Input.GetKeyDown (KeyCode.Q) && !weaponController.isAttacking) {
 			if (targetIntera != null) {
-				CmdOnInteraExit (transform.name);
+				CmdOnInteraExit ();
 			} else if (targetChildIntera != null) {
-				CmdOnChildInteraExit (transform.name);
+				CmdOnChildInteraExit ();
 			}
 		}
 	}
@@ -196,7 +196,7 @@ public class PlayerInteraction : NetworkBehaviour {
 	// Item that player picked up follows the hand for x amount of time
 	IEnumerator PickupItemFollow(string _name) {
 		yield return new WaitForSeconds (.14f);
-		Equipment eq = Instantiate (EquipmentLibrary.instance.GetEquipment(_name), weaponController.gunHoldL.position, weaponController.gunHoldL.rotation) as Equipment;
+		Equipment eq = Instantiate (ItemDatabase.instance.GetEquipment(_name), weaponController.gunHoldL.position, weaponController.gunHoldL.rotation) as Equipment;
 		eq.transform.SetParent (weaponController.gunHoldL.transform);
 		eq.enabled = false;
 		eq.isAvailable = false;

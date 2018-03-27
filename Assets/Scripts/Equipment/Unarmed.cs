@@ -29,34 +29,34 @@ public class Unarmed : Weapon {
 	private Coroutine clientOrientationUpdateCoroutine;
 	private Coroutine liftCoroutine;
 
-	public override void OnClientEntityHit(string playerName, string entityName, int entityGroup) {
-		base.OnClientEntityHit (playerName, entityName, entityGroup);
+	public override void OnClientEntityHit(string victimName, int victimGroup, string sourcePlayer) {
+		base.OnClientEntityHit (victimName, victimGroup, sourcePlayer);
 	}
 
-	public override void OnServerEntityHit(string playerName, string entityName, int entityGroup) {
+	public override void OnServerEntityHit(string victimName, int victimGroup, string sourcePlayer) {
 		// Get reference to the target entity
-		targetEntity = GameManager.instance.GetEntity (entityName, entityGroup) as Entity;
+		targetEntity = GameManager.instance.GetEntity (victimName, victimGroup) as Entity;
 		if (targetEntity != null && targetEntity.isAvailable) {
 			// Set authority
-			GameManager.GetPlayerByName (playerName).SetAuthority (targetEntity.netId, GameManager.GetPlayerByName (playerName).GetComponent<NetworkIdentity> ());
+			GameManager.GetPlayerByName (sourcePlayer).SetAuthority (targetEntity.netId, GameManager.GetPlayerByName (sourcePlayer).GetComponent<NetworkIdentity> ());
 			// Subscride to target entitys on pickup and TODO on use methods
 			//targetEntity.pickupEvent += CmdYieldEntity;
 			// Confrim hit and store target rig
 			targetRig = targetEntity.GetComponent<Rigidbody> ();
 			targetEntity.isAvailable = false;
-			RpcConfirmLift (playerName, entityName, entityGroup);
+			RpcConfirmLift (victimName, victimGroup, sourcePlayer);
 		}
 	}
 
 	[ClientRpc]
-	void RpcConfirmLift(string playerName, string entityName, int entityGroup) {
-		targetEntity = GameManager.instance.GetEntity (entityName, entityGroup) as Entity;
+	void RpcConfirmLift(string victimName, int victimGroup, string sourcePlayer) {
+		targetEntity = GameManager.instance.GetEntity (victimName, victimGroup) as Entity;
 		if (targetEntity != null) {
 			// Store target rigidbody reference
 			targetRig = targetEntity.GetComponent<Rigidbody> ();
 
 			// If we're the player who issued this lift, start lifting
-			if (GameManager.GetLocalPlayer ().name == playerName) {
+			if (GameManager.GetLocalPlayer ().name == sourcePlayer) {
 				if (liftCoroutine != null) {
 					StopCoroutine (liftCoroutine);
 				}
@@ -79,16 +79,17 @@ public class Unarmed : Weapon {
 
 		// Set target rig properties
 		targetRig.useGravity = false;
+		player.canJump = false;
 
 		// Lift target entity while left mouse is down
-		while (weaponController.mouseLeftDown && targetEntity != null) {
+		while (player.weaponController.mouseLeftDown && targetEntity != null) {
 			// Add scroll input to lift distance
 			liftDst += Input.GetAxisRaw ("Mouse ScrollWheel") * distanceChangeSensitivity;
 			liftDst = Mathf.Clamp (liftDst, minLiftDistance, maxLiftDistance);
 			// Orientate entity
 			OrientateEntity ();
 			// Throwing
-			if (weaponController.mouseRightDown) {
+			if (player.weaponController.mouseRightDown) {
 				CmdThrowEntity (player.cam.transform.forward * dropForce, owner.transform.name);
 				ThrowEntity (player.cam.transform.forward * dropForce);
 				yield break;
@@ -96,10 +97,9 @@ public class Unarmed : Weapon {
 			yield return new WaitForFixedUpdate();
 		}
 
-		Debug.Log ("We continue");
-
 		// Set target rig properties
 		targetRig.useGravity = true;
+		player.canJump = true;
 
 		// Drop entity for other clients
 		CmdDrop ();
@@ -118,17 +118,17 @@ public class Unarmed : Weapon {
 		targetRig.angularVelocity = Vector3.zero;
 
 		// Rotation
-		if (weaponController.keyRDown) {
+		if (player.weaponController.keyRDown) {
 			// Get input
 			float xInput = Input.GetAxisRaw ("Mouse X");
 			float yInput = Input.GetAxisRaw ("Mouse Y");
-			playerController.cameraEnabled = false;
+			player.playerController.cameraEnabled = false;
 
 			// Rotate target rig
 			Vector3 targetEuler = player.cam.transform.TransformDirection (new Vector3 (yInput, -xInput, 0) * rotateSensitivity);
 			targetRig.transform.Rotate (targetEuler, Space.World);
 		} else {
-			playerController.cameraEnabled = true;
+			player.playerController.cameraEnabled = true;
 		}
 	}
 
@@ -162,6 +162,7 @@ public class Unarmed : Weapon {
 	void CmdDrop() {
 		if (targetEntity != null) {
 			targetEntity.isAvailable = true;
+			player.canJump = true;
 
 			// Unsubscribe from delegates
 			targetEntity.deathEvent -= CmdYieldEntity;
@@ -183,28 +184,31 @@ public class Unarmed : Weapon {
 	IEnumerator UpdateVelocity() {
 		float tickRate = 1f / syncRate;
 
-		while (targetRig != null) {
-			CmdUpdateVelocity (targetRig.position, targetRig.rotation.eulerAngles);
+		while (targetRig != null && owner != null) {
+			CmdUpdateVelocity (targetRig.position, targetRig.rotation.eulerAngles, owner.name);
 			yield return new WaitForSeconds (tickRate);
 		}
 	}
 
 	[Command]
-	void CmdUpdateVelocity(Vector3 pos, Vector3 euler) {
-		RpcUpdateVelocity (pos, euler);
+	void CmdUpdateVelocity(Vector3 pos, Vector3 euler, string ownerName) {
+		RpcUpdateVelocity (pos, euler, ownerName);
 	}
 
 	[ClientRpc]
-	void RpcUpdateVelocity(Vector3 pos, Vector3 euler) {
+	void RpcUpdateVelocity(Vector3 pos, Vector3 euler, string ownerName) {
 		if (targetRig != null) {
 			targetRig.velocity = Vector3.zero;
 			targetRig.angularVelocity = Vector3.zero;
-		}
 
-		if (clientOrientationUpdateCoroutine != null && !isServer) {
-			StopCoroutine (clientOrientationUpdateCoroutine);
+			// Start syncing if we're not the one picking up the item
+			if (GameManager.GetLocalPlayer ().name != ownerName) {
+				if (clientOrientationUpdateCoroutine != null && !isServer) {
+					StopCoroutine (clientOrientationUpdateCoroutine);
+				}
+				clientOrientationUpdateCoroutine = StartCoroutine (ClientEntityOrientationUpdate (pos, euler));
+			}
 		}
-		clientOrientationUpdateCoroutine = StartCoroutine(ClientEntityOrientationUpdate (pos, euler));
 	}
 
 	// Update target entity rotation for every client

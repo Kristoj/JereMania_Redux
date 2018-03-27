@@ -3926,6 +3926,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityName: Player
   isAvailable: 1
+  owner: {fileID: 0}
   entitySoundMaterial: 0
   entityGroupIndex: 0
   startingHealth: 100
@@ -4335,9 +4336,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityName: PlayerInv
   isAvailable: 1
+  owner: {fileID: 0}
   entitySoundMaterial: 0
   entityGroupIndex: 0
-  owner: {fileID: 0}
   slotCountX: 4
   slotCountY: 3
   slotSize: 30
@@ -4388,7 +4389,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1281667382303850}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e7e5f29bbb537f469c5af67050b2af2, type: 3}
+  m_Script: {fileID: 11500000, guid: 4bfc88ddc20d2704bbe1c52b7c5d2292, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   gunHoldR: {fileID: 0}
@@ -4409,9 +4410,9 @@ MonoBehaviour:
   swayScaleX: 0.5
   swaySpeedX: 3
   swayReturnSpeedX: 10
-  swayScaleY: 0.12
-  swaySpeedY: 5
-  swayReturnSpeedY: 20
+  swayScaleY: 0.25
+  swaySpeedY: 1
+  swayReturnSpeedY: 7
   swayScaleZ: 0.2
   swaySpeedZ: 3
   swayReturnSpeedZ: 10

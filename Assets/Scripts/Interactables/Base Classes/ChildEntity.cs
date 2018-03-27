@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ChildEntity : MonoBehaviour {
-
+	
+	// Vars
+	public bool isAvailable = true;
 	public ParentEntity parentEntity;
 
 	public virtual void Awake() {
@@ -11,6 +13,15 @@ public class ChildEntity : MonoBehaviour {
 		FindParentEntity ();
 		// Register this to the parent entity
 		RegisterToParent ();
+	}
+
+	/// <summary>
+	/// Called when player player hits a entity with a equipment.
+	/// </summary>
+	/// <param name="sourcePlayer">Source player name.</param>
+	/// <param name="sourceEquipmentName">Source equipment name.</param>
+	public virtual void OnChildEntityHit(string sourcePlayer, string sourceEquipmentName) {
+
 	}
 
 	void FindParentEntity() {
@@ -32,8 +43,6 @@ public class ChildEntity : MonoBehaviour {
 			}
 		}
 	}
-
-
 
 	void RegisterToParent() {
 		if (parentEntity != null) {

@@ -14,7 +14,6 @@ public class Furnace : Fireplace {
 
 	// 
 	private ChildDoor furnaceDoor;
-	private ChildDoor crucibleDoor;
 	private FurnaceCrucibleHolder crucibleHolder;
 	private Coroutine temperatureUpdateCoroutine;
 	private Coroutine clientGaugeCoroutine;
@@ -27,10 +26,6 @@ public class Furnace : Fireplace {
 		foreach (ChildEntity ce in childEntities) {
 			if (ce.name== "Furnace_Door") {
 				furnaceDoor = ce as ChildDoor;
-			}
-
-			if (ce.GetType().Name == "ChildDoor" && ce.name == "Crucible_Holder") {
-				crucibleDoor = ce as ChildDoor;
 			}
 
 			if (ce.GetType().Name == "FurnaceCrucibleHolder") {
@@ -112,29 +107,49 @@ public class Furnace : Fireplace {
 		// Determine what door we want to open and if we can open it
 		int swingDir = 0;
 
-		if (furnaceDoor == null || crucibleDoor == null) {
+		if (furnaceDoor == null || crucibleHolder == null) {
 			return;
 		}
 
-		if (ciName == "Furnace_Door" && crucibleDoor.isClosed) {
+		// Furnace door swing
+		if (ciName == "Furnace_Door" && crucibleHolder.isClosed) {
 			furnaceDoor.isClosed = !furnaceDoor.isClosed;
-		
-			if (furnaceDoor.isClosed) {
-				swingDir = -1;
-			} else {
-				swingDir = 1;
-			}
-		} 
-		else if (ciName == "Crucible_Holder" && !furnaceDoor.isClosed) {
-			crucibleDoor.isClosed = !crucibleDoor.isClosed;
 
 			// Close
-			if (crucibleDoor.isClosed) {
+			if (furnaceDoor.isClosed) {
 				swingDir = -1;
+				temperatureDescendMultiplier = 1f;
+			} 
+
+			// Open
+			else {
+				swingDir = 1;
+				temperatureDescendMultiplier = 5.5f;
+			}
+		} 
+		// Crucible door swing
+		else if (ciName == "Crucible_Holder" && !furnaceDoor.isClosed) {
+			crucibleHolder.isClosed = !crucibleHolder.isClosed;
+
+			// Close
+			if (crucibleHolder.isClosed) {
+				swingDir = -1;
+				// Start adding temperature to the crucible
+				for (int i = 0; i < crucibleHolder.crucibleSlots.Length; i++) {
+					if (crucibleHolder.crucibleSlots [i].crucible != null) {
+						crucibleHolder.crucibleSlots [i].crucible.StartMelting (this);
+					}
+				}
 			} 
 			// Open
 			else {
 				swingDir = 1;
+				// Stop adding temperature to the crucible
+				for (int i = 0; i < crucibleHolder.crucibleSlots.Length; i++) {
+					if (crucibleHolder.crucibleSlots [i].crucible != null) {
+						crucibleHolder.crucibleSlots [i].crucible.StopMelting ();
+					}
+				}
 			}
 		}
 
@@ -149,8 +164,8 @@ public class Furnace : Fireplace {
 		// Open the correct door
 		if (ciName == "Furnace_Door" && furnaceDoor != null) {
 			furnaceDoor.SwingDoor (swingDir);
-		} else if (ciName == "Crucible_Holder" && crucibleDoor != null) {
-			crucibleDoor.SwingDoor (swingDir);
+		} else if (ciName == "Crucible_Holder" && crucibleHolder != null) {
+			crucibleHolder.SwingDoor (swingDir);
 		}
 	}
 
@@ -194,7 +209,7 @@ public class Furnace : Fireplace {
 	[ClientRpc]
 	void RpcSignalCrucibleAdd(string playerName, string crucibleName, int entityGroup) {
 		if (GameManager.GetLocalPlayer ().name == playerName) {
-			GameManager.GetLocalPlayer ().GetComponent<GunController> ().ParentCurrentEquipmentToChildEntity (transform.name, entityGroup, crucibleHolder.transform.name, true);
+			GameManager.GetLocalPlayer ().GetComponent<PlayerWeaponController> ().ParentCurrentEquipmentToChildEntity (transform.name, entityGroup, crucibleHolder.transform.name, true);
 		}
 		crucibleHolder.OnClientAddCrucible (crucibleName, entityGroup);
 	}

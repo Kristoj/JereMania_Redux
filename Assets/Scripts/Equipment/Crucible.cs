@@ -43,7 +43,7 @@ public class Crucible : Equipment {
 
 	// Called when player attacks this crucible with mineral in his hand
 	public override void OnEntityHit(string playerName, string sourceEquipmentName) {
-		Mineral sourceMineral = EquipmentLibrary.instance.GetEquipment (sourceEquipmentName) as Mineral;
+		Mineral sourceMineral = ItemDatabase.instance.GetEquipment (sourceEquipmentName) as Mineral;
 		if (sourceMineral != null && mineral == null) {
 			RpcAddOre (playerName);
 
@@ -62,26 +62,34 @@ public class Crucible : Equipment {
 	// Add ore mesh to the crucible and for the player who placed it there remove it from his inventory
 	void RpcAddOre(string playerName) {
 		if (GameManager.GetLocalPlayer ().name == playerName) {
-			GameManager.GetLocalPlayer ().GetComponent<GunController> ().DestroyCurrentEquipment (true);
+			GameManager.GetLocalPlayer ().GetComponent<PlayerWeaponController> ().DestroyCurrentEquipment (true);
 		}
 
 		oreMesh.gameObject.SetActive (true);
 	}
 
-	// Called when crucible is in a crucible slot in a furnace.. Starts melting the ore...
+	// Start melting mineral if one is placed inside the crucible
 	public void StartMelting(Furnace fur) {
-		furnace = fur;
+		if (mineral != null) {
+			furnace = fur;
+			if (tempUpdateCoroutine != null) {
+				StopCoroutine (tempUpdateCoroutine);
+			}
+			tempUpdateCoroutine = StartCoroutine (UpdateMineralTemperature ());
+		}
+	}
+
+	// Stop melting the ore if one is placed inside the crucible
+	public void StopMelting() {
 		if (tempUpdateCoroutine != null) {
 			StopCoroutine (tempUpdateCoroutine);
-		}
-
-		if (mineral != null) {
-			tempUpdateCoroutine = StartCoroutine (UpdateMineralTemperature ());
 		}
 	}
 
 	// Update mineral temperature inside the crucible 
 	IEnumerator UpdateMineralTemperature () {
+
+		// Molten visuals
 		moltenMatterObject.gameObject.SetActive (true);
 		moltenMatterObject.transform.localScale = new Vector3 (moltenMatterObjectOriginalScale.x, moltenMatterObjectOriginalScale.y * (meltTime / mineral.meltTime), moltenMatterObjectOriginalScale.z);
 
@@ -99,6 +107,7 @@ public class Crucible : Equipment {
 
 				// Increment melt time
 				meltTime += Time.deltaTime;
+				// Update ore visuals
 				moltenMatterObject.transform.localScale = new Vector3 (moltenMatterObjectOriginalScale.x, moltenMatterObjectOriginalScale.y * (meltTime / mineral.meltTime), moltenMatterObjectOriginalScale.z);
 				oreMesh.transform.localPosition = oreMeshOriginalPos - (transform.up * (.15f * (meltTime / mineral.meltTime)));
 
@@ -148,7 +157,6 @@ public class Crucible : Equipment {
 			moltenMatterObject.transform.localScale = Vector3.Lerp (moltenMatterObject.transform.localScale, moltenMatterObjectTargetScale, .3f * Time.deltaTime);
 			yield return null;
 		}
-		Debug.Log ("Client End");
 	}
 	// Called on the server when server finished melting the ore
 	void FinishMelting() {
@@ -161,6 +169,13 @@ public class Crucible : Equipment {
 		oreMesh.gameObject.SetActive (false);
 	}
 
+	// Remove mineral
+	public void RemoveMineral() {
+		oreMesh.gameObject.SetActive (false);
+		moltenMatterObject.gameObject.SetActive (false);
+		mineral.DestroyEntity(owner.name);
+	}
+
 	[ClientRpc]
 	// Called when crucible is added to a furnace...
 	public void RpcSetFurnaceMode(Vector3 spawnPos, Vector3 spawnEulers) {
@@ -169,5 +184,12 @@ public class Crucible : Equipment {
 		rig.isKinematic = true;
 		transform.position = spawnPos;
 		transform.eulerAngles = spawnEulers;
+	}
+
+	public bool isMelted () {
+		if (mineral != null && meltTime > mineral.meltTime) {
+			return true;
+		} 
+		return false;
 	}
 }

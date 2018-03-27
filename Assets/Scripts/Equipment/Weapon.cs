@@ -10,6 +10,7 @@ public class Weapon : Equipment {
 	public float bluntDamage = 1;
 	public float piercingDamage = 1;
 
+	[Header ("Damage bonuses")]
 	public float woodcuttingBonus = 0;
 	public float miningBonus = 0;
 	public float harvestingBonus = 0;

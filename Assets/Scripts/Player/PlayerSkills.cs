@@ -14,7 +14,6 @@ public class PlayerSkills : MonoBehaviour {
 	public void AddExperienceToSkill(string skillName, int amount) {
 		foreach (Skill s in skills) {
 			if (s.skillName == skillName) {
-				Debug.Log (skillName.ToString ());
 				s.AddExperienceToSkill (amount);
 			}
 		}

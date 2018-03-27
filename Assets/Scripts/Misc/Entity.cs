@@ -5,6 +5,7 @@ using UnityEngine.Networking;
 
 public class Entity : NetworkBehaviour {
 
+	[Header("Entity Properties")]
 	public string entityName = "Entity";
 	[SyncVar]
 	public bool isAvailable = true;
@@ -18,6 +19,7 @@ public class Entity : NetworkBehaviour {
 
 	protected Rigidbody rig;
 	[SyncVar]
+	[HideInInspector]
 	public int entityGroupIndex;
 
 	public virtual void Start() {
@@ -38,9 +40,18 @@ public class Entity : NetworkBehaviour {
 			GameManager.instance.RegisterLivingEntity (myID, entity, entityName);
 		}
 	}
+
+	/// <summary>
+	/// Called when player hits a entity with a equipment.
+	/// </summary>
+	/// <param name="sourcePlayer">Source player name.</param>
+	/// <param name="sourceEquipmentName">Source equipment name.</param>
+	public virtual void OnEntityHit(string sourcePlayer, string sourceEquipmentName) {
 		
-	public virtual void OnEntityHit(string playerName, string sourceEquipmentName) {
-		
+	}
+
+	public virtual void OnEntityHit (string sourcePlayer, string sourceEquipmentName, float damage) {
+
 	}
 
 	// ------------------------------------------ EVENTS START ------------------------------------------------------------ \\

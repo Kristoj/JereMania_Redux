@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FurnaceCrucibleHolder : ChildLivingEntity {
-	
+public class FurnaceCrucibleHolder : ChildDoor {
+
+	// Vars
+	[HideInInspector]
 	public CrucibleSlot[] crucibleSlots = new CrucibleSlot[4];
 
 	// Called when player attacks this object with a equipment
-	public override void OnServerTakeDamage(string playerName, string sourceEquipmentName) {
+	public override void OnChildEntityHit(string playerName, string sourceEquipmentName) {
 		Player sourcePlayer = GameManager.GetPlayerByName (playerName);
 		if (sourcePlayer != null) {
-			GunController gunController = sourcePlayer.GetComponent<GunController> ();
+			PlayerWeaponController gunController = sourcePlayer.GetComponent<PlayerWeaponController> ();
 			if (gunController.currentEquipment != null && gunController.currentEquipment.entityName == "Crucible") {
 				(parentEntity as Furnace).SignalCrucibleAdd (playerName, sourceEquipmentName, gunController.currentEquipment.entityGroupIndex);
 			}
@@ -55,6 +57,11 @@ public class FurnaceCrucibleHolder : ChildLivingEntity {
 		public void OnCrucibleAdd (Furnace fur) {
 			crucible.furnace = fur;
 			hasCrucible = true;
+
+			// Start melting the ore
+			if (crucible != null) {
+				crucible.StartMelting (fur);
+			}
 		}
 	}
 }

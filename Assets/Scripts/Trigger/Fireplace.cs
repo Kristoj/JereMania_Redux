@@ -18,6 +18,7 @@ public class Fireplace : ParentEntity {
 	public float temperatureDescendRate = 1.5f;
 	[Tooltip("How efficiently the temperature will descend in a second. 0-100%")]
 	public float temperatureDescendEfficiency = 0f;
+	protected float temperatureDescendMultiplier = 1f;
 	[Tooltip("How efficiently the descend efficiency will descend in a second. 0-100%")]
 	public float temperatureDescendEfficiencyRate = 5f;
 	[Tooltip("How efficiently temperature is added to objects inside the fireplace per second. 0-100%")]
@@ -104,7 +105,7 @@ public class Fireplace : ParentEntity {
 	/// Updates tempererature constantly until the fireplace is deactivated.
 	/// </summary>
 	public virtual void OnTemperatureUpdate() {
-		temperature -= temperatureDescendRate * temperatureDescendEfficiency * Time.deltaTime;
+		temperature -= temperatureDescendRate * temperatureDescendEfficiency * temperatureDescendMultiplier * Time.deltaTime;
 		temperatureDescendEfficiency += temperatureDescendEfficiencyRate / Time.deltaTime / 100;
 
 		// Clamp values

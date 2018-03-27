@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EquipmentLibrary : MonoBehaviour {
+public class ItemDatabase : MonoBehaviour {
 
 	public bool scanObjectsOnAwake = false;
 	public FarmPlant[] farmPlant;
 	public List<Equipment> equipmentList = new List<Equipment>();
-	public static EquipmentLibrary instance;
+	public static ItemDatabase instance;
 
 	void Awake() {
 		if (scanObjectsOnAwake) {

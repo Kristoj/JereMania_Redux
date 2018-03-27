@@ -28,8 +28,9 @@ public class PlayerController : NetworkBehaviour {
 	public float jumpSpeed = 8.0f;  // The speed at which the character's up axis gains when hitting jump
 	public float moveScale = 1.0f;
 	public bool hideCursor = true;
-	private bool absoluteGroundMode = true;
-	public bool isEnabled = true;
+	[HideInInspector]
+	public bool isStatic = false;
+	[HideInInspector]
 	public bool isActive = true;
 
 	[Header ("Camera")]
@@ -40,15 +41,18 @@ public class PlayerController : NetworkBehaviour {
 	public float downwardLean = .2f;
 	private Transform  playerView;  // Must be a camera;
 	private float curForwardLean;
-	private float curViewOffset;
-	private float camRotX;
-	private float camRotY;
+	[HideInInspector]
+	public float curViewOffset;
+	[HideInInspector]
+	public float camRotX;
+	[HideInInspector]
+	public float camRotY;
 	//[HideInInspector]
 	public Vector2 recoilRot;
 
 	private Player player;
 	private CharacterController controller;
-	private GunController gunController;
+	private PlayerWeaponController gunController;
 	private PlayerStats playerStats;
 	private Vector3 playerVelocity = Vector3.zero;
 	private Vector3 hardGroundPoint;
@@ -56,7 +60,8 @@ public class PlayerController : NetworkBehaviour {
 
 	// Q3: players can queue the next jump just before he hits the ground
 	private bool wishJump = false;
-	private bool canJump = true;
+	[HideInInspector]
+	public bool canJump = true;
 	private bool jumpIssued = false;
 	public bool isSliding = false;
 	public bool canSlide = false;
@@ -86,7 +91,7 @@ public class PlayerController : NetworkBehaviour {
 	void Start() {
 		player = GetComponent<Player>();
 		controller = GetComponent<CharacterController> ();
-		gunController = GetComponent<GunController> ();
+		gunController = GetComponent<PlayerWeaponController> ();
 		playerStats = GetComponent<PlayerStats> ();
 		curViewOffset = playerViewYOffset;
 		curSpeed = moveSpeed;
@@ -112,21 +117,24 @@ public class PlayerController : NetworkBehaviour {
 
 	void Update() {
 		CursorStateCheck ();
-		if (isEnabled && cameraEnabled) {
-			CameraRotation ();
-		}
 		/* Movement, here's the important part */
 
-		if (isActive && isEnabled) {
+		if (isActive) {
+			CheckPlayerInput ();
 			QueueJump ();
+			if (cameraEnabled) {
+				CameraRotation ();
+			}
+		}
+		if (!isStatic) {
 			if (controller.isGrounded)
 				GroundMove ();
 			else if (!controller.isGrounded) {
 				AirMove ();
 			}
-			Move (playerVelocity * Time.deltaTime);
 		}
-		CheckPlayerInput ();
+		Move (playerVelocity * Time.deltaTime);
+
 	}
 
 	/*******************************************************************************************************\
@@ -137,8 +145,13 @@ public class PlayerController : NetworkBehaviour {
 	* Sets the movement direction based on player input
 	*/
 	void SetMovementDir() {
-		cmd.forwardmove = Input.GetAxisRaw("Vertical");
-		cmd.rightmove = Input.GetAxisRaw("Horizontal");
+		if (!isStatic && isActive) {
+			cmd.forwardmove = Input.GetAxisRaw ("Vertical");
+			cmd.rightmove = Input.GetAxisRaw ("Horizontal");
+		} else {
+			cmd.forwardmove = 0;
+			cmd.rightmove = 0;
+		}
 	}
 
 	/**
@@ -167,8 +180,6 @@ public class PlayerController : NetworkBehaviour {
 	IEnumerator OnPlayerAirborne() {
 		float heightPeak = transform.position.y;
 		if (jumpIssued) {
-			//canGroundStrafe = false;
-			absoluteGroundMode = false;
 			canJump = false;
 			StartCoroutine (EnableJump ());
 		}
@@ -190,8 +201,6 @@ public class PlayerController : NetworkBehaviour {
 		}
 
 		jumpIssued = false;
-		StartCoroutine (SetPlayerAbsoluteGroundMode());
-		StartCoroutine (EnableGroundStrafe());
 		StartCoroutine (OnPlayerLand ());
 	}
 
@@ -201,21 +210,6 @@ public class PlayerController : NetworkBehaviour {
 			yield return null;
 		}
 		StartCoroutine (OnPlayerAirborne ());
-	}
-
-	IEnumerator SetPlayerAbsoluteGroundMode() {
-		yield return new WaitForSeconds (.8f);
-		if (controller.isGrounded) {
-			absoluteGroundMode = true;
-		}
-	}
-
-	IEnumerator EnableGroundStrafe() {
-		yield return new WaitForSeconds (.08f);
-
-		if (IsGrounded()) {
-			//canGroundStrafe = true;
-		}
 	}
 
 	IEnumerator EnableJump() {
@@ -335,25 +329,11 @@ public class PlayerController : NetworkBehaviour {
 
 		var wishspeed = wishdir.magnitude;
 		wishspeed *= curSpeed * speedMultiplier;
-
-		// Make sure that when bunny hop landing on the ground player doesn't strafe
-		/**if (!canGroundStrafe) {
-			wishspeed = 0;
-		}**/
-
-		//if (canGroundStrafe) {
 		Accelerate (wishdir, wishspeed, curAcceleration);
-		//}
 
 		Vector3 vel = controller.velocity;
 		vel.y = 0;
 		playerVelocity.y = 0;
-
-
-		if (absoluteGroundMode) {
-			playerVelocity.x = Mathf.Clamp (playerVelocity.x, -curSpeed, curSpeed);
-			playerVelocity.z = Mathf.Clamp (playerVelocity.z, -curSpeed, curSpeed);
-		}
 
 		if (wishJump) {
 			playerVelocity.y = jumpSpeed;
@@ -478,16 +458,16 @@ public class PlayerController : NetworkBehaviour {
 	void CheckPlayerInput() {
 
 		// Crouching
-		if (Input.GetKeyDown (KeyCode.LeftControl) && isActive && isEnabled) {
+		if (Input.GetKeyDown (KeyCode.LeftControl) && isActive && !isStatic) {
 			curViewOffset = crouchViewOffset;
 		}
 
-		if (Input.GetKeyUp (KeyCode.LeftControl) && isActive && isEnabled) {
+		if (Input.GetKeyUp (KeyCode.LeftControl) && isActive && !isStatic) {
 			curViewOffset = playerViewYOffset;
 		}
 
 		// Running
-		if (Input.GetKeyDown (KeyCode.LeftShift) && isActive && isEnabled && cmd.forwardmove > 0 && canRun) {
+		if (Input.GetKeyDown (KeyCode.LeftShift) && isActive && !isStatic && cmd.forwardmove > 0 && canRun) {
 			curSpeed = runSpeed;
 			curAcceleration = runAcceleration;
 			targetFov = 105;
@@ -530,7 +510,7 @@ public class PlayerController : NetworkBehaviour {
 		/* Ensure that the cursor is locked into the screen */
 		if (Cursor.lockState == CursorLockMode.None)
 		{
-			if (Input.GetMouseButtonDown(0) && isEnabled)
+			if (Input.GetMouseButtonDown(0) && !isStatic && isActive)
 				Cursor.lockState = CursorLockMode.Locked;
 		}
 	}
@@ -592,49 +572,12 @@ public class PlayerController : NetworkBehaviour {
 		isSliding = false;
 	}
 
-	public void SetPlayerActive (bool state) {
-		if (state) {
-			isActive = true;
-			controller.GetComponent<CharacterController> ().enabled = true;
-			curViewOffset = playerViewYOffset;
-		} else {
-			isActive = false;
-			controller.GetComponent<CharacterController> ().enabled = false;
-		}
-	}
-
-	public void SetPlayerEnabled(bool state) {
-		if (state) {
-			isEnabled = true;
-		} else {
-			isEnabled = false;
-		}
-	}
-
 	void Move(Vector3 vel) {
 		controller.Move (vel);
-
-
 		// Move the controller
 		if (IsHardGrounded () && !wishJump && controller.velocity.y <= 0) {
 			playerVelocity.y = 0;
 			controller.transform.position = new Vector3 (controller.transform.position.x, hardGroundPoint.y + controller.skinWidth + (controller.height / 2), controller.transform.position.z);
 		}
-	}
-
-	public void SetCameraOffset (float f) {
-		curViewOffset = f;
-	}
-		
-	public void TeleportPlayer(Vector3 pos) {
-		transform.position = pos;
-	}
-
-	public void SetCameraRotationY (float yRot) {
-		camRotY = yRot;
-	}
-
-	public void AddCameraRotationX (float xRot) {
-		camRotX += xRot;
 	}
 }

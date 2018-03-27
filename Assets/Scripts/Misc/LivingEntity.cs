@@ -10,14 +10,14 @@ public class LivingEntity : Entity{
 	public int startingHealth = 100;
 	[SyncVar]
 	public int health;
+	[Header("Entity Resistance")]
 	public float slashResistance = 25;
 	public float bluntResistance = 25;
 	public float piercingResistance = 25;
-
-	[Header("Profession")]
-	public ProfessionWeakness professionWeakness;
-	public enum ProfessionWeakness {Woodcutting, Mining, Harvesting};
+	public SkillWeakness skillWeakness;
+	public enum SkillWeakness {Woodcutting, Mining, Harvesting};
 	public float weaknessAmount = 25;
+
 	[Header("Experience")]
 	public List<ExperienceDropTable> expDropTable = new List<ExperienceDropTable>();
 
@@ -27,6 +27,11 @@ public class LivingEntity : Entity{
 	public override void Start() {
 		health = startingHealth;
 		rig = GetComponent<Rigidbody> ();
+	}
+
+	public override void OnEntityHit (string sourcePlayer, string sourceEquipmentName, float damage) {
+		base.OnEntityHit (sourcePlayer, sourceEquipmentName, damage);
+		TakeDamage (damage, sourcePlayer);
 	}
 
 	/// <summary>

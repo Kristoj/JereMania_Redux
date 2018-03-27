@@ -15,7 +15,7 @@ public class SpawnMenu : NetworkBehaviour {
 	public RectTransform spawnMenuScreen;
 	public List<RectTransform> slotList = new List<RectTransform>();
 	public List<Equipment> equipmentList = new List<Equipment>();
-	private PlayerController playerController;
+	private Player player;
 	private List<Equipment> spawnedEquipments = new List<Equipment> ();
 
 	protected int currEquipments = 0;
@@ -28,7 +28,7 @@ public class SpawnMenu : NetworkBehaviour {
 	// Use this for initialization
 	void Start () {
 		
-		playerController = GetComponent<PlayerController> ();
+		player = GetComponent<Player> ();
 		SetupMenu ();
 
 	}
@@ -38,8 +38,8 @@ public class SpawnMenu : NetworkBehaviour {
 
 	void SetupMenu(){
 		//Scan Lists
-		equipmentList = EquipmentLibrary.instance.equipmentList;
-		equipmentAmount = EquipmentLibrary.instance.equipmentList.Count-1;
+		equipmentList = ItemDatabase.instance.equipmentList;
+		equipmentAmount = ItemDatabase.instance.equipmentList.Count-1;
 		//Get start pos for slots
 		Vector3 startPosition;
 		startPosition.x = -((menuBackground.sizeDelta.x * 0.5f) - itemSlotSize);
@@ -94,12 +94,12 @@ public class SpawnMenu : NetworkBehaviour {
 
 			switch (menuOpen) {
 
-			case true:
+		case true:
 			
 			spawnMenuScreen.gameObject.SetActive (true);
 			Cursor.lockState = CursorLockMode.None;
 			Cursor.visible = true;
-			playerController.SetPlayerEnabled (false);
+			player.isStatic = true;
 			break;
 
 			case false:
@@ -107,7 +107,7 @@ public class SpawnMenu : NetworkBehaviour {
 			spawnMenuScreen.gameObject.SetActive (false);
 			Cursor.lockState = CursorLockMode.Locked;
 			Cursor.visible = false;
-			playerController.SetPlayerEnabled (true);
+			player.isStatic = false;
 			break;
 		}
 	}

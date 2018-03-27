@@ -51,14 +51,15 @@ public class Item : Interactable {
 	/// <param name="dropRot">Rotation of the item when dropped.</param>
 	/// <param name="dropDir">Direction where force is applied.</param>
 	/// <param name="dropForce">Amount of force added when dropped.</param>
-	public void DropItem(string masterId, Vector3 dropPos, Quaternion dropRot, Vector3 dropDir, float dropForce) {
+	/// <param name="addSpin">Should we add torque so that the item will spin when dropped?</param>
+	public void DropItem(string masterId, Vector3 dropPos, Quaternion dropRot, Vector3 dropDir, float dropForce, bool addSpin = true) {
 		// Add force to the spawned item
 		EnableEntity ();
-		RpcDropItem (masterId, dropPos, dropRot, dropDir, dropForce);
+		RpcDropItem (masterId, dropPos, dropRot, dropDir, dropForce, addSpin);
 	}
 
 	[ClientRpc]
-	public void RpcDropItem(string masterId, Vector3 dropPos, Quaternion dropRot, Vector3 dropDir, float dropForce) {
+	public void RpcDropItem(string masterId, Vector3 dropPos, Quaternion dropRot, Vector3 dropDir, float dropForce, bool addSpin) {
 		rig = GetComponent<Rigidbody> ();
 		if (rig != null) {
 			rig.isKinematic = false;
@@ -81,12 +82,14 @@ public class Item : Interactable {
 			massMultiplier = Mathf.Clamp (massMultiplier, .3f, 1.4f) * .8f;
 			Player targetPlayer = GameManager.GetPlayerByName (masterId);
 			if (targetPlayer != null) {
+				// Add drop force
 				rig.AddForce (dropDir / massMultiplier * rig.mass * dropForce + (targetPlayer.GetComponent<CharacterController>().velocity * rig.mass), ForceMode.Impulse);
 
-				//rig.maxAngularVelocity = 100;
-				rig.AddTorque (transform.right * 250, ForceMode.Impulse);
+				// Add spin
+				if (addSpin) {
+					rig.AddTorque (transform.right * 250, ForceMode.Impulse);
+				}
 			}
-
 		}
 	}
 

@@ -210,7 +210,6 @@ GameObject:
   - component: {fileID: 23225061224140738}
   - component: {fileID: 65784991431921666}
   - component: {fileID: 114779425702641020}
-  - component: {fileID: 114594900640894350}
   m_Layer: 0
   m_Name: Crucible_Holder
   m_TagString: Untagged
@@ -278,7 +277,7 @@ GameObject:
   - component: {fileID: 198760929199735286}
   - component: {fileID: 199458372143539370}
   m_Layer: 0
-  m_Name: FlamesParticleEffect
+  m_Name: PS_Flames
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1167,6 +1166,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9780b6a43e98d814e8227bd73830a93c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isAvailable: 1
   parentEntity: {fileID: 0}
 --- !u!114 &114071671082438262
 MonoBehaviour:
@@ -1179,6 +1179,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d55bf9ace8da5be4289703f244ccb6e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isAvailable: 1
   parentEntity: {fileID: 0}
 --- !u!114 &114208457754893402
 MonoBehaviour:
@@ -1193,12 +1194,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityName: Furnace_Crucible
   isAvailable: 1
+  owner: {fileID: 0}
   entitySoundMaterial: 0
   entityGroupIndex: 0
   childEntities: []
   maxTemperature: 400
   temperature: 0
-  temperatureClimbRate: 500
+  temperatureClimbRate: 4
   temperatureClimbEfficiency: 0
   temperatureClimbEfficiencyRate: 3
   temperatureDescendRate: 1.5
@@ -1211,7 +1213,7 @@ MonoBehaviour:
   isBurning: 0
   fireParticle: {fileID: 198760929199735286}
   temperatureGaugePointer: {fileID: 4877701194999312}
-  temperatureGaugeMaxEuler: 239.055
+  temperatureGaugeMaxEuler: 239
 --- !u!114 &114555053039246862
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1223,29 +1225,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1b87b8214b9bc740a191946dab0bbed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isAvailable: 1
   parentEntity: {fileID: 0}
   doorSwingTime: 6
   isClosed: 1
   isMoving: 0
   openEuler: {x: -90, y: 0, z: 170}
   openPos: {x: 0, y: 0, z: 0}
---- !u!114 &114594900640894350
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1724740549614320}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d1b87b8214b9bc740a191946dab0bbed, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  parentEntity: {fileID: 0}
-  doorSwingTime: 8
-  isClosed: 1
-  isMoving: 0
-  openEuler: {x: -90, y: 0, z: 0}
-  openPos: {x: 0.036, y: 0.944, z: 0.816}
 --- !u!114 &114779425702641020
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1257,7 +1243,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31ab3dde53139a1478cb36d3c9412199, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isAvailable: 1
   parentEntity: {fileID: 0}
+  doorSwingTime: 2.5
+  isClosed: 1
+  isMoving: 0
+  openEuler: {x: -90, y: 0, z: 0}
+  openPos: {x: 0.036, y: 0.944, z: 0.838}
   crucibleSlots:
   - hasCrucible: 0
     slotOffset: {x: 0.18, y: 0, z: -0.119}
@@ -4664,7 +4656,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: -1031411313
+  randomSeed: -2123630024
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -7893,7 +7885,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: 621264890
+  randomSeed: -525239100
   InitialModule:
     serializedVersion: 3
     enabled: 1

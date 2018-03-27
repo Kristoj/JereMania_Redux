@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class ChildInteractable : ChildEntity {
 
-	// Vars
-	public bool isAvailable = true;
-
 	public virtual void OnClientStartInteraction (string sourcePlayer) {
 
 	}

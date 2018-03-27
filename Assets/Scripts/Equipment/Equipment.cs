@@ -8,7 +8,7 @@ using UnityEngine.Networking;
 public class Equipment : Item {
 	
 	public enum FireMode {Auto, Semi}
-	[Header("Melee Properties")]
+	[Header("Equipment Stats")]
 	public FireMode fireMode;
 	public float rpm = 100;
 	protected float lastShotTime;
@@ -44,10 +44,6 @@ public class Equipment : Item {
 	// Classes
 	[HideInInspector]
 	public Player player;
-	protected PlayerAnimationController playerAnimationController;
-	protected GunController weaponController;
-	protected PlayerStats playerStats;
-	protected PlayerController playerController;
 
 
 	public override void Start() {
@@ -55,24 +51,26 @@ public class Equipment : Item {
 		timeBetweenShots = 60 / rpm;
 	}
 
+	//  ----- INPUT ----- \\
+	#region |---Action Input---|
 	public virtual void OnPrimaryAction() {
-		if (weaponController != null) {
-			if (!weaponController.isChargingSecondaryAction) {
+		if (player.weaponController != null) {
+			if (!player.weaponController.isChargingSecondaryAction) {
 				// Attack
-				if (primaryAction == ActionType.Attack && playerStats.fatique > 0 && playerStats.stamina > 0) {
+				if (primaryAction == ActionType.Attack && player.playerStats.fatique > 0 && player.playerStats.stamina > 0) {
 					Attack ();
 				}
 				// Throw
 				else if (primaryAction == ActionType.Throw) {
-					StartCoroutine (ActionStart (0));
+					StartCoroutine (ActionCycle (0));
 				}
 				// Block
 				else if (primaryAction == ActionType.Block) {
-					StartCoroutine (ActionStart (0));
+					StartCoroutine (ActionCycle (0));
 				}
 				// Consume
 				else if (primaryAction == ActionType.Consume) {
-					StartCoroutine (ActionStart (0));
+					StartCoroutine (ActionCycle (0));
 				}
 				// Custom
 				else if (primaryAction == ActionType.Custom) {
@@ -90,83 +88,79 @@ public class Equipment : Item {
 		}
 		// Throw
 		else if (secondaryAction == ActionType.Throw) {
-			StartCoroutine (ActionStart(1));
+			StartCoroutine (ActionCycle(1));
 		}
 		// Block
 		else if (secondaryAction == ActionType.Block) {
-			StartCoroutine (ActionStart(1));
+			StartCoroutine (ActionCycle(1));
 		}
 		// Consume
 		else if (secondaryAction == ActionType.Consume) {
-			StartCoroutine (ActionStart(1));
+			StartCoroutine (ActionCycle(1));
 		}
 		// Custom
 		else if (secondaryAction == ActionType.Custom) {
-			weaponController.isChargingSecondaryAction = false;
-			weaponController.isAttacking = false;
-			weaponController.canAttack = true;
+			player.weaponController.isChargingSecondaryAction = false;
+			player.weaponController.isAttacking = false;
+			player.weaponController.canAttack = true;
 		}
 	}
+	#endregion
 
-	public virtual IEnumerator StartAttack() {
-		if (fireMode == FireMode.Semi && !weaponController.mouseLeftReleased) {
+	//  ----- Attack Cycle ----- \\
+	public virtual IEnumerator AttackCycle() {
+		if (fireMode == FireMode.Semi && !player.weaponController.mouseLeftReleased) {
 			yield break;
 		}
 
 		if (Time.time - lastShotTime > timeBetweenShots) {
-			playerAnimationController.Attack();
+			// Set vars
 			lastShotTime = Time.time;
-			weaponController.isAttacking = true;
-			playerStats.StaminaRemove (3f, true);
-			// Audio
+			player.weaponController.isAttacking = true;
+
+			// Effects
+			player.animationController.Attack();
 			if (attackSound != null) {
 				StartCoroutine (HitAudioDelay ());
 			}
 
-			StartCoroutine (AttackCycle ());
-			StartCoroutine (TrackEquipmentVelocity ());
+			// Player Conditions
+			player.playerStats.StaminaRemove (3f, true);
 
+			// Misc
+			StartCoroutine (TrackEquipmentVelocity ());
 			yield return new WaitForSeconds (hitDelay);
-			// Rot
-			Vector3 tracerRot = new Vector3 (player.cam.transform.eulerAngles.x, player.cam.transform.eulerAngles.y, player.cam.transform.eulerAngles.z);
 
 			// Raycast
-			Ray ray = new Ray (player.cam.transform.position, Quaternion.Euler (tracerRot) * Vector3.forward);
+			Ray ray = new Ray (player.cam.transform.position, player.cam.transform.forward);
 			RaycastHit hit;
 
 			if (Physics.Raycast (ray, out hit, meleeRange, myHitMask, QueryTriggerInteraction.Collide)) {
 
-				// Take damage
-				LivingEntity livingEntity = hit.collider.GetComponent<LivingEntity>();
-				if (livingEntity != null) {
-					CmdTakeDamage (hit.collider.name, livingEntity.entityGroupIndex, transform.name);
-					if (playerStats != null) {
-						playerStats.HungerRemove (.09f);
-						playerStats.FatiqueRemove (.005f);
-					}
-					// Add force
-					Vector3 meleeForce = equipmentVelocity * impactForce;
-					CmdAddImpactForce (meleeForce, hit.point, livingEntity.name, livingEntity.entityGroupIndex);
-					OnClientEntityHit (owner.name, livingEntity.name, entityGroupIndex);
-				}
-
 				// Get Entity
 				Entity entity = hit.collider.GetComponent<Entity>();
-				if (entity != null && livingEntity == null) {
+				if (entity != null) {
+					// Add impact force and tell target entity that we hit it
 					Vector3 meleeForce = equipmentVelocity * impactForce;
 					CmdAddImpactForce (meleeForce, hit.point, entity.name, entity.entityGroupIndex);
-					OnClientEntityHit (owner.name, entity.name, entityGroupIndex);
-				}
+					OnClientEntityHit (entity.name, entity.entityGroupIndex, owner.name);
 
-				// Get Local Entity
-				ChildLivingEntity childLivingEntity = hit.collider.GetComponent<ChildLivingEntity>();
-				if (childLivingEntity != null) {
-					CmdOnChildEntityHit (owner.name, childLivingEntity.parentEntity.name, childLivingEntity.GetType().ToString(), childLivingEntity.name, childLivingEntity.parentEntity.entityGroupIndex);
+					// Player conditions
+					if (player.playerStats != null) {
+						player.playerStats.HungerRemove (.09f);
+						player.playerStats.FatiqueRemove (.005f);
+					}
+				} 
+
+				// Get ChildEntity
+				else {
+					ChildEntity childEntity = hit.collider.GetComponent<ChildEntity>();
+					if (childEntity != null) {
+						CmdOnChildEntityHit (owner.name, childEntity.parentEntity.name, childEntity.GetType().ToString(), childEntity.name, childEntity.parentEntity.entityGroupIndex);
+					}
 				}
 
 				// -------------------------------------- EFFECTS  START ------------------------------------------------ \\
-				// Animation
-				playerAnimationController.MeleeImpact();
 				// Play impact audio
 				if (entity != null) {
 					AudioManager.instance.CmdPlayEntityImpactSound (entity.entitySoundMaterial.ToString(), this.weaponImpactSoundMaterial.ToString(), hit.point, "", 1f);
@@ -177,6 +171,9 @@ public class Equipment : Item {
 					}
 				}
 
+				// Animation
+				player.animationController.MeleeImpact();
+
 				// Impact rotation
 				Quaternion impactRot = Quaternion.identity;
 				if (hit.normal != Vector3.zero) {
@@ -184,65 +181,72 @@ public class Equipment : Item {
 				}
 
 				// Tell server to spawn ImpactFX for all clients
-				CmdOnActionHit (hit.point, transform.name, Quaternion.Euler (tracerRot), impactRot);
+				Vector3 tracerRot = new Vector3 (player.cam.transform.eulerAngles.x, player.cam.transform.eulerAngles.y, player.cam.transform.eulerAngles.z);
+				CmdImpactFX (hit.point, transform.name, Quaternion.Euler (tracerRot), impactRot);
 				// -------------------------------------- EFFECTS  END ------------------------------------------------ \\
 			}
+
+			// Wait for attack cycle to end
+			yield return new WaitForSeconds (60 / rpm - hitDelay);
+			player.weaponController.isAttacking = false;
 		}
 	}
 
+	// Starts the attack cycle...
 	public virtual void Attack() {
-		StartCoroutine (StartAttack ());
+		StartCoroutine (AttackCycle ());
 	}
-		
-	IEnumerator ActionStart(int buttonId) {
-		weaponController.animController.ActionStart (buttonId);
 
+	//  ----- Action Cycle ----- \\
+	IEnumerator ActionCycle(int buttonId) {
+		// Set vars and start action animation
+		player.weaponController.animController.ActionStart (buttonId);
+		player.weaponController.isChargingSecondaryAction = true;
 		bool eventTriggered = false;
 		bool pass = false;
-		weaponController.isChargingSecondaryAction = true;
 		float t = .3f;
 
 		while (!eventTriggered && !pass) {
 
-			// PRIMARY ACTION ---
+			// --- PRIMARY ACTION START --- \\
 
 			// TRIGGER if left mouse is down and x amount of time has passed
-			if (weaponController.mouseLeftDown && buttonId == 0 && t <= 0) {
+			if (player.weaponController.mouseLeftDown && buttonId == 0 && t <= 0) {
 				if (primaryAction == ActionType.Consume || secondaryAction == ActionType.Consume) {
 					eventTriggered = true;
 					StartCoroutine (ConsumeItem ());
 				}
 			}
 
-			if (buttonId == 0 && !weaponController.mouseLeftDown) {
+			if (buttonId == 0 && !player.weaponController.mouseLeftDown) {
 				pass = true;
 			}
 
-			// PRIMARY ACTION ---
+			// --- PRIMARY ACTION END --- \\
 
 			// SECONDARY ACTION ---
-			if (!weaponController.mouseRightDown && buttonId == 1) {
+			if (!player.weaponController.mouseRightDown && buttonId == 1) {
 				eventTriggered = false;
 				pass = true;
 			}
 			// TRIGGER if left mouse is down and trigger button is right click
-			if (weaponController.mouseLeftDown && buttonId == 1) {
+			if (player.weaponController.mouseLeftDown && buttonId == 1) {
 				// Drop this equipment
 
 				eventTriggered = true;
-				weaponController.canChangeEquipment = true;
+				player.weaponController.canChangeEquipment = true;
 			}
 			// SECONDARY ACTION ---
 
 			if (eventTriggered) {
-				weaponController.animController.ActionEvent ();
+				player.weaponController.animController.ActionEvent ();
 			}
 
 			t -= Time.deltaTime;
 			yield return null;
 		}
 		if (!eventTriggered) {
-			weaponController.animController.ActionEnd ();
+			player.weaponController.animController.ActionEnd ();
 		}
 
 		// If we are the client wait x amount of time according to the last ping before continuing
@@ -265,25 +269,26 @@ public class Equipment : Item {
 		}
 		// Throw equipment with delay
 		if (eventTriggered) {
-			weaponController.EquipEquipment("", entityGroupIndex, true, 6);
+			player.weaponController.EquipEquipment("", entityGroupIndex, true, 6);
 		}
 		// Enable attacking
-		weaponController.isChargingSecondaryAction = false;
-		weaponController.canAttack = true;
+		player.weaponController.isChargingSecondaryAction = false;
+		player.weaponController.canAttack = true;
 	}
 
 	IEnumerator ConsumeItem() {
-		EquipmentLibrary.instance.ConsumeItem (this.entityName, owner.name);
+		ItemDatabase.instance.ConsumeItem (this.entityName, owner.name);
 		AudioManager.instance.CmdPlaySound2D ("UI_Eat1",transform.position, owner.name, 1);
-		weaponController.EquipEquipment ("", 0, false, 0);
+		player.weaponController.EquipEquipment ("", 0, false, 0);
 		yield return new WaitForSeconds (1);
 	}
 
+	#region INTERACTIONS
+	// Client interaction
 	public override void OnClientStartInteraction(string masterId) {
-
 		base.OnClientStartInteraction (masterId);
 		if (isAvailable) {
-			// Play sound
+			// Play pickup sound
 			if (pickupSound != null) {
 				AudioManager.instance.CmdPlaySound (pickupSound.name, transform.position, "", 1);
 			}
@@ -292,7 +297,7 @@ public class Equipment : Item {
 		}
 	}
 
-	// Client pickup
+	// Client swap
 	public override void OnClientStartSwap(string masterId) {
 		if (isAvailable) {
 			base.OnClientStartSwap (masterId);
@@ -308,60 +313,28 @@ public class Equipment : Item {
 	public override void OnServerStartSwap(string masterId) {
 		if (isAvailable) {
 			base.OnServerStartSwap (masterId);
-			GameManager.GetPlayerByName(masterId).GetComponent<GunController>().EquipEquipment (transform.name, entityGroupIndex, true, 1);
+			GameManager.GetPlayerByName(masterId).GetComponent<PlayerWeaponController>().EquipEquipment (transform.name, entityGroupIndex, true, 1);
 		}
 	}
+	#endregion
 
-	// Firerate
-	IEnumerator AttackCycle() {
-		yield return new WaitForSeconds (60 / rpm);
-		weaponController.isAttacking = false;
-	}
-
-	// Tracks equipments velocity while player is attacking with his equipment, and when he hits a entity add impact force to it...
-	IEnumerator TrackEquipmentVelocity() {
-		Vector3 equipmentA = transform.position;
-		Vector3 playerA = owner.transform.position;
-		yield return new WaitForSeconds (.03f);
-		Vector3 equipmentB = transform.position;
-		Vector3 playerB = owner.transform.position;
-		equipmentVelocity = (equipmentA-equipmentB);
-		equipmentVelocity = equipmentVelocity.normalized;
-		equipmentVelocity -= (playerA - playerB).normalized;
-	}
-
-
-	// Call take damage from the server... This function is called when player hits a living entity
-	[Command]
-	public void CmdTakeDamage(string victimId, int targetGroup, string playerId) {
-		TakeDamage (victimId, targetGroup, playerId);
-	}
-
-	// Called when player hits a object that has LivingEntity class attached to it... This function is meant to be overridden from other classes who inherit from this..
-	public virtual void TakeDamage(string victimId, int targetGroup, string playerId) {
-
+	// Called on the client when player hits a entity
+	public virtual void OnClientEntityHit(string victimName, int victimGroup, string sourcePlayer) {
+		CmdSignalOnEntityHit (victimName, victimGroup, sourcePlayer);
 	}
 
 	// Signals on entity hit from a client to the server
 	[Command]
-	void CmdSignalOnEntityHit (string playerName, string entityName, int entityGroup) {
-		OnServerEntityHit (playerName, entityName, entityGroup);
+	void CmdSignalOnEntityHit (string victimName, int victimGroup, string sourcePlayer) {
+		OnServerEntityHit (victimName, victimGroup, sourcePlayer);
 	}
 
 	// Called on the server when player hits a entity
-	public virtual void OnServerEntityHit(string playerName, string entityName, int entityGroup) {
-		Entity targetEntity = GameManager.instance.GetEntity (entityName, entityGroup);
-		if (targetEntity == null) {
-			targetEntity = GameManager.instance.GetLivingEntity (entityName, entityGroup)as Entity;
-		}
+	public virtual void OnServerEntityHit(string victimName, int victimGroup, string sourcePlayer) {
+		Entity targetEntity = GameManager.instance.GetEntity (victimName, victimGroup);
 		if (targetEntity != null) {
-			targetEntity.OnEntityHit (playerName, this.entityName);
+			targetEntity.OnEntityHit (sourcePlayer, this.entityName);
 		}
-	}
-
-	// Called on the client when player hits a entity
-	public virtual void OnClientEntityHit(string playerName, string entityName, int entityGroup) {
-		CmdSignalOnEntityHit (playerName, entityName, entityGroup);
 	}
 
 	[Command]
@@ -373,15 +346,15 @@ public class Equipment : Item {
 		}
 		// Interact with the object if we got valid reference to it
 		if (parentEntity != null) {
-			ChildLivingEntity childLivingEntity = parentEntity.GetChildEntity (childType, childName) as ChildLivingEntity;
-			if (childLivingEntity != null) {
+			ChildEntity childEntity = parentEntity.GetChildEntity (childType, childName) as ChildEntity;
+			if (childEntity != null) {
 				// Set authority for the object that we hit
 				if (player == null) {
 					player = owner.GetComponent<Player> ();
 					player.SetAuthority (parentEntity.netId, GameManager.GetPlayerByName(playerName).GetComponent<NetworkIdentity>());
 				}
 				// Rpc the interaction
-				childLivingEntity.OnServerTakeDamage(playerName, transform.name);
+				childEntity.OnChildEntityHit(playerName, transform.name);
 			}
 		}
 	}
@@ -402,21 +375,34 @@ public class Equipment : Item {
 
 	[Command]
 	// Called when player hits something with PrimaryAction (Left click ability with equipment)
-	protected void CmdOnActionHit(Vector3 hitPoint, string id, Quaternion tracerRot, Quaternion impactRot) {
-		RpcOnActionHit (hitPoint, id, tracerRot, impactRot);
+	protected void CmdImpactFX(Vector3 hitPoint, string id, Quaternion tracerRot, Quaternion impactRot) {
+		RpcImpactFX (hitPoint, id, tracerRot, impactRot);
 	}
 
 	[ClientRpc]
-	protected void RpcOnActionHit(Vector3 hitPoint, string id, Quaternion tracerRot, Quaternion impactRot) {
-		// Spawn impactFX
+	// Spawn ImpactFX
+	protected void RpcImpactFX(Vector3 hitPoint, string id, Quaternion tracerRot, Quaternion impactRot) {
 		if (impactFX != null) {
 			Instantiate (impactFX, hitPoint, impactRot);
 		}
 	}
 
+	// Hit audio delay
 	IEnumerator HitAudioDelay() {
 		yield return new WaitForSeconds (audioDelay);
 		AudioManager.instance.CmdPlaySound2D (attackSound.name, transform.position, owner.name, 1);
+	}
+
+	// Tracks equipments velocity while player is attacking with his equipment, and when he hits a entity add impact force to it...
+	IEnumerator TrackEquipmentVelocity() {
+		Vector3 equipmentA = transform.position;
+		Vector3 playerA = owner.transform.position;
+		yield return new WaitForSeconds (.03f);
+		Vector3 equipmentB = transform.position;
+		Vector3 playerB = owner.transform.position;
+		equipmentVelocity = (equipmentA-equipmentB);
+		equipmentVelocity = equipmentVelocity.normalized;
+		equipmentVelocity -= (playerA - playerB).normalized;
 	}
 
 	// Stores all equipment action animation ids
@@ -504,38 +490,15 @@ public class Equipment : Item {
 		return actionIds;
 	}
 
-	// Set the owner of this equipment
-	public void SetOwner (string ownerName) {
-		Player newOwner = GameManager.GetPlayerByName (ownerName);
-		if (newOwner != null) {
-
-			owner = newOwner.transform;
-			weaponController = owner.GetComponent<GunController> ();
-			player = owner.GetComponent<Player> ();
-			playerAnimationController = owner.GetComponent<PlayerAnimationController> ();
-			playerStats = owner.GetComponent<PlayerStats> ();
-			playerController = owner.GetComponent<PlayerController> ();
-
-			// Set authority
-			NetworkIdentity playerId = player.GetComponent<NetworkIdentity> ();
-			player.SetAuthority (netId, playerId);
-		} else {
-
-		}
-	}
-
-	public virtual void SetHitMask() {
-		myHitMask = weaponController.hitMask;
-	}
-
 	[ClientRpc]
 	public void RpcEquipmentHandshake(string callerName) {
-		if (weaponController != null) {
+		if (player.weaponController != null) {
 			if (GameManager.GetLocalPlayer().name == callerName) {
-				weaponController.canSpawnNewEquipment = true;
+				player.weaponController.canSpawnNewEquipment = true;
 			}
 		}
 	}
+
 	[ClientRpc]
 	public void RpcMoveCurrentEquipment(Vector3 movePos, Vector3 moveRot, string newParentName, int parentGroup) {
 		// Orientate this object
@@ -574,6 +537,22 @@ public class Equipment : Item {
 		}
 	}
 
+	// Set the owner of this equipment
+	public void SetOwner (string ownerName) {
+		Player newOwner = GameManager.GetPlayerByName (ownerName);
+		if (newOwner != null) {
+
+			owner = newOwner.transform;
+			player = owner.GetComponent<Player> ();
+
+			// Set authority
+			NetworkIdentity playerId = player.GetComponent<NetworkIdentity> ();
+			player.SetAuthority (netId, playerId);
+		} else {
+
+		}
+	}
+
 	// Sets this equipment control mode to player controlled or control free on the server
 	public void SetEquipmentPlayerControlled(bool isPlayerController, string ownerName) {
 		// Player controlled
@@ -586,8 +565,8 @@ public class Equipment : Item {
 		// Control free
 		else {
 			isAvailable = true;
-			if (weaponController != null) {
-				weaponController.currentEquipment = null;
+			if (player != null && player.weaponController != null) {
+				player.weaponController.currentEquipment = null;
 				owner = null;
 			}
 		}
@@ -627,5 +606,9 @@ public class Equipment : Item {
 			}
 			owner = null;
 		}
+	}
+
+	public virtual void SetHitMask() {
+		myHitMask = player.weaponController.hitMask;
 	}
 }

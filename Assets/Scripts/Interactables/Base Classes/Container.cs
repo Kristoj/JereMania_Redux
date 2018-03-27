@@ -111,7 +111,7 @@ public class Container : Interactable {
 	[ClientRpc]
 	void RpcAddItem(string itemName, int slotIndex) {
 		if (!isServer) {
-			slots [slotIndex].SetSlotIcon (EquipmentLibrary.instance.GetEquipment (itemName).itemIcon);
+			slots [slotIndex].SetSlotIcon (ItemDatabase.instance.GetEquipment (itemName).itemIcon);
 		}
 	}
 
