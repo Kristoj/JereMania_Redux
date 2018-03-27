@@ -116,16 +116,17 @@ public class PlayerController : NetworkBehaviour {
 	}
 
 	void Update() {
-		CursorStateCheck ();
-		/* Movement, here's the important part */
-
+		// If we're active, add player input
 		if (isActive) {
 			CheckPlayerInput ();
 			QueueJump ();
+
 			if (cameraEnabled) {
 				CameraRotation ();
 			}
 		}
+
+		// If we're not static, calculate player movement
 		if (!isStatic) {
 			if (controller.isGrounded)
 				GroundMove ();
@@ -133,8 +134,11 @@ public class PlayerController : NetworkBehaviour {
 				AirMove ();
 			}
 		}
+		// Apply player velocity
 		Move (playerVelocity * Time.deltaTime);
 
+		// Misc
+		CursorStateCheck ();
 	}
 
 	/*******************************************************************************************************\

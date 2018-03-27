@@ -20,6 +20,8 @@ public class Player : LivingEntity {
 	public PlayerStats playerStats;
 	[HideInInspector]
 	public PlayerAnimationController animationController;
+	[HideInInspector]
+	public CharacterController controller;
 
 	public override void OnStartClient() {
 		string myID = GetComponent<NetworkIdentity> ().netId.ToString ();
@@ -34,6 +36,7 @@ public class Player : LivingEntity {
 		playerSkills = GetComponent<PlayerSkills>();
 		playerStats = GetComponent<PlayerStats>();
 		animationController = GetComponent<PlayerAnimationController>();
+		controller = GetComponent<CharacterController>();
 	}
 
 	public override void Start() {
@@ -150,6 +153,12 @@ public class Player : LivingEntity {
 		}
 		set {
 			playerController.isStatic = value;
+
+			if (value == true) {
+				controller.enabled = false;
+			} else {
+				controller.enabled = true;
+			}
 		}
 	}
 
