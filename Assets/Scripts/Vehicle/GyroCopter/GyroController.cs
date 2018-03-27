@@ -2,25 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GyroController : Seat {
+public class GyroController : ParentEntity {
 
 	private bool isLooking = false;
 	private Player seatOwner = null;
 	private bool isSeated = false;
 
-	public void OnEnter(string masterId){
-		if(seatOwner = null){
-			print (masterId);
-			seatOwner = GameManager.GetPlayerByName (masterId);
-			base.OnClientStartInteraction (masterId);
+	public void OnEnter(string sourcePlayer){
+		if (seatOwner == null){
+			print (sourcePlayer);
+			seatOwner = GameManager.GetPlayerByName (sourcePlayer);
 			GameManager.GetLocalPlayer().GetComponent<PlayerController>().cameraEnabled = false;
 			isSeated = true;
 		}
 	}
 
-	public void OnExit(string masterId){
+	public void OnExit(string sourcePlayer){
 		seatOwner = null;
-		base.OnExit (masterId);
 		GameManager.GetLocalPlayer ().GetComponent<PlayerController> ().cameraEnabled = true;
 		isSeated = false;
 	}

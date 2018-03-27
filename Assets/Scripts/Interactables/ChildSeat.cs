@@ -51,9 +51,9 @@ public class ChildSeat : ChildInteractable {
 
 	}
 		
-	public void EnterSeat(string masterId) {
+	public void EnterSeat(string sourcePlayer) {
 		isAvailable = false;
-		Player player = GameManager.GetPlayerByName (masterId);
+		Player player = GameManager.GetPlayerByName (sourcePlayer);
 		NetworkTransform netTransform = player.GetComponent<NetworkTransform> ();
 
 		// Disable network position sync
@@ -77,9 +77,9 @@ public class ChildSeat : ChildInteractable {
 	}
 		
 	// Exit seat
-	public virtual void ExitSeat(string masterId) {
+	public virtual void ExitSeat(string sourcePlayer) {
 		isAvailable = true;
-		Player player = GameManager.GetPlayerByName (masterId);
+		Player player = GameManager.GetPlayerByName (sourcePlayer);
 		NetworkTransform netTransform = player.GetComponent<NetworkTransform> ();
 
 		// Teleport player

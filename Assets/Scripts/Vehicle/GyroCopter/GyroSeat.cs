@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GyroSeat : Seat {
+public class GyroSeat : ChildSeat {
+	
 	// On enter
-	public override void OnClientStartInteraction(string masterId) {
-		transform.parent.GetComponent<GyroController> ().OnEnter(masterId);
+	public override void OnServerStartInteraction(string sourcePlayer) {
+		base.OnServerStartInteraction (sourcePlayer);
+		transform.parent.GetComponent<GyroController> ().OnEnter(sourcePlayer);
 	}
 	// On exit
-	public override void OnExit(string masterId) {
-		transform.parent.GetComponent<GyroController> ().OnExit(masterId);
+	public override void OnServerExit(string sourcePlayer) {
+		transform.parent.GetComponent<GyroController> ().OnExit(sourcePlayer);
 	}
 }
