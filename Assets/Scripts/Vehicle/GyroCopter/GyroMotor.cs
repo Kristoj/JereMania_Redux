@@ -3,14 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GyroMotor : MonoBehaviour {
+	public float motorSpeed = 1f;
+	public float fallSpeed = 9.81f;
 
-	// Use this for initialization
-	void Start () {
-		
+	void Start(){
+		Rigidbody rig = GetComponent<Rigidbody> ();
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+
+	public void GyroAcceleration(){
+
 	}
+
+	public void GyroGravity(){
+
+	}
+
+
 }

@@ -3,23 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GyroSeat : Seat {
-	public bool isSeated = false;
+	// On enter
 	public override void OnClientStartInteraction(string masterId) {
-		base.OnClientStartInteraction (masterId);
-		GameManager.GetLocalPlayer().GetComponent<PlayerController>().cameraEnabled = false;
-		isSeated = true;
+		transform.parent.GetComponent<GyroController> ().OnEnter(masterId);
 	}
-
+	// On exit
 	public override void OnExit(string masterId) {
-		base.OnExit (masterId);
-		GameManager.GetLocalPlayer ().GetComponent<PlayerController> ().cameraEnabled = true;
-		isSeated = false;
+		transform.parent.GetComponent<GyroController> ().OnExit(masterId);
 	}
-
-	void Update(){
-		if(isSeated && Input.GetKeyDown(KeyCode.LeftAlt)){
-		GameManager.GetLocalPlayer ().GetComponent<PlayerController> ().cameraEnabled = true;
-		}
-	}
-
 }
